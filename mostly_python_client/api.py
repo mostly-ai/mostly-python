@@ -3,7 +3,6 @@ from typing import Any, List, Literal, Optional, Union
 
 import httpx
 
-
 GET = "get"
 POST = "post"
 PATCH = "patch"
