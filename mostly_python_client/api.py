@@ -195,6 +195,7 @@ class MostlyClient(_MostlyBaseClient):
     :param base_url: The base URL. If not provided, a default value is used.
     :param api_key: The API key for authenticating. If not provided, it would rely on env vars.
     """
+
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         super().__init__(base_url=base_url, api_key=api_key)
         client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
