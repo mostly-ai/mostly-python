@@ -33,10 +33,10 @@ class MostlyBaseClient:
             base_url or self.load_from_env_var("BASE_URL") or EXAMPLE_BASE_URL
         )
         self.api_key = (
-            api_key or self.load_from_env_var("API_KEY") or self.temp_get_token()
+            api_key or self.load_from_env_var("API_KEY") or self._temp_get_token()
         )
 
-    def temp_get_token(self) -> str:
+    def _temp_get_token(self) -> str:
         path = "auth/realms/mostly-generate/protocol/openid-connect/token"
         data = {
             "username": "superadmin@mostly.ai",
@@ -80,8 +80,13 @@ class MostlyBaseClient:
         response = req_func(full_url, **kwargs)  # type: ignore
         response.raise_for_status()
 
+        response_json = response.json()
         if response.content:
-            return response_type(**response.json())
+            return (
+                response_type(**response_json)
+                if isinstance(response_json, dict)
+                else response_json
+            )
         else:
             return None
 
@@ -93,20 +98,38 @@ class MostlyBaseClient:
 class MostlyConnectorClient(MostlyBaseClient):
     SECTION = ["api", "v2", "connectors"]
 
-    def list(self, page: int = 1, size: int = 50) -> dict:
-        # TODO check whether pagination work, and implement it once clarified
-        params = {"page": page, "size": size}
-        response = self.request(path=[], params=params)
-        for connector in response["results"]:
-            yield connector
+    def list(self, offset: int = 0, limit: int = 50, access_type: str = None) -> dict:
+        while True:
+            params = {"offset": offset, "limit": limit}
+            if access_type:
+                params["accessType"] = access_type
+
+            response = self.request(path=[], params=params)
+
+            # Safely handling the case when 'results' or 'totalCount' is not in response
+            results = response.get("results", [])
+            total_count = response.get("totalCount", 0)
+
+            for connector in results:
+                yield connector
+
+            offset += limit
+
+            # Correcting the condition to break the loop
+            if offset >= total_count:
+                break
 
     def get(self, connector_id: str) -> dict:
         response = self.request(path=[connector_id])
         return response
 
     def create(self, new_connector: dict):
-        # TODO verify if it works
-        response = self.request(verb=POST, path=[], data=new_connector)
+        response = self.request(verb=POST, path=[], json=new_connector)
+        return response
+
+    def update(self, updated_connector: dict):
+        connector_id = updated_connector["id"]
+        response = self.request(verb=PATCH, path=[connector_id], json=updated_connector)
         return response
 
     def delete(self, connector_id: str):
