@@ -8,17 +8,17 @@ POST = "post"
 PATCH = "patch"
 DELETE = "delete"
 HttpVerb = Literal[GET, POST, PATCH, DELETE]  # type: ignore
-VERB_HTTPX_FUNC_MAP = {
+_VERB_HTTPX_FUNC_MAP = {
     GET: httpx.get,
     POST: httpx.post,
     PATCH: httpx.patch,
     DELETE: httpx.delete,
 }
 
-EXAMPLE_BASE_URL = "https://llb2.dev.mostlylab.com"
+_EXAMPLE_BASE_URL = "https://llb2.dev.mostlylab.com"
 
 
-class MostlyBaseClient:
+class _MostlyBaseClient:
     ENV_VAR_PREFIX = "MOSTLY"
     SECTION = []
 
@@ -30,7 +30,7 @@ class MostlyBaseClient:
 
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         self.base_url = (
-            base_url or self.load_from_env_var("BASE_URL") or EXAMPLE_BASE_URL
+            base_url or self.load_from_env_var("BASE_URL") or _EXAMPLE_BASE_URL
         )
         self.api_key = (
             api_key or self.load_from_env_var("API_KEY") or self._temp_get_token()
@@ -66,7 +66,7 @@ class MostlyBaseClient:
         response_type: type = dict,
         **kwargs,
     ) -> Any:
-        req_func = VERB_HTTPX_FUNC_MAP.get(verb)
+        req_func = _VERB_HTTPX_FUNC_MAP.get(verb)
         if not req_func:
             raise
 
@@ -95,10 +95,21 @@ class MostlyBaseClient:
         return self.request(verb=POST, headers=headers, **kwargs)
 
 
-class MostlyConnectorClient(MostlyBaseClient):
+class _MostlyConnectorClient(_MostlyBaseClient):
     SECTION = ["api", "v2", "connectors"]
 
     def list(self, offset: int = 0, limit: int = 50, access_type: str = None) -> dict:
+        """
+        List connectors with pagination and optional access type filtering.
+
+        :param offset: The starting point for listing connectors.
+        :param limit: The maximum number of connectors to return per request.
+        :param access_type: Filter connectors by access type, defaults to None.
+        :return: Yields individual connectors.
+
+        The method uses a while loop to handle pagination and continues to request
+        and yield connectors until all available connectors have been listed.
+        """
         while True:
             params = {"offset": offset, "limit": limit}
             if access_type:
@@ -120,29 +131,71 @@ class MostlyConnectorClient(MostlyBaseClient):
                 break
 
     def get(self, connector_id: str) -> dict:
+        """
+        Retrieve a specific connector by its ID.
+
+        :param connector_id: The unique identifier of the connector.
+        :return: The retrieved connector.
+        """
         response = self.request(path=[connector_id])
         return response
 
-    def create(self, new_connector: dict):
+    def create(self, new_connector: dict) -> dict:
+        """
+        Create a new connector.
+
+        :param new_connector: The connector data to be created.
+        :return: The created connector.
+        """
         response = self.request(verb=POST, path=[], json=new_connector)
         return response
 
-    def update(self, updated_connector: dict):
+    def update(self, updated_connector: dict) -> dict:
+        """
+        Update an existing connector.
+
+        :param updated_connector: The updated connector data, must include its ID.
+        :return: The updated connector.
+        """
         connector_id = updated_connector["id"]
         response = self.request(verb=PATCH, path=[connector_id], json=updated_connector)
         return response
 
-    def delete(self, connector_id: str):
-        pass
+    def delete(self, connector_id: str) -> dict:
+        """
+        Delete a connector by its ID.
 
-    def locations(self, connector_id: str, prefix: str = ""):
+        :param connector_id: The unique identifier of the connector to be deleted.
+        :return: Empty, if successfully deleted the connector.
+        """
+        response = self.request(verb=DELETE, path=[connector_id])
+        return response
+
+    def locations(self, connector_id: str, prefix: str = "") -> list:
+        """
+        Retrieve the locations associated with a specific connector and prefix.
+
+        :param connector_id: The unique identifier of the connector.
+        :param prefix: A prefix to filter the locations, defaults to "".
+        :return: A list of locations (schemas, databases, directories, etc.) on the given level.
+        """
         params = {"prefix": prefix}
         response = self.request(path=[connector_id, "locations"], params=params)
         return response
 
 
-class MostlyClient(MostlyBaseClient):
+class MostlyClient(_MostlyBaseClient):
+    """
+    Client for interacting with the Mostly AI Public API.
+
+    This client serves as the main entry point for accessing various functionalities
+    provided. It initializes and holds various specialized clients for
+    different sections of the API.
+
+    :param base_url: The base URL. If not provided, a default value is used.
+    :param api_key: The API key for authenticating. If not provided, it would rely on env vars.
+    """
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         super().__init__(base_url=base_url, api_key=api_key)
         client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
-        self.connector = MostlyConnectorClient(**client_kwargs)
+        self.connector = _MostlyConnectorClient(**client_kwargs)

@@ -1,5 +1,3 @@
-import uuid
-
 import pytest
 
 from mostly_python_client.api import MostlyClient
@@ -18,7 +16,7 @@ def connector_id():
 @pytest.fixture
 def new_connector():
     return {
-        "name": f"Test New Connector {str(uuid.uuid4())[:8]}",
+        "name": "Test New Connector",
         "type": "S3_STORAGE",
         "accessType": "SOURCE",
         "config": {
@@ -41,7 +39,7 @@ class TestMostlyClient:
             connector_props = ["id", "name", "type", "accessType", "metadata"]
             assert all(prop in connector for prop in connector_props)
 
-    def test_connector_create_and_update(self, mostly_client, new_connector):
+    def test_connector_create_update_delete(self, mostly_client, new_connector):
         fetched_connector = mostly_client.connector.create(new_connector)
         assert isinstance(fetched_connector, dict)
         assert "id" in fetched_connector
@@ -50,6 +48,8 @@ class TestMostlyClient:
         updated_connector["testConnection"] = False
         response = mostly_client.connector.update(updated_connector)
         assert "Updated" in response["name"]
+        response = mostly_client.connector.delete(updated_connector["id"])
+        assert response == {}
 
     def test_connector_get(self, mostly_client, connector_id):
         result = mostly_client.connector.get(connector_id)
