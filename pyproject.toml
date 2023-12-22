@@ -6,7 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "mostly-python"
 version = "0.0.1"
 description = "The official Python library for the mostlyai API"
-authors = ["MOSTLY AI <office@mostly.ai>"]
+authors = [
+    {name = "MostlyAI", email = "office@mostly.ai"}
+]
 license = {file="LICENSE"}
 readme = "README.md"
 requires-python = ">=3.6"
@@ -15,4 +17,4 @@ requires-python = ">=3.6"
 Home = "https://github.com/mostly-ai/mostly-python"
 
 [tool.setuptools]
-packages = ["mostly-python"]
+packages = ["mostlyai"]
