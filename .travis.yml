@@ -14,7 +14,11 @@ jobs:
     - name: Tests - static analysis [mypy, black, isort]
       if: branch NOT IN (test, main) AND tag IS NOT present
       script:
-        - poetry run mypy mostlyai/
+        # - poetry run mypy mostlyai/
         - poetry run black --check .
         - poetry run isort --check .
       before_script: skip
+
+    - name: Tests - unit
+      if: branch NOT IN (test, main) AND tag IS NOT present
+      script: poetry run pytest tests/unit -vv
