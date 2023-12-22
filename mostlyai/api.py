@@ -121,7 +121,7 @@ class MostlyAI(_MostlyBaseClient):
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         super().__init__(base_url=base_url, api_key=api_key)
         client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
-        self.connector = _MostlyConnectorClient(**client_kwargs)
+        self.connectors = _MostlyConnectorClient(**client_kwargs)
 
 
 # NOTE: the part below part is very hacky! Just for a quick POC
