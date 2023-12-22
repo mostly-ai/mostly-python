@@ -1,0 +1,20 @@
+dist: focal
+language: python
+env:
+  global:
+   - POETRY_VERSION="1.6.0"
+python:
+ - "3.9.16"
+install:
+  - pip install poetry==$POETRY_VERSION
+  - poetry config virtualenvs.create false
+  - poetry install -v --no-interaction --no-ansi --no-root  # Install dependencies
+jobs:
+  include:
+    - name: Tests - static analysis [mypy, black, isort]
+      if: branch NOT IN (test, main) AND tag IS NOT present
+      script:
+        - poetry run mypy mostlyai/
+        - poetry run black --check .
+        - poetry run isort --check .
+      before_script: skip
