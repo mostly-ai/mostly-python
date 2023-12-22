@@ -10,7 +10,7 @@ from uuid import UUID
 
 from pydantic import Field, RootModel
 
-from mostly_python_client.base import CustomBaseModel
+from mostlyai.base import CustomBaseModel
 
 
 class BaseResource(CustomBaseModel):
