@@ -3,8 +3,8 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mostly-python"
-version = "0.0.1"
+name = "mostlyai"
+version = "0.0.2"
 description = "The official Python library for the mostlyai API"
 authors = [
     {name = "MostlyAI", email = "office@mostly.ai"}
