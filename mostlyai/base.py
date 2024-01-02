@@ -86,8 +86,7 @@ class _MostlyBaseClient:
         except httpx.HTTPStatusError as exc:
             # Handle HTTP errors (not in 2XX range)
             raise APIStatusError(
-                f"HTTP error occurred: {exc.response.status_code} {exc.response.reason_phrase}",
-                exc.response.status_code,
+                f"HTTP error occurred: {exc.response.status_code} {exc.response.content}",
             ) from exc
         except httpx.RequestError as exc:
             # Handle request errors (e.g., network issues)
