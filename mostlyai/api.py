@@ -2,7 +2,7 @@ from typing import Any, Iterator, Optional, Union
 from uuid import UUID
 
 from mostlyai.base import DELETE, PATCH, POST, _MostlyBaseClient
-from mostlyai.model import Connector
+from mostlyai.model import Connector, Generator
 
 
 class _MostlyConnectorClient(_MostlyBaseClient):
@@ -106,6 +106,33 @@ class _MostlyConnectorClient(_MostlyBaseClient):
         return response
 
 
+class _MostlyGeneratorsClient(_MostlyBaseClient):
+    SECTION = ["api", "v2", "generators"]
+
+    def list(
+        self, offset: int = 0, limit: int = 50, access_type: str = None
+    ) -> Iterator[Generator]:
+        while True:
+            params = {"offset": offset, "limit": limit}
+            if access_type:
+                params["accessType"] = access_type
+
+            response = self.request(path=[], params=params)
+
+            # Safely handling the case when 'results' or 'totalCount' is not in response
+            results = response.get("results", [])
+            total_count = response.get("totalCount", 0)
+
+            for generator in results:
+                yield Generator(**generator, client=self, by_alias=True)
+
+            offset += limit
+
+            # Correcting the condition to break the loop
+            if offset >= total_count:
+                break
+
+
 class MostlyAI(_MostlyBaseClient):
     """
     Client for interacting with the Mostly AI Public API.
@@ -122,6 +149,7 @@ class MostlyAI(_MostlyBaseClient):
         super().__init__(base_url=base_url, api_key=api_key)
         client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
         self.connectors = _MostlyConnectorClient(**client_kwargs)
+        self.generators = _MostlyGeneratorsClient(**client_kwargs)
 
 
 # NOTE: the part below part is very hacky! Just for a quick POC
