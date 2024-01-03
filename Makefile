@@ -4,7 +4,7 @@ PUBLIC_OPENAPI_FILE ?= /path/to/metadata/openapi.yaml
 
 # Internal Variables
 PUBLIC_OPENAPI_YAML_URL = https://raw.githubusercontent.com/mostly-ai/mostly-app-v2/llb2/mstar/public-api/public-api.yaml?token=
-PUBLIC_API_OUTPUT_PATH = mostly_python_client/model.py
+PUBLIC_API_OUTPUT_PATH = mostlyai/model.py
 PUBLIC_API_FULL_URL = $(PUBLIC_OPENAPI_YAML_URL)$(GH_TOKEN)
 
 # Targets
@@ -31,4 +31,5 @@ COMMON_OPTIONS = \
 	--use-one-literal-as-default \
 	--enum-field-as-literal one \
 	--output-model-type pydantic_v2.BaseModel \
-	--base-class mostly_python_client.base.CustomBaseModel
+	--base-class mostlyai.base.CustomBaseModel \
+	--custom-template-dir custom_template

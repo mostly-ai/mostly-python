@@ -1,12 +1,12 @@
 from typing import Any, Iterator, Optional, Union
 from uuid import UUID
 
-from mostlyai.base import DELETE, PATCH, POST, _MostlyBaseClient
+from mostlyai.base import DELETE, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import Connector, Generator
 
 
 class _MostlyConnectorClient(_MostlyBaseClient):
-    SECTION = ["api", "v2", "connectors"]
+    SECTION = ["connectors"]
 
     def list(
         self, offset: int = 0, limit: int = 50, access_type: str = None
@@ -22,25 +22,11 @@ class _MostlyConnectorClient(_MostlyBaseClient):
         The method uses a while loop to handle pagination and continues to request
         and yield connectors until all available connectors have been listed.
         """
-        while True:
-            params = {"offset": offset, "limit": limit}
-            if access_type:
-                params["accessType"] = access_type
-
-            response = self.request(path=[], params=params)
-
-            # Safely handling the case when 'results' or 'totalCount' is not in response
-            results = response.get("results", [])
-            total_count = response.get("totalCount", 0)
-
-            for connector in results:
-                yield Connector(**connector, client=self, by_alias=True)
-
-            offset += limit
-
-            # Correcting the condition to break the loop
-            if offset >= total_count:
-                break
+        with Paginator(
+            self, Connector, offset=offset, limit=limit, access_type=access_type
+        ) as paginator:
+            for item in paginator:
+                yield item
 
     def get(self, connector_id: Union[str, UUID]) -> Connector:
         """
@@ -107,30 +93,16 @@ class _MostlyConnectorClient(_MostlyBaseClient):
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient):
-    SECTION = ["api", "v2", "generators"]
+    SECTION = ["generators"]
 
     def list(
-        self, offset: int = 0, limit: int = 50, access_type: str = None
+        self, offset: int = 0, limit: int = 50
     ) -> Iterator[Generator]:
-        while True:
-            params = {"offset": offset, "limit": limit}
-            if access_type:
-                params["accessType"] = access_type
-
-            response = self.request(path=[], params=params)
-
-            # Safely handling the case when 'results' or 'totalCount' is not in response
-            results = response.get("results", [])
-            total_count = response.get("totalCount", 0)
-
-            for generator in results:
-                yield Generator(**generator, client=self, by_alias=True)
-
-            offset += limit
-
-            # Correcting the condition to break the loop
-            if offset >= total_count:
-                break
+        with Paginator(
+                self, Generator, offset=offset, limit=limit
+        ) as paginator:
+            for item in paginator:
+                yield item
 
 
 class MostlyAI(_MostlyBaseClient):
