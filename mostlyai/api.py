@@ -2,7 +2,7 @@ from typing import Any, Iterator, Optional, Union
 from uuid import UUID
 
 from mostlyai.base import DELETE, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Connector, Generator
+from mostlyai.model import Connector, Generator, SourceTable
 
 
 class _MostlyConnectorClient(_MostlyBaseClient):
@@ -103,6 +103,20 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         ) as paginator:
             for item in paginator:
                 yield item
+
+    def create(self, **params):
+        new_generator = dict(params)
+        response = self.request(
+            verb=POST, path=[], json=new_generator, response_type=Generator
+        )
+        return response
+
+    def add_table(self, generator_id: str, **params):
+        new_table = dict(params)
+        response = self.request(
+            verb=POST, path=[generator_id, "tables"], json=new_table, response_type=SourceTable
+        )
+        return response
 
 
 class MostlyAI(_MostlyBaseClient):
