@@ -65,7 +65,7 @@ def append_or_replace_in_jinja_template(template_filename, classes_content):
 
 
 # Example Usage
-source_filename = "model.py"
-template_filename = "../custom_template/pydantic_v2/BaseModel.jinja2"
+source_filename = "tools/model.py"
+template_filename = "custom_template/pydantic_v2/BaseModel.jinja2"
 classes_content = extract_class_contents(source_filename)
 append_or_replace_in_jinja_template(template_filename, classes_content)

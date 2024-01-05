@@ -14,6 +14,8 @@ help: ## show definition of each function
 
 .PHONY: gen-public-model
 gen-public-model: ## build pydantic models for public api
+	@echo "Updating custom Jinja2 templates"
+	python tools/extend_model.py
 	@echo "Generating Pydantic models from $(PUBLIC_API_FULL_URL)"
 	datamodel-codegen --url $(PUBLIC_API_FULL_URL) $(COMMON_OPTIONS)
 	black $(PUBLIC_API_OUTPUT_PATH) && isort $(PUBLIC_API_OUTPUT_PATH)
