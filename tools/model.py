@@ -11,4 +11,14 @@ class Connector:
 class Generator:
     def add_table(self, **kwargs) -> "Table":
         if self.client and hasattr(self.client, "add_table"):
-            return self.client.add_table(gnerator_id=self.id, **kwargs)
+            return self.client.add_table(generator_id=self.id, **kwargs)
+
+    def add_table_by_upload(self, **kwargs):
+        if self.client and hasattr(self.client, "add_table_by_upload"):
+            return self.client.add_table_by_upload(generator_id=self.id, **kwargs)
+
+    def add_table_from_df_by_upload(self, **kwargs):
+        if self.client and hasattr(self.client, "add_table_from_df_by_upload"):
+            return self.client.add_table_from_df_by_upload(
+                generator_id=self.id, **kwargs
+            )

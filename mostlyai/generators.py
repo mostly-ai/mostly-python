@@ -1,3 +1,4 @@
+import tempfile
 from typing import Any, Iterator, Union
 from uuid import UUID
 
@@ -48,3 +49,28 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             response_type=SourceTable,
         )
         return response
+
+    def add_table_by_upload(self, generator_id: str, **params):
+        # TODO this is still WIP
+        file_content = params.pop("file")
+        files = {"file": file_content}
+        new_table = dict(params)
+        response = self.request(
+            verb=POST,
+            path=[generator_id, "tables", "upload"],
+            files=files,
+            json=new_table,
+            response_type=SourceTable,
+        )
+        return response
+
+    def add_table_from_df_by_upload(self, generator_id: str, **params):
+        df = params.pop("df")
+        with tempfile.NamedTemporaryFile(mode="w+t") as temp_file:
+            df.to_parquet(temp_file.name)
+            temp_file_name = temp_file.name
+            with open(temp_file_name, "rb") as file:
+                temp_file_content = file.read()
+                params["file"] = (temp_file_name, temp_file_content)
+
+        return self.add_table_by_upload(generator_id=generator_id, **params)
