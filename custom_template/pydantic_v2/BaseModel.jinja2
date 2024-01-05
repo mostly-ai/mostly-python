@@ -47,6 +47,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
 
 
 
+
 {%- if class_name == "Generator" %}
     def add_table(self, **kwargs) -> "Table":
         if self.client and hasattr(self.client, "add_table"):
@@ -62,6 +63,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
                 generator_id=self.id, **kwargs
             )
 {%- endif %}
+
 
 
 
