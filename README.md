@@ -12,7 +12,7 @@ Clone the repo:
 
 ```bash
 git clone https://github.com/mostly-ai/python-client/
-cd mostly-qa
+cd python-client
 ```
 
 ## Poetry
