@@ -46,7 +46,7 @@ def append_or_replace_in_jinja_template(template_filename, classes_content):
             + class_name
             + '" %}\n'
             + content
-            + "\n{%- endif %}\n"
+            + "\n{%- endif %}"
         )
 
         # Check if class block exists
