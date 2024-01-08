@@ -40,7 +40,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
     def delete(self, generator_id: Union[str, UUID]) -> None:
         self.request(verb=DELETE, path=[generator_id])
 
-    # TABLES
+    # SOURCE TABLES
 
     def add_table(self, generator_id: str, **params):
         new_table = dict(params)
@@ -49,6 +49,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             path=[generator_id, "tables"],
             json=new_table,
             response_type=SourceTable,
+            extra_key_values={"generator_id": generator_id},
         )
         return response
 
@@ -63,6 +64,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             files=files,
             json=new_table,
             response_type=SourceTable,
+            extra_key_values={"generator_id": generator_id},
         )
         return response
 
@@ -82,6 +84,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             verb=GET,
             path=[generator_id, "tables", table_id],
             response_type=SourceTable,
+            extra_key_values={"generator_id": generator_id},
         )
         return response
 
@@ -92,6 +95,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             path=[generator_id, "tables"],
             json=updated_table,
             response_type=SourceTable,
+            extra_key_values={"generator_id": generator_id},
         )
         return response
 
@@ -102,3 +106,19 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             response_type=SourceTable,
         )
         return response
+
+    def model_qa_report(
+        self, generator_id: Union[str, UUID], table_id: Union[str, UUID]
+    ):
+        response = self.request(
+            verb=GET,
+            path=[generator_id, "tables", table_id, "qa"],
+            response_type=SourceTable,
+        )
+        return response
+
+    # SOURCE COLUMNS
+
+    # SOURCE FOREIGN KEYS
+
+    # GENERATOR TRAINING

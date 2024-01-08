@@ -84,6 +84,7 @@ class _MostlyBaseClient:
         response_type: type = dict,
         is_api_call: bool = True,
         do_include_client: bool = True,
+        extra_key_values: Optional[dict] = None,
         **kwargs,
     ) -> Any:
         req_func = _VERB_HTTPX_FUNC_MAP.get(verb)
@@ -116,6 +117,8 @@ class _MostlyBaseClient:
         if response.content:
             if do_include_client and isinstance(response_json, dict):
                 response_json["client"] = self
+            if isinstance(extra_key_values, dict) and isinstance(response_json, dict):
+                response_json["extra_key_values"] = extra_key_values
             return (
                 response_type(**response_json)
                 if isinstance(response_json, dict)

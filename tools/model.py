@@ -30,3 +30,19 @@ class Generator:
     def delete_table(self, **kwargs) -> "Table":
         if self.client and hasattr(self.client, "delete_table"):
             return self.client.delete_table(generator_id=self.id, **kwargs)
+
+
+class SourceTable:
+    def model_qa_report(self) -> "ModelQAReport":
+        if self.client and hasattr(self.client, "model_qa_report"):
+            return self.client.model_qa_report(
+                generator_id=self.extra_key_values["generator_id"], table_id=self.id
+            )
+
+    def model_samples(self, **kwargs):
+        if self.client and hasattr(self.client, "model_samples"):
+            return self.client.model_qa_report(
+                generator_id=self.extra_key_values["generator_id"],
+                table_id=self.id,
+                **kwargs
+            )

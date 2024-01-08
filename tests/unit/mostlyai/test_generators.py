@@ -25,9 +25,23 @@ class TestGenerators:
         assert str(generator.id) == generator_id
 
         updated_params = {"name": "Updated Test Generator"}
+        # TODO ensure that this works
         updated_generator = mostly_client.generators.update(
             generator_id, **updated_params
         )
         assert updated_generator.name == "Updated Test Generator"
 
         mostly_client.generators.delete(generator_id)
+
+    def test_add_get_update_delete_table(
+        self, mostly_client, new_generator_params, local_connector
+    ):
+        generator = mostly_client.generators.create(**new_generator_params)
+
+        # TODO ensure that this works
+        new_table = generator.add_table(
+            sourceConnectorId=str(local_connector.id), location=""
+        )
+        table = generator.get_table(new_table.id)
+        generator.update_table(table.id)
+        generator.delete_table(table.id)
