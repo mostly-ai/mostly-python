@@ -2,7 +2,7 @@ import tempfile
 from typing import Any, Iterator, Union
 from uuid import UUID
 
-from mostlyai.base import DELETE, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import Connector, Generator, SourceTable
 
 
@@ -40,6 +40,8 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
     def delete(self, generator_id: Union[str, UUID]) -> None:
         self.request(verb=DELETE, path=[generator_id])
 
+    # TABLES
+
     def add_table(self, generator_id: str, **params):
         new_table = dict(params)
         response = self.request(
@@ -74,3 +76,29 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
                 params["file"] = (temp_file_name, temp_file_content)
 
         return self.add_table_by_upload(generator_id=generator_id, **params)
+
+    def get_table(self, generator_id: str, table_id: Union[str, UUID]):
+        response = self.request(
+            verb=GET,
+            path=[generator_id, "tables", table_id],
+            response_type=SourceTable,
+        )
+        return response
+
+    def update_table(self, generator_id: str, **params):
+        updated_table = dict(params)
+        response = self.request(
+            verb=PATCH,
+            path=[generator_id, "tables"],
+            json=updated_table,
+            response_type=SourceTable,
+        )
+        return response
+
+    def delete_table(self, generator_id: str, table_id: Union[str, UUID]):
+        response = self.request(
+            verb=DELETE,
+            path=[generator_id, "tables", table_id],
+            response_type=SourceTable,
+        )
+        return response

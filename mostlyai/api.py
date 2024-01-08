@@ -23,12 +23,3 @@ class MostlyAI(_MostlyBaseClient):
         client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
         self.connectors = _MostlyConnectorsClient(**client_kwargs)
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
-
-
-# NOTE: the part below part is very hacky! Just for a quick POC
-def connector_locations(self, prefix: str = ""):
-    if isinstance(self.client, _MostlyConnectorsClient):
-        return self.client.locations(connector_id=self.id, prefix=prefix)
-
-
-Connector.locations = connector_locations
