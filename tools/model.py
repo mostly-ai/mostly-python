@@ -31,6 +31,23 @@ class Generator:
         if self.client and hasattr(self.client, "delete_table"):
             return self.client.delete_table(generator_id=self.id, **kwargs)
 
+    # TRAINING
+
+    def get_training_progress(self):
+        pass
+
+    def start_training(self):
+        pass
+
+    def stop_training(self):
+        pass
+
+    def cancel_training(self):
+        pass
+
+    def get_training_logs(self):
+        pass
+
 
 class SourceTable:
     def model_qa_report(self) -> "ModelQAReport":
@@ -42,6 +59,34 @@ class SourceTable:
     def model_samples(self, **kwargs):
         if self.client and hasattr(self.client, "model_samples"):
             return self.client.model_qa_report(
+                generator_id=self.extra_key_values["generator_id"],
+                table_id=self.id,
+                **kwargs
+            )
+
+    def get_column(self, **kwargs):
+        # TODO clarify
+        pass
+
+    def create_foreign_key(self, **kwargs):
+        if self.client and hasattr(self.client, "create_foreign_key"):
+            return self.client.create_foreign_key(
+                generator_id=self.extra_key_values["generator_id"],
+                table_id=self.id,
+                **kwargs
+            )
+
+    def update_foreign_key(self, **kwargs):
+        if self.client and hasattr(self.client, "update_foreign_key"):
+            return self.client.update_foreign_key(
+                generator_id=self.extra_key_values["generator_id"],
+                table_id=self.id,
+                **kwargs
+            )
+
+    def delete_foreign_key(self, **kwargs):
+        if self.client and hasattr(self.client, "delete_foreign_key"):
+            return self.client.delete_foreign_key(
                 generator_id=self.extra_key_values["generator_id"],
                 table_id=self.id,
                 **kwargs
