@@ -1,7 +1,8 @@
+import pandas as pd
 import pytest
 
 from mostlyai.exceptions import APIStatusError
-from mostlyai.model import Generator, SourceTable
+from mostlyai.model import Generator
 
 
 @pytest.fixture
@@ -25,7 +26,6 @@ class TestGenerators:
         assert str(generator.id) == generator_id
 
         updated_params = {"name": "Updated Test Generator"}
-        # TODO ensure that this works
         updated_generator = mostly_client.generators.update(
             generator_id, **updated_params
         )
@@ -37,11 +37,16 @@ class TestGenerators:
         self, mostly_client, new_generator_params, local_connector
     ):
         generator = mostly_client.generators.create(**new_generator_params)
+        df = pd.DataFrame({"id": [1, 2], "num": [3, 4]})
+        new_table = generator.add_table_from_df_by_upload(df=df, name="simple")
+        assert [c.name for c in new_table.columns] == ["id", "num"]
+        table = generator.get_table(table_id=new_table.id)
+        assert table.name == "simple"
+        updated_table = generator.update_table(table_id=str(table.id), name="new")
+        assert updated_table.name == "new"
+        generator.delete_table(table_id=str(table.id))
 
-        # TODO ensure that this works
-        new_table = generator.add_table(
-            sourceConnectorId=str(local_connector.id), location=""
-        )
-        table = generator.get_table(new_table.id)
-        generator.update_table(table.id)
-        generator.delete_table(table.id)
+        with pytest.raises(APIStatusError) as err:
+            generator.get_table(table_id=new_table.id)
+
+        assert "not found" in err.value.message

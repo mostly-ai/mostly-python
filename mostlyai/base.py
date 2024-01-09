@@ -1,17 +1,5 @@
 import os
-from contextlib import contextmanager
-from typing import (
-    Annotated,
-    Any,
-    Callable,
-    Generic,
-    Iterator,
-    List,
-    Literal,
-    Optional,
-    TypeVar,
-    Union,
-)
+from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Union
 
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
@@ -190,4 +178,5 @@ class Paginator(Generic[T]):
 
 class CustomBaseModel(BaseModel):
     client: Annotated[Optional[Any], Field(exclude=True)] = None
+    extra_key_values: Annotated[Optional[dict], Field(exclude=True)] = None
     model_config = ConfigDict(protected_namespaces=())

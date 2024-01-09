@@ -1,4 +1,5 @@
 import tempfile
+from pathlib import Path
 from typing import Any, Iterator, Union
 from uuid import UUID
 
@@ -53,31 +54,35 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def add_table_by_upload(self, generator_id: str, **params):
-        # TODO this is still WIP
-        file_content = params.pop("file")
-        files = {"file": file_content}
+    def add_table_by_upload(self, generator_id: str, file: str, **params):
+        # TODO improve the code below
+        file_path = file
+        file_name = Path(file_path).name
         new_table = dict(params)
-        response = self.request(
-            verb=POST,
-            path=[generator_id, "tables", "upload"],
-            files=files,
-            json=new_table,
-            response_type=SourceTable,
-            extra_key_values={"generator_id": generator_id},
-        )
-        return response
+        with open(file_path, "rb") as file:
+            # construct the multipart form data
+            files = {
+                "file": (file_name, file),
+            }
+            response = self.request(
+                verb=POST,
+                path=[generator_id, "tables", "upload"],
+                files=files,
+                data=new_table,
+                response_type=SourceTable,
+                extra_key_values={"generator_id": generator_id},
+            )
+            return response
 
     def add_table_from_df_by_upload(self, generator_id: str, **params):
         df = params.pop("df")
-        with tempfile.NamedTemporaryFile(mode="w+t") as temp_file:
-            df.to_parquet(temp_file.name)
+        # without a suffix, we'll get 500
+        with tempfile.NamedTemporaryFile(mode="w+t", suffix=".csv") as temp_file:
+            df.to_csv(temp_file.name)  # CSV to ease debugging
             temp_file_name = temp_file.name
-            with open(temp_file_name, "rb") as file:
-                temp_file_content = file.read()
-                params["file"] = (temp_file_name, temp_file_content)
-
-        return self.add_table_by_upload(generator_id=generator_id, **params)
+            return self.add_table_by_upload(
+                generator_id=generator_id, file=temp_file_name, **params
+            )
 
     def get_table(self, generator_id: str, table_id: Union[str, UUID]):
         response = self.request(
@@ -88,11 +93,11 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def update_table(self, generator_id: str, **params):
+    def update_table(self, generator_id: str, table_id: str, **params):
         updated_table = dict(params)
         response = self.request(
             verb=PATCH,
-            path=[generator_id, "tables"],
+            path=[generator_id, "tables", table_id],
             json=updated_table,
             response_type=SourceTable,
             extra_key_values={"generator_id": generator_id},
@@ -103,22 +108,37 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         response = self.request(
             verb=DELETE,
             path=[generator_id, "tables", table_id],
-            response_type=SourceTable,
         )
         return response
 
     def model_qa_report(
         self, generator_id: Union[str, UUID], table_id: Union[str, UUID]
     ):
+        pass
+
+    # SOURCE COLUMNS
+
+    def get_column(
+        self, generator_id: Union[str, UUID], table_id: Union[str, UUID], column_id: str
+    ):
         response = self.request(
             verb=GET,
-            path=[generator_id, "tables", table_id, "qa"],
+            path=[generator_id, "tables", table_id, "columns", column_id],
             response_type=SourceTable,
         )
         return response
 
-    # SOURCE COLUMNS
-
     # SOURCE FOREIGN KEYS
+    def create_foreign_key(
+        self, generator_id: Union[str, UUID], table_id: Union[str, UUID], **params
+    ):
+        new_fk = dict(params)
+        response = self.request(
+            verb=POST,
+            path=[generator_id, "tables", table_id, "columns", "foreign-keys"],
+            json=new_fk,
+            response_type=SourceTable,
+        )
+        return response
 
     # GENERATOR TRAINING
