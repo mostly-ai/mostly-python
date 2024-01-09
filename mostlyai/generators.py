@@ -61,7 +61,9 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def add_table_by_upload(self, generator_id: StrUUID, file: str, **params) -> SourceTable:
+    def add_table_by_upload(
+        self, generator_id: StrUUID, file: str, **params
+    ) -> SourceTable:
         # TODO improve the code below
         file_path = file
         file_name = Path(file_path).name
@@ -81,7 +83,9 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             )
             return response
 
-    def add_table_from_df_by_upload(self, generator_id: StrUUID, df :pd.DataFrame, **params) -> SourceTable:
+    def add_table_from_df_by_upload(
+        self, generator_id: StrUUID, df: pd.DataFrame, **params
+    ) -> SourceTable:
         # without a suffix, we'll get 500
         with tempfile.NamedTemporaryFile(mode="w+t", suffix=".csv") as temp_file:
             df.to_csv(temp_file.name)  # CSV to ease debugging
