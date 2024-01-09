@@ -5,6 +5,9 @@ description = "Mostly Python Client"
 authors = ["MOSTLY AI <office@mostly.ai>"]
 license = "Proprietary"
 readme = "README.md"
+packages = [
+    { include = "mostlyai" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
