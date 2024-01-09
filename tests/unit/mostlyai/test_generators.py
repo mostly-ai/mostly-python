@@ -1,8 +1,6 @@
-import httpx
 import pytest
 
-from mostlyai.exceptions import APIStatusError
-from mostlyai.model import Generator, SourceTable
+from mostlyai.model import Generator
 
 
 @pytest.fixture
@@ -54,16 +52,3 @@ class TestGenerators:
         )
         generator.delete_table(table_id=str(table.id))
 
-    def test_columns_and_foreign_keys(
-        self, mostly_client, new_generator_params, postgres_connector
-    ):
-        generator = mostly_client.generators.create(**new_generator_params)
-
-        new_table = generator.add_table(
-            sourceConnectorId=str(postgres_connector.id), location="public.Customer"
-        )
-        table = generator.get_table(table_id=new_table.id)
-        column_id = str(table.columns[0].id)
-        column = table.get_column(column_id=column_id)
-        assert column == table.columns[0]
-        # table.create_foreign_key

@@ -93,11 +93,11 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def update_table(self, generator_id: str, **params):
+    def update_table(self, generator_id: str, table_id: str, **params):
         updated_table = dict(params)
         response = self.request(
             verb=PATCH,
-            path=[generator_id, "tables"],
+            path=[generator_id, "tables", table_id],
             json=updated_table,
             response_type=SourceTable,
             extra_key_values={"generator_id": generator_id},
@@ -115,12 +115,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
     def model_qa_report(
         self, generator_id: Union[str, UUID], table_id: Union[str, UUID]
     ):
-        response = self.request(
-            verb=GET,
-            path=[generator_id, "tables", table_id, "qa"],
-            response_type=SourceTable,
-        )
-        return response
+        pass
 
     # SOURCE COLUMNS
 
@@ -135,5 +130,17 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         return response
 
     # SOURCE FOREIGN KEYS
+    def create_foreign_key(
+        self, generator_id: Union[str, UUID], table_id: Union[str, UUID], **params
+    ):
+        new_fk = dict(params)
+        response = self.request(
+            verb=POST,
+            path=[generator_id, "tables", table_id, "columns", "foreign-keys"],
+            json=new_fk,
+            response_type=SourceTable,
+        )
+        return response
+
 
     # GENERATOR TRAINING

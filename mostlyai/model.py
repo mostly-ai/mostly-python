@@ -731,16 +731,16 @@ class Generator(CustomBaseModel):
     def add_table_from_df_by_upload(self, **kwargs) -> "Table":
         if self.client and hasattr(self.client, "add_table_from_df_by_upload"):
             return self.client.add_table_from_df_by_upload(
-                generator_id=self.id, **kwargs
+                generator_id=str(self.id), **kwargs
             )
 
     def get_table(self, **kwargs) -> "Table":
         if self.client and hasattr(self.client, "get_table"):
             return self.client.get_table(generator_id=self.id, **kwargs)
 
-    def update_table(self, **kwargs) -> "Table":
+    def update_table(self, table_id: str, **kwargs) -> "Table":
         if self.client and hasattr(self.client, "update_table"):
-            return self.client.update_table(generator_id=self.id, **kwargs)
+            return self.client.update_table(generator_id=self.id, table_id=table_id, **kwargs)
 
     def delete_table(self, **kwargs) -> "Table":
         if self.client and hasattr(self.client, "delete_table"):

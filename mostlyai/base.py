@@ -190,4 +190,5 @@ class Paginator(Generic[T]):
 
 class CustomBaseModel(BaseModel):
     client: Annotated[Optional[Any], Field(exclude=True)] = None
+    extra_key_values: Annotated[Optional[dict], Field(exclude=True)] = None
     model_config = ConfigDict(protected_namespaces=())
