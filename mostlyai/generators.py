@@ -2,6 +2,8 @@ import tempfile
 from pathlib import Path
 from typing import Any, Iterator
 
+import pandas as pd
+
 from mostlyai.base import (
     DELETE,
     GET,
@@ -48,7 +50,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
 
     # SOURCE TABLES
 
-    def add_table(self, generator_id: StrUUID, **params):
+    def add_table(self, generator_id: StrUUID, **params) -> SourceTable:
         new_table = dict(params)
         response = self.request(
             verb=POST,
@@ -59,7 +61,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def add_table_by_upload(self, generator_id: StrUUID, file: str, **params):
+    def add_table_by_upload(self, generator_id: StrUUID, file: str, **params) -> SourceTable:
         # TODO improve the code below
         file_path = file
         file_name = Path(file_path).name
@@ -79,8 +81,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             )
             return response
 
-    def add_table_from_df_by_upload(self, generator_id: StrUUID, **params):
-        df = params.pop("df")
+    def add_table_from_df_by_upload(self, generator_id: StrUUID, df :pd.DataFrame, **params) -> SourceTable:
         # without a suffix, we'll get 500
         with tempfile.NamedTemporaryFile(mode="w+t", suffix=".csv") as temp_file:
             df.to_csv(temp_file.name)  # CSV to ease debugging
@@ -89,7 +90,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
                 generator_id=generator_id, file=temp_file_name, **params
             )
 
-    def get_table(self, generator_id: str, table_id: StrUUID):
+    def get_table(self, generator_id: str, table_id: StrUUID) -> SourceTable:
         response = self.request(
             verb=GET,
             path=[generator_id, "tables", table_id],
@@ -98,7 +99,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def update_table(self, generator_id: str, table_id: str, **params):
+    def update_table(self, generator_id: str, table_id: str, **params) -> SourceTable:
         updated_table = dict(params)
         response = self.request(
             verb=PATCH,
@@ -109,12 +110,11 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def delete_table(self, generator_id: str, table_id: StrUUID):
-        response = self.request(
+    def delete_table(self, generator_id: str, table_id: StrUUID) -> None:
+        self.request(
             verb=DELETE,
             path=[generator_id, "tables", table_id],
         )
-        return response
 
     def model_qa_report(self, generator_id: StrUUID, table_id: StrUUID):
         pass
