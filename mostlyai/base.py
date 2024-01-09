@@ -1,14 +1,5 @@
 import os
-from typing import (
-    Annotated,
-    Any,
-    Generic,
-    List,
-    Literal,
-    Optional,
-    TypeVar,
-    Union,
-)
+from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Union
 
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
