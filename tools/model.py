@@ -31,7 +31,7 @@ class Generator:
         if self.client and hasattr(self.client, "delete_table"):
             return self.client.delete_table(generator_id=self.id, **kwargs)
 
-    # TRAINING
+    # TRAINING STUBS
 
     def get_training_progress(self):
         pass
@@ -64,9 +64,13 @@ class SourceTable:
                 **kwargs
             )
 
-    def get_column(self, **kwargs):
-        # TODO clarify
-        pass
+    def get_column(self, column_id: str):
+        if self.client and hasattr(self.client, "get_column"):
+            return self.client.get_column(
+                generator_id=self.extra_key_values["generator_id"],
+                table_id=self.id,
+                column_id=column_id,
+            )
 
     def create_foreign_key(self, **kwargs):
         if self.client and hasattr(self.client, "create_foreign_key"):

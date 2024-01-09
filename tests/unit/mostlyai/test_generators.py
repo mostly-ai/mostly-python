@@ -1,3 +1,4 @@
+import httpx
 import pytest
 
 from mostlyai.exceptions import APIStatusError
@@ -25,7 +26,6 @@ class TestGenerators:
         assert str(generator.id) == generator_id
 
         updated_params = {"name": "Updated Test Generator"}
-        # TODO ensure that this works
         updated_generator = mostly_client.generators.update(
             generator_id, **updated_params
         )
@@ -34,14 +34,36 @@ class TestGenerators:
         mostly_client.generators.delete(generator_id)
 
     def test_add_get_update_delete_table(
-        self, mostly_client, new_generator_params, local_connector
+        self, mostly_client, new_generator_params, local_connector, postgres_connector
     ):
         generator = mostly_client.generators.create(**new_generator_params)
 
-        # TODO ensure that this works
         new_table = generator.add_table(
-            sourceConnectorId=str(local_connector.id), location=""
+            sourceConnectorId=str(postgres_connector.id), location="public.Customer"
         )
-        table = generator.get_table(new_table.id)
-        generator.update_table(table.id)
-        generator.delete_table(table.id)
+        table = generator.get_table(table_id=new_table.id)
+        # TODO ensure update table works
+        modelConfiguration = {
+            "modelSize": "M",
+            "enableFlexibleGeneration": True,
+            "valueProtection": True,
+            "rareCategoryReplacementMethod": "CONSTANT",
+        }
+        generator.update_table(
+            table_id=str(table.id), modelConfiguration=modelConfiguration
+        )
+        generator.delete_table(table_id=str(table.id))
+
+    def test_columns_and_foreign_keys(
+        self, mostly_client, new_generator_params, postgres_connector
+    ):
+        generator = mostly_client.generators.create(**new_generator_params)
+
+        new_table = generator.add_table(
+            sourceConnectorId=str(postgres_connector.id), location="public.Customer"
+        )
+        table = generator.get_table(table_id=new_table.id)
+        column_id = str(table.columns[0].id)
+        column = table.get_column(column_id=column_id)
+        assert column == table.columns[0]
+        # table.create_foreign_key
