@@ -1,5 +1,6 @@
 import os
 from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Union
+from uuid import UUID
 
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
@@ -19,6 +20,7 @@ _VERB_HTTPX_FUNC_MAP = {
 }
 _EXAMPLE_BASE_URL = "https://llb2.dev.mostlylab.com"
 T = TypeVar("T")
+StrUUID = Union[str, UUID]
 
 
 class _MostlyBaseClient:
