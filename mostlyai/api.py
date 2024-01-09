@@ -3,7 +3,6 @@ from typing import Optional
 from mostlyai.base import _MostlyBaseClient
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
-from mostlyai.model import Connector
 
 
 class MostlyAI(_MostlyBaseClient):

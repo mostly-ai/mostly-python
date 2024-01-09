@@ -57,7 +57,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
     def add_table_by_upload(self, generator_id: str, file: str, **params):
         # TODO improve the code below
         file_path = file
-        file_name = params.pop("name") if "name" in params else Path(file_path).name
+        file_name = Path(file_path).name
         new_table = dict(params)
         with open(file_path, "rb") as file:
             # construct the multipart form data
@@ -68,7 +68,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
                 verb=POST,
                 path=[generator_id, "tables", "upload"],
                 files=files,
-                json=new_table,
+                data=new_table,
                 response_type=SourceTable,
                 extra_key_values={"generator_id": generator_id},
             )
@@ -108,7 +108,6 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         response = self.request(
             verb=DELETE,
             path=[generator_id, "tables", table_id],
-            response_type=SourceTable,
         )
         return response
 

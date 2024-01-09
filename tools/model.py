@@ -5,29 +5,29 @@ class Connector:
 
 
 class Generator:
-    def add_table(self, **kwargs) -> "Table":
+    def add_table(self, **kwargs) -> "SourceTable":
         if self.client and hasattr(self.client, "add_table"):
             return self.client.add_table(generator_id=self.id, **kwargs)
 
-    def add_table_by_upload(self, **kwargs) -> "Table":
+    def add_table_by_upload(self, **kwargs) -> "SourceTable":
         if self.client and hasattr(self.client, "add_table_by_upload"):
             return self.client.add_table_by_upload(generator_id=self.id, **kwargs)
 
-    def add_table_from_df_by_upload(self, **kwargs) -> "Table":
+    def add_table_from_df_by_upload(self, **kwargs) -> "SourceTable":
         if self.client and hasattr(self.client, "add_table_from_df_by_upload"):
             return self.client.add_table_from_df_by_upload(
                 generator_id=self.id, **kwargs
             )
 
-    def get_table(self, **kwargs) -> "Table":
+    def get_table(self, **kwargs) -> "SourceTable":
         if self.client and hasattr(self.client, "get_table"):
             return self.client.get_table(generator_id=self.id, **kwargs)
 
-    def update_table(self, **kwargs) -> "Table":
+    def update_table(self, **kwargs) -> "SourceTable":
         if self.client and hasattr(self.client, "update_table"):
             return self.client.update_table(generator_id=self.id, **kwargs)
 
-    def delete_table(self, **kwargs) -> "Table":
+    def delete_table(self, **kwargs) -> "SourceTable":
         if self.client and hasattr(self.client, "delete_table"):
             return self.client.delete_table(generator_id=self.id, **kwargs)
 
