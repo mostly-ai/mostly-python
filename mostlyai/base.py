@@ -1,5 +1,6 @@
 import os
 from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Union
+from uuid import UUID
 
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
@@ -19,9 +20,14 @@ _VERB_HTTPX_FUNC_MAP = {
 }
 _EXAMPLE_BASE_URL = "https://llb2.dev.mostlylab.com"
 T = TypeVar("T")
+StrUUID = Union[str, UUID]
 
 
 class _MostlyBaseClient:
+    """
+    Base client class, which contains all the essentials to be used by sub-classes.
+    """
+
     ENV_VAR_PREFIX = "MOSTLY"
     API_SECTION = ["api", "v2"]
     SECTION = []
@@ -75,6 +81,21 @@ class _MostlyBaseClient:
         extra_key_values: Optional[dict] = None,
         **kwargs,
     ) -> Any:
+        """
+        This method is rather an extended request helper method, which could be split into two:
+        1. Create a request with its params and execute it; Raise an exception in case of an unsuccessful result.
+        2. Pack the response into: a specific type (e.g. Pydantic class) with the optional inclusion of:
+            - client - so that the returned object can access the API
+            - extra_key_values - to store extra information, that is potentially used via that object
+        :param path: a single str, or a list of parts of the path to concatenate
+        :param verb: get/post/patch/delete
+        :param response_type: a specific type to return (e.g. Pydantic class)
+        :param is_api_call: True by default; if False, API_SECTION and SECTION won't be prefixed
+        :param do_include_client: True by default; if True, client property will be included in the returned instance
+        :param extra_key_values: Any extra information storage to include in the returned object
+        :param kwargs: httpx's request function's kwargs
+        :return: response in a designated type with optional extras
+        """
         req_func = _VERB_HTTPX_FUNC_MAP.get(verb)
         if not req_func:
             raise
@@ -103,6 +124,7 @@ class _MostlyBaseClient:
 
         response_json = response.json()
         if response.content:
+            # this section could be split into a separate method
             if do_include_client and isinstance(response_json, dict):
                 response_json["client"] = self
             if isinstance(extra_key_values, dict) and isinstance(response_json, dict):

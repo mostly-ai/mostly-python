@@ -1,10 +1,19 @@
 import tempfile
 from pathlib import Path
-from typing import Any, Iterator, Union
-from uuid import UUID
+from typing import Any, Iterator
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Connector, Generator, SourceTable
+import pandas as pd
+
+from mostlyai.base import (
+    DELETE,
+    GET,
+    PATCH,
+    POST,
+    Paginator,
+    StrUUID,
+    _MostlyBaseClient,
+)
+from mostlyai.model import Generator, SourceColumn, SourceForeignKey, SourceTable
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient):
@@ -15,20 +24,18 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             for item in paginator:
                 yield item
 
-    def create(self, **params):
+    def create(self, **params) -> Generator:
         new_generator = dict(params)
         response = self.request(
             verb=POST, path=[], json=new_generator, response_type=Generator
         )
         return response
 
-    def get(self, generator_id: Union[str, UUID]) -> Connector:
+    def get(self, generator_id: StrUUID) -> Generator:
         response = self.request(path=[generator_id], response_type=Generator)
         return response
 
-    def update(
-        self, generator_id: Union[str, UUID], **params: dict[str, Any]
-    ) -> Connector:
+    def update(self, generator_id: StrUUID, **params: dict[str, Any]) -> Generator:
         updated_generator = dict(params)
         response = self.request(
             verb=PATCH,
@@ -38,23 +45,25 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         )
         return response
 
-    def delete(self, generator_id: Union[str, UUID]) -> None:
+    def delete(self, generator_id: StrUUID) -> None:
         self.request(verb=DELETE, path=[generator_id])
 
     # SOURCE TABLES
 
-    def add_table(self, generator_id: str, **params):
+    def add_table(self, generator_id: StrUUID, **params) -> SourceTable:
         new_table = dict(params)
         response = self.request(
             verb=POST,
             path=[generator_id, "tables"],
             json=new_table,
             response_type=SourceTable,
-            extra_key_values={"generator_id": generator_id},
+            extra_key_values={"generator_id": str(generator_id)},
         )
         return response
 
-    def add_table_by_upload(self, generator_id: str, file: str, **params):
+    def add_table_by_upload(
+        self, generator_id: StrUUID, file: str, **params
+    ) -> SourceTable:
         # TODO improve the code below
         file_path = file
         file_name = Path(file_path).name
@@ -70,12 +79,13 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
                 files=files,
                 data=new_table,
                 response_type=SourceTable,
-                extra_key_values={"generator_id": generator_id},
+                extra_key_values={"generator_id": str(generator_id)},
             )
             return response
 
-    def add_table_from_df_by_upload(self, generator_id: str, **params):
-        df = params.pop("df")
+    def add_table_from_df_by_upload(
+        self, generator_id: StrUUID, df: pd.DataFrame, **params
+    ) -> SourceTable:
         # without a suffix, we'll get 500
         with tempfile.NamedTemporaryFile(mode="w+t", suffix=".csv") as temp_file:
             df.to_csv(temp_file.name)  # CSV to ease debugging
@@ -84,60 +94,57 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
                 generator_id=generator_id, file=temp_file_name, **params
             )
 
-    def get_table(self, generator_id: str, table_id: Union[str, UUID]):
+    def get_table(self, generator_id: str, table_id: StrUUID) -> SourceTable:
         response = self.request(
             verb=GET,
             path=[generator_id, "tables", table_id],
             response_type=SourceTable,
-            extra_key_values={"generator_id": generator_id},
+            extra_key_values={"generator_id": str(generator_id)},
         )
         return response
 
-    def update_table(self, generator_id: str, table_id: str, **params):
+    def update_table(self, generator_id: str, table_id: str, **params) -> SourceTable:
         updated_table = dict(params)
         response = self.request(
             verb=PATCH,
             path=[generator_id, "tables", table_id],
             json=updated_table,
             response_type=SourceTable,
-            extra_key_values={"generator_id": generator_id},
+            extra_key_values={"generator_id": str(generator_id)},
         )
         return response
 
-    def delete_table(self, generator_id: str, table_id: Union[str, UUID]):
-        response = self.request(
+    def delete_table(self, generator_id: str, table_id: StrUUID) -> None:
+        self.request(
             verb=DELETE,
             path=[generator_id, "tables", table_id],
         )
-        return response
 
-    def model_qa_report(
-        self, generator_id: Union[str, UUID], table_id: Union[str, UUID]
-    ):
+    def model_qa_report(self, generator_id: StrUUID, table_id: StrUUID):
         pass
 
     # SOURCE COLUMNS
 
     def get_column(
-        self, generator_id: Union[str, UUID], table_id: Union[str, UUID], column_id: str
-    ):
+        self, generator_id: StrUUID, table_id: StrUUID, column_id: str
+    ) -> SourceColumn:
         response = self.request(
             verb=GET,
             path=[generator_id, "tables", table_id, "columns", column_id],
-            response_type=SourceTable,
+            response_type=SourceColumn,
         )
         return response
 
     # SOURCE FOREIGN KEYS
     def create_foreign_key(
-        self, generator_id: Union[str, UUID], table_id: Union[str, UUID], **params
-    ):
+        self, generator_id: StrUUID, table_id: StrUUID, **params
+    ) -> SourceForeignKey:
         new_fk = dict(params)
         response = self.request(
             verb=POST,
             path=[generator_id, "tables", table_id, "columns", "foreign-keys"],
             json=new_fk,
-            response_type=SourceTable,
+            response_type=SourceForeignKey,
         )
         return response
 

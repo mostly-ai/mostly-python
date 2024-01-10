@@ -1,8 +1,7 @@
-from typing import Any, Iterator, Union
-from uuid import UUID
+from typing import Any, Dict, Iterator, Optional
 
-from mostlyai.base import DELETE, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Connector
+from mostlyai.base import DELETE, PATCH, POST, Paginator, StrUUID, _MostlyBaseClient
+from mostlyai.model import Connector, ConnectorAccessType, ConnectorType
 
 
 class _MostlyConnectorsClient(_MostlyBaseClient):
@@ -28,7 +27,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
             for item in paginator:
                 yield item
 
-    def get(self, connector_id: Union[str, UUID]) -> Connector:
+    def get(self, connector_id: StrUUID) -> Connector:
         """
         Retrieve a specific connector by its ID.
 
@@ -38,30 +37,70 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         response = self.request(path=[connector_id], response_type=Connector)
         return response
 
-    def create(self, **params: dict[str, Any]) -> Connector:
+    def create(
+        self,
+        type: ConnectorType,
+        name: Optional[str] = None,
+        accessType: Optional[ConnectorAccessType] = None,
+        config: Optional[Dict[str, Any]] = None,
+        secrets: Optional[Dict[str, str]] = None,
+        ssl: Optional[Dict[str, str]] = None,
+        testConnection: Optional[bool] = None,
+    ) -> Connector:
         """
         Create a new connector.
 
-        :param params: A dictionary representing a new connector.
+        :param type: The type of connector
+        :param name: The name of a connector
+        :param accessType: The access type of connector
+        :param config: The config parameter contains any configuration of the connector
+        :param secrets: The secrets parameter contains any sensitive credentials of the connector
+        :param ssl: The ssl parameter contains any SSL related configurations of the connector
+        :param testConnection: If true, the connection will be tested before saving
         :return: The created connector.
         """
-        new_connector = dict(params)
+        new_connector = {
+            "type": type,
+            "name": name,
+            "accessType": accessType,
+            "config": config,
+            "secrets": secrets,
+            "ssl": ssl,
+            "testConnection": testConnection,
+        }
+
         response = self.request(
             verb=POST, path=[], json=new_connector, response_type=Connector
         )
         return response
 
     def update(
-        self, connector_id: Union[str, UUID], **params: dict[str, Any]
+        self,
+        connector_id: StrUUID,
+        name: Optional[str] = None,
+        config: Optional[Dict[str, Any]] = None,
+        secrets: Optional[Dict[str, str]] = None,
+        ssl: Optional[Dict[str, str]] = None,
+        testConnection: Optional[bool] = None,
     ) -> Connector:
         """
         Update an existing connector.
 
         :param connector_id: Unique ID of the connector to update.
-        :param params: A dictionary representing the edited part of the connector.
+        :param name: The name of a connector
+        :param config: The config parameter contains any configuration of the connector
+        :param secrets: The secrets parameter contains any sensitive credentials of the connector
+        :param ssl: The ssl parameter contains any SSL related configurations of the connector
+        :param testConnection: If true, the connection will be tested before saving
         :return: The updated connector.
         """
-        updated_connector = dict(params)
+        updated_connector = {
+            "name": name,
+            "config": config,
+            "secrets": secrets,
+            "ssl": ssl,
+            "testConnection": testConnection,
+        }
         response = self.request(
             verb=PATCH,
             path=[connector_id],
@@ -70,7 +109,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         )
         return response
 
-    def delete(self, connector_id: Union[str, UUID]) -> None:
+    def delete(self, connector_id: StrUUID) -> None:
         """
         Delete a connector by its ID.
 
