@@ -5,6 +5,7 @@ import pandas as pd
 from mostlyai.base import _MostlyBaseClient
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
+from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -24,6 +25,7 @@ class MostlyAI(_MostlyBaseClient):
         client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
         self.connectors = _MostlyConnectorsClient(**client_kwargs)
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
+        self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
 
     # PLACEHOLDER FOR METHODS, SUCH AS
     def synthesize(self, df: pd.DataFrame, **params):
