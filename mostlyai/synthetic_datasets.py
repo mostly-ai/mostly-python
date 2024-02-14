@@ -13,7 +13,13 @@ from mostlyai.base import (
     StrUUID,
     _MostlyBaseClient,
 )
-from mostlyai.model import SyntheticDataset, SourceColumn, SourceForeignKey, SourceTable
+from mostlyai.model import (
+    SyntheticDataset,
+    SourceColumn,
+    SourceForeignKey,
+    SourceTable,
+    SyntheticDatasetFormat,
+)
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
@@ -42,4 +48,13 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
 
     def config(self, synthetic_dataset_id: StrUUID) -> SyntheticDataset:
         response = self.request(path=[synthetic_dataset_id, "config"])
+        return response
+
+    def download(self, synthetic_dataset_id: StrUUID, fmt: SyntheticDatasetFormat):
+        response = self.request(
+            path=[synthetic_dataset_id, "download"],
+            params={"format": fmt},
+            raw_response=True,
+        )
+        # TODO
         return response

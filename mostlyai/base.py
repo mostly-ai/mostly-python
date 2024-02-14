@@ -76,6 +76,7 @@ class _MostlyBaseClient:
         path: Union[str, List[Any]],
         verb: HttpVerb = "get",
         response_type: type = dict,
+        raw_response: bool = False,
         is_api_call: bool = True,
         do_include_client: bool = True,
         extra_key_values: Optional[dict] = None,
@@ -90,6 +91,7 @@ class _MostlyBaseClient:
         :param path: a single str, or a list of parts of the path to concatenate
         :param verb: get/post/patch/delete
         :param response_type: a specific type to return (e.g. Pydantic class)
+        :param raw_response: whether to just return a raw response (e.g. content)
         :param is_api_call: True by default; if False, API_SECTION and SECTION won't be prefixed
         :param do_include_client: True by default; if True, client property will be included in the returned instance
         :param extra_key_values: Any extra information storage to include in the returned object
@@ -121,6 +123,9 @@ class _MostlyBaseClient:
             raise APIError(
                 f"An error occurred while requesting {exc.request.url!r}."
             ) from exc
+
+        if raw_response:
+            return response.content
 
         if response.content:
             # this section could be split into a separate method
