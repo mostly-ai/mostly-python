@@ -1,9 +1,22 @@
-from typing import Optional
+from typing import Optional, Annotated, Any
 
 import pandas as pd
+from pydantic import Field
 
 
 class Connector:
+    def config(self):
+        if self.client and hasattr(self.client, "config"):
+            return self.client.config(connector_id=self.id)
+
+    def update(self, **kwargs):
+        if self.client and hasattr(self.client, "update"):
+            return self.client.update(connector_id=self.id, **kwargs)
+
+    def delete(self):
+        if self.client and hasattr(self.client, "delete"):
+            return self.client.delete(connector_id=self.id)
+
     def locations(self, prefix: str = "") -> list:
         """Retrieve the locations associated with this connector and prefix.
 
@@ -16,6 +29,33 @@ class Connector:
 
 
 class Generator:
+    training: Annotated[Optional[Any], Field(exclude=True)] = None
+
+    class Training:
+        def __init__(self, _generator: "Generator"):
+            self.generator = _generator
+
+        def progress(self):
+            self.generator.client.get_training_progress(self.generator.id)
+
+        def start(self):
+            self.generator.client.start_training(self.generator.id)
+
+        def stop(self):
+            self.generator.client.stop_training(self.generator.id)
+
+        def cancel(self):
+            self.generator.client.cancel_training(self.generator.id)
+
+        def wait(self, interval: float = 5):
+            # block until training is done
+            # poll every {interval} seconds
+            self.generator.client.training_wait(self.generator.id, interval=interval)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.training = self.Training(self)
+
     def add_table(
         self,
         sourceConnectorId: str,
@@ -116,23 +156,6 @@ class Generator:
     def delete_table(self, **kwargs) -> "SourceTable":
         if self.client and hasattr(self.client, "delete_table"):
             return self.client.delete_table(generator_id=self.id, **kwargs)
-
-    # TRAINING STUBS
-
-    def get_training_progress(self):
-        pass
-
-    def start_training(self):
-        pass
-
-    def stop_training(self):
-        pass
-
-    def cancel_training(self):
-        pass
-
-    def get_training_logs(self):
-        pass
 
 
 class SourceTable:

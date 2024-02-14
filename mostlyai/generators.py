@@ -1,8 +1,10 @@
 import tempfile
+import time
 from pathlib import Path
 from typing import Any, Iterator
 
 import pandas as pd
+from tqdm import tqdm
 
 from mostlyai.base import (
     DELETE,
@@ -13,7 +15,13 @@ from mostlyai.base import (
     StrUUID,
     _MostlyBaseClient,
 )
-from mostlyai.model import Generator, SourceColumn, SourceForeignKey, SourceTable
+from mostlyai.model import (
+    Generator,
+    SourceColumn,
+    SourceForeignKey,
+    SourceTable,
+    JobProgress,
+)
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient):
@@ -24,11 +32,15 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             for item in paginator:
                 yield item
 
-    def create(self, **params) -> Generator:
+    def create(self, start: bool = True, wait: bool = True, **params) -> Generator:
         new_generator = dict(params)
         response = self.request(
             verb=POST, path=[], json=new_generator, response_type=Generator
         )
+        if start:
+            response.training.start()
+        if wait:
+            response.training.wait()
         return response
 
     def get(self, generator_id: StrUUID) -> Generator:
@@ -51,6 +63,35 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
 
     def delete(self, generator_id: StrUUID) -> None:
         self.request(verb=DELETE, path=[generator_id])
+
+    # GENERATOR TRAINING
+
+    def start_training(self, generator_id: StrUUID) -> None:
+        response = self.request(verb=POST, path=[generator_id, "training", "start"])
+        return response
+
+    def stop_training(self, generator_id: StrUUID) -> None:
+        response = self.request(verb=POST, path=[generator_id, "training", "stop"])
+        return response
+
+    def cancel_training(self, generator_id: StrUUID) -> None:
+        response = self.request(verb=POST, path=[generator_id, "training", "cancel"])
+        return response
+
+    def get_training_progress(self, generator_id: StrUUID) -> JobProgress:
+        response = self.request(
+            path=[generator_id, "training"], response_type=JobProgress
+        )
+        return response
+
+    def training_wait(self, generator_id: StrUUID, interval: float) -> None:
+        progress = self.get_training_progress(generator_id).progress
+        current_progress = 0
+        with tqdm(total=progress.max) as pbar:
+            time.sleep(interval)
+            progress = self.get_training_progress(generator_id).progress
+            increment = progress.value - current_progress
+            pbar.update(increment)
 
     #
     #
@@ -155,4 +196,3 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
     #     )
     #     return response
     #
-    # # GENERATOR TRAINING

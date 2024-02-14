@@ -122,13 +122,14 @@ class _MostlyBaseClient:
                 f"An error occurred while requesting {exc.request.url!r}."
             ) from exc
 
-        response_json = response.json()
         if response.content:
             # this section could be split into a separate method
-            if do_include_client and isinstance(response_json, dict):
-                response_json["client"] = self
-            if isinstance(extra_key_values, dict) and isinstance(response_json, dict):
-                response_json["extra_key_values"] = extra_key_values
+            response_json = response.json()
+            if isinstance(response_json, dict) and not response_type == dict:
+                if do_include_client:
+                    response_json["client"] = self
+                if isinstance(extra_key_values, dict):
+                    response_json["extra_key_values"] = extra_key_values
             return (
                 response_type(**response_json)
                 if isinstance(response_json, dict)

@@ -15,6 +15,7 @@ pydantic = "^2.4.2"
 httpx = "^0.25.1"
 pandas = "^2.1.4"
 pyarrow = "^14.0.2"
+tqdm = "^4.66.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.0.0"

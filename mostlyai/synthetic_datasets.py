@@ -27,12 +27,17 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     def create(self, **params) -> SyntheticDataset:
         new_synthetic_dataset = dict(params)
         response = self.request(
-            verb=POST, path=[], json=new_synthetic_dataset, response_type=SyntheticDataset
+            verb=POST,
+            path=[],
+            json=new_synthetic_dataset,
+            response_type=SyntheticDataset,
         )
         return response
 
     def get(self, synthetic_dataset_id: StrUUID) -> SyntheticDataset:
-        response = self.request(path=[synthetic_dataset_id], response_type=SyntheticDataset)
+        response = self.request(
+            path=[synthetic_dataset_id], response_type=SyntheticDataset
+        )
         return response
 
     def config(self, synthetic_dataset_id: StrUUID) -> SyntheticDataset:
