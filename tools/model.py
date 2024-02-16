@@ -81,7 +81,7 @@ class Generator:
 
         :return: The generator properties as dictionary
         """
-        return self.client.to_dict(generator_id=self.id)
+        return self.client._to_dict(generator_id=self.id)
 
     class Training:
         def __init__(self, _generator: "Generator"):

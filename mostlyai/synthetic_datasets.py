@@ -11,7 +11,7 @@ from mostlyai.base import (
     PATCH,
     DELETE,
 )
-from mostlyai.utils import _job_wait
+from mostlyai.utils import _job_wait, _convert_df_to_base64
 from mostlyai.model import (
     SyntheticDataset,
     SyntheticDatasetFormat,
@@ -61,6 +61,27 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         :param **kwargs: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
         """
+        # convert `sample_seed_data` to base64-encoded Parquet files
+        if "tables" in kwargs:
+            for table in kwargs["tables"]:
+                if "sampleSeedData" in table:
+                    if isinstance(table["sampleSeedData"], pd.DataFrame):
+                        table["sampleSeedData"] = _convert_df_to_base64(
+                            table["sampleSeedData"]
+                        )
+                    elif isinstance(table["sampleSeedData"], str):
+                        if table["sampleSeedData"].lower().endswith(".csv"):
+                            df = pd.read_csv(table["sampleSeedData"])
+                        elif table["sampleSeedData"].lower().endswith(
+                            ".parquet"
+                        ) or table["sampleSeedData"].lower().endswith(".pqt"):
+                            df = pd.read_parquet(table["sampleSeedData"])
+                        else:
+                            raise ValueError("data must be a DataFrame or a file path")
+                        table["sampleSeedData"] = _convert_df_to_base64(df)
+                        del df
+                    else:
+                        raise ValueError("data must be a DataFrame or a file path")
         # convert generator_id to str
         kwargs["generatorId"] = str(kwargs["generatorId"])
         synthetic_dataset = self.request(
