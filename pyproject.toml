@@ -33,7 +33,7 @@ vcrpy = "^5.1.0"
 python_version = "3.9"
 follow_imports = "silent"
 ignore_missing_imports = true
-warn_unused_configs = true
+warn_unused_to_dicts = true
 warn_redundant_casts = true
 warn_unreachable = true
 

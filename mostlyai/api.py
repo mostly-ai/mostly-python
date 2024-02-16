@@ -12,10 +12,6 @@ class MostlyAI(_MostlyBaseClient):
     """
     Client for interacting with the Mostly AI Public API.
 
-    This client serves as the main entry point for accessing various functionalities
-    provided. It initializes and holds various specialized clients for
-    different sections of the API.
-
     :param base_url: The base URL. If not provided, a default value is used.
     :param api_key: The API key for authenticating. If not provided, it would rely on env vars.
     """
@@ -26,7 +22,3 @@ class MostlyAI(_MostlyBaseClient):
         self.connectors = _MostlyConnectorsClient(**client_kwargs)
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
-
-    # PLACEHOLDER FOR METHODS, SUCH AS
-    def synthesize(self, df: pd.DataFrame, **params):
-        pass

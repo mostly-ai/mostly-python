@@ -1,5 +1,14 @@
 import os
-from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Union
+from typing import (
+    Annotated,
+    Any,
+    Generic,
+    List,
+    Literal,
+    Optional,
+    TypeVar,
+    Union,
+)
 from uuid import UUID
 
 import httpx
@@ -28,7 +37,7 @@ class _MostlyBaseClient:
     Base client class, which contains all the essentials to be used by sub-classes.
     """
 
-    ENV_VAR_PREFIX = "MOSTLY"
+    ENV_VAR_PREFIX = "MOSTLY_AI"
     API_SECTION = ["api", "v2"]
     SECTION = []
 
@@ -74,7 +83,7 @@ class _MostlyBaseClient:
     def request(
         self,
         path: Union[str, List[Any]],
-        verb: HttpVerb = "get",
+        verb: HttpVerb,
         response_type: type = dict,
         raw_response: bool = False,
         is_api_call: bool = True,
@@ -107,8 +116,7 @@ class _MostlyBaseClient:
         full_path = [self.base_url] + prefix + path_list
         full_url = "/".join(full_path)
 
-        kwargs["headers"] = kwargs.get("headers") or {}
-        kwargs["headers"] |= self.headers()
+        kwargs["headers"] = self.headers() | kwargs.get("headers", {})
 
         try:
             response = req_func(full_url, **kwargs)  # type: ignore
@@ -194,7 +202,7 @@ class Paginator(Generic[T]):
         params = {"offset": self.offset, "limit": self.limit}
         params.update(self.kwargs)
 
-        response = self.request_context.request([], params=params)
+        response = self.request_context.request(verb=GET, path=[], params=params)
 
         self.current_items = response.get("results", [])
         total_count = response.get("totalCount", 0)

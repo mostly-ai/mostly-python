@@ -1,25 +1,38 @@
 from typing import Any, Dict, Iterator, Optional
 
-from mostlyai.base import DELETE, PATCH, POST, Paginator, StrUUID, _MostlyBaseClient
+from mostlyai.base import (
+    DELETE,
+    PATCH,
+    POST,
+    Paginator,
+    StrUUID,
+    _MostlyBaseClient,
+    GET,
+)
 from mostlyai.model import Connector, ConnectorAccessType, ConnectorType
 
 
 class _MostlyConnectorsClient(_MostlyBaseClient):
     SECTION = ["connectors"]
 
+    ## PUBLIC METHODS ##
+
     def list(
-        self, offset: int = 0, limit: int = 50, access_type: str = None
+        self,
+        offset: int = 0,
+        limit: int = 50,
+        access_type: Optional[str] = None,
     ) -> Iterator[Connector]:
         """
-        List connectors with pagination and optional access type filtering.
+        List connectors.
 
-        :param offset: The starting point for listing connectors.
-        :param limit: The maximum number of connectors to return per request.
-        :param access_type: Filter connectors by access type, defaults to None.
-        :return: Yields individual connectors.
+        Paginate through all connectors that the user has access to.
+        Only connectors, that are independent of a table, will be returned.
 
-        The method uses a while loop to handle pagination and continues to request
-        and yield connectors until all available connectors have been listed.
+        :param offset: Offset the entities in the response. Optional. Default: 0
+        :param limit: Limit the number of entities in the response. Optional. Default: 50
+        :param access_type: Filter by access type. Possible values: "SOURCE", "DESTINATION"
+        :return: Iterator over connectors.
         """
         with Paginator(
             self, Connector, offset=offset, limit=limit, access_type=access_type
@@ -29,22 +42,12 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
 
     def get(self, connector_id: StrUUID) -> Connector:
         """
-        Retrieve a specific connector by its ID.
+        Retrieve connector
 
-        :param connector_id: The unique identifier of the connector.
-        :return: The retrieved connector.
+        :param connector_id: The unique identifier of a connector
+        :return: The retrieved connector
         """
         response = self.request(path=[connector_id], response_type=Connector)
-        return response
-
-    def get_config(self, connector_id: StrUUID) -> dict:
-        """
-        Retrieve the configuration of a specific connector.
-
-        :param connector_id: The unique identifier of the connector.
-        :return: The configuration of the connector.
-        """
-        response = self.request(path=[connector_id, "config"])
         return response
 
     def create(
@@ -58,11 +61,104 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         testConnection: Optional[bool] = None,
     ) -> Connector:
         """
-        Create a new connector.
+        Create a connector, and optionally validate the connection before saving.
 
-        :param type: The type of connector
+        If validation fails, a 400 status with an error message will be returned.
+
+        The structures of the config, secrets and ssl parameters depend on the connector type.
+        Cloud storage:
+        - AZURE_STORAGE
+            - config
+                - accountName: string
+            - secrets
+                - accountKey: string
+            - location: container/path
+        - GOOGLE_CLOUD_STORAGE
+            - config
+            - secrets
+                - keyFile: string
+            - location: bucket/path
+        - S3_STORAGE
+            - config
+                - accessKey: string
+            - secrets
+                - secretKey: string
+            - location: bucket/path
+        Database:
+        - BIGQUERY
+            - config
+            - secrets
+                - keyFile: string
+            - location: dataset.table
+        - DATABRICKS
+            - config
+                - host: string
+                - httpPath: string
+                - catalog: string
+            - secrets
+                - accessToken: keyFile
+            - location: schema.table
+        - MARIADB
+            - config
+                - host: string
+                - port: integer, default: 3306
+                - username: string
+            - secrets
+                - password: string
+            - location: database.table
+        - MSSQL
+            - config
+                - host: string
+                - port: integer, default: 1433
+                - username: string
+                - database: string
+            - secrets
+                - password: string
+            - location: schema.table
+        - MYSQL
+            - config
+                - host: string
+                - port: integer, default: 3306
+                - username: string
+            - secrets
+                - password: string
+            - location: database.table
+        - ORACLE
+            - config
+                - host: string
+                - port: integer, default: 1521
+                - username: string
+                - connectionType: enum {SID, SERVICE_NAME}, default: SID
+                - database: string, default: ORCL
+            - secrets
+                - password: string
+            - location: schema.table
+        - POSTGRES
+            - config
+                - host: string
+                - port: integer, default: 5432
+                - username: string
+                - database: string
+            - secrets
+                - password: string
+            - ssl
+                - rootCertificate: string
+                - sslCertificate: string
+                - sslCertificateKey: string
+            - location: schema.table
+        - SNOWFLAKE
+            - config
+                - account: string
+                - username: string
+                - warehouse: string, default: COMPUTE_WH
+                - database: string
+            - secrets
+                - password: string
+            - location: schema.table
+
+        :param type: The type of connector, i.e. POSTGRES, MYSQL, etc.
         :param name: The name of a connector
-        :param accessType: The access type of connector
+        :param accessType: The access type of connector. Possible values: "SOURCE", "DESTINATION"
         :param config: The config parameter contains any configuration of the connector
         :param secrets: The secrets parameter contains any sensitive credentials of the connector
         :param ssl: The ssl parameter contains any SSL related configurations of the connector
@@ -84,7 +180,9 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         )
         return response
 
-    def update(
+    ## PRIVATE METHODS ##
+
+    def _update(
         self,
         connector_id: StrUUID,
         name: Optional[str] = None,
@@ -93,17 +191,6 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         ssl: Optional[Dict[str, str]] = None,
         testConnection: Optional[bool] = None,
     ) -> Connector:
-        """
-        Update an existing connector.
-
-        :param connector_id: Unique ID of the connector to update.
-        :param name: The name of a connector
-        :param config: The config parameter contains any configuration of the connector
-        :param secrets: The secrets parameter contains any sensitive credentials of the connector
-        :param ssl: The ssl parameter contains any SSL related configurations of the connector
-        :param testConnection: If true, the connection will be tested before saving
-        :return: The updated connector.
-        """
         updated_connector = {
             "name": name,
             "config": config,
@@ -119,23 +206,15 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         )
         return response
 
-    def delete(self, connector_id: StrUUID) -> None:
-        """
-        Delete a connector by its ID.
-
-        :param connector_id: The unique identifier of the connector to be deleted.
-        :return: Empty, if successfully deleted the connector.
-        """
+    def _delete(self, connector_id: StrUUID) -> None:
         self.request(verb=DELETE, path=[connector_id])
 
-    def locations(self, connector_id: str, prefix: str = "") -> list:
-        """
-        Retrieve the locations associated with a specific connector and prefix.
+    def _to_dict(self, connector_id: StrUUID):
+        response = self.request(verb=GET, path=[connector_id, "config"])
+        return response
 
-        :param connector_id: The unique identifier of the connector.
-        :param prefix: A prefix to filter the locations, defaults to "".
-        :return: A list of locations (schemas, databases, directories, etc.) on the given level.
-        """
-        params = {"prefix": prefix}
-        response = self.request(path=[connector_id, "locations"], params=params)
+    def _locations(self, connector_id: str, prefix: str = "") -> list:
+        response = self.request(
+            path=[connector_id, "locations"], params={"prefix": prefix}
+        )
         return response

@@ -3,249 +3,218 @@ from typing import Optional, Annotated, Any
 import pandas as pd
 from pydantic import Field
 
+from mostlyai.model import JobProgress
+
 
 class Connector:
-    def get_config(self):
-        if self.client and hasattr(self.client, "get_config"):
-            return self.client.get_config(connector_id=self.id)
+    def update(self, **kwargs) -> "Connector":
+        """
+        Update a connector, and optionally validate the connection before saving.
 
-    def update(self, **kwargs):
-        if self.client and hasattr(self.client, "update"):
-            return self.client.update(connector_id=self.id, **kwargs)
+        If validation fails, a 400 status with an error message will be returned.
+
+        For the structure of the config, secrets and ssl parameters, see the CREATE method.
+
+        :param name: The name of a connector
+        :param config: The config parameter contains any configuration of the connector
+        :param secrets: The secrets parameter contains any sensitive credentials of the connector
+        :param ssl: The ssl parameter contains any SSL related configurations of the connector
+        :param testConnection: If true, the connection will be tested before saving
+        :return: The updated connector
+        """
+        return self.client._update(connector_id=self.id, **kwargs)
 
     def delete(self):
-        if self.client and hasattr(self.client, "delete"):
-            return self.client.delete(connector_id=self.id)
+        """
+        Delete connector
+        """
+        return self.client._delete(connector_id=self.id)
 
     def locations(self, prefix: str = "") -> list:
-        """Retrieve the locations associated with this connector and prefix.
-
-        :param prefix: A prefix to filter the locations, defaults to "".
-        :return: A list of locations (schemas, databases, directories, etc.) on the
-            given level.
         """
-        if self.client and hasattr(self.client, "locations"):
-            return self.client.locations(connector_id=self.id, prefix=prefix)
+        List connector locations
+
+        List the available databases, schemas, tables or folders for a connector.
+        For storage connectors, this returns list of folders and files at root, respectively at `prefix` level.
+        For DB connectors, this returns list of schemas (or databases for DBs without schema), respectively list of tables if `prefix` is provided.
+
+        :param prefix: The prefix to filter the results by.
+        :return: A list of locations (schemas, databases, directories, etc.) on the given level.
+        """
+        return self.client._locations(connector_id=self.id, prefix=prefix)
+
+    def to_dict(self) -> dict[str, Any]:
+        """
+        Retrieve writeable generator properties
+
+        :return: The generator properties as dictionary
+        """
+        return self.client._to_dict(connector_id=self.id)
 
 
 class Generator:
     training: Annotated[Optional[Any], Field(exclude=True)] = None
 
-    class Training:
-        def __init__(self, _generator: "Generator"):
-            self.generator = _generator
-
-        def progress(self):
-            self.generator.client.get_training_progress(self.generator.id)
-
-        def start(self):
-            self.generator.client.start_training(self.generator.id)
-
-        def stop(self):
-            self.generator.client.stop_training(self.generator.id)
-
-        def cancel(self):
-            self.generator.client.cancel_training(self.generator.id)
-
-        def wait(self, interval: float = 5):
-            # block until training is done
-            # poll every {interval} seconds
-            self.generator.client.training_wait(self.generator.id, interval=interval)
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.training = self.Training(self)
 
-    def get_config(self):
-        if self.client and hasattr(self.client, "get_config"):
-            return self.client.get_config(generator_id=self.id)
-
-    def add_table(
-        self,
-        sourceConnectorId: str,
-        location: str,
-        name: Optional[str] = None,
-        includeChildren: Optional[bool] = False,
-        modelConfiguration: Optional["ModelConfiguration"] = None,
-        textModelConfiguration: Optional["ModelConfiguration"] = None,
-    ) -> "SourceTable":
-        """Add table to generator.
-
-        :param sourceConnectorId: The unique identifier of a connector
-        :param location: The location of a source table
-        :param name: The name of a source table
-        :param includeChildren: If true, all tables that are referenced by foreign keys
-            will be included. If false, only the selected table will be included.
-        :param modelConfiguration:
-        :param textModelConfiguration:
-        :return: The added source table object
+    def update(self, **kwargs) -> "Generator":
         """
-        params = {
-            "sourceConnectorId": sourceConnectorId,
-            "location": location,
-            "name": name,
-            "includeChildren": includeChildren,
-            "modelConfiguration": modelConfiguration,
-            "textModelConfiguration": textModelConfiguration,
-        }
-        if self.client and hasattr(self.client, "add_table"):
-            return self.client.add_table(generator_id=self.id, **params)
+        Update generator
 
-    def add_table_by_upload(
-        self,
-        file: str,
-        name: Optional[str] = None,
-        primaryKey: Optional[str] = None,
-        modelConfiguration: Optional["ModelConfiguration"] = None,
-        textModelConfiguration: Optional["ModelConfiguration"] = None,
-    ) -> "SourceTable":
-        """Add table to generator by uploading a data file.
+        See to_dict for the structure of the parameters.
 
-        :param file: Path to the file to upload
-        :param name: The name of a source table
-        :param includeChildren: If true, all tables that are referenced by foreign keys
-            will be included. If false, only the selected table will be included.
-        :param modelConfiguration:
-        :param textModelConfiguration:
-        :return: The added source table object
+        :return: The updated generator
         """
-        params = {
-            "file": file,
-            "name": name,
-            "primaryKey": primaryKey,
-            "modelConfiguration": modelConfiguration,
-            "textModelConfiguration": textModelConfiguration,
-        }
-        if self.client and hasattr(self.client, "add_table_by_upload"):
-            return self.client.add_table_by_upload(generator_id=self.id, **params)
+        return self.client._update(generator_id=self.id, **kwargs)
 
-    def add_table_from_df_by_upload(
-        self,
-        df: pd.DataFrame,
-        name: Optional[str] = None,
-        primaryKey: Optional[str] = None,
-        modelConfiguration: Optional["ModelConfiguration"] = None,
-        textModelConfiguration: Optional["ModelConfiguration"] = None,
-    ) -> "SourceTable":
-        """Add table to generator from a pd.DataFrame object.
-
-        :param df: DataFrame that represents the table to be added
-        :param name: The name of a source table
-        :param includeChildren: If true, all tables that are referenced by foreign keys
-            will be included. If false, only the selected table will be included.
-        :param modelConfiguration:
-        :param textModelConfiguration:
-        :return: The added source table object
+    def delete(self):
         """
-        if self.client and hasattr(self.client, "add_table_from_df_by_upload"):
-            params = {
-                "df": df,
-                "name": name,
-                "primaryKey": primaryKey,
-                "modelConfiguration": modelConfiguration,
-                "textModelConfiguration": textModelConfiguration,
-            }
-            return self.client.add_table_from_df_by_upload(
-                generator_id=self.id, **params
+        Delete generator
+        """
+        return self.client._delete(generator_id=self.id)
+
+    def to_dict(self) -> dict[str, Any]:
+        """
+        Retrieve writeable generator properties
+
+        :return: The generator properties as dictionary
+        """
+        return self.client.to_dict(generator_id=self.id)
+
+    class Training:
+        def __init__(self, _generator: "Generator"):
+            self.generator = _generator
+
+        def start(self) -> None:
+            """
+            Start training
+            """
+            return self.generator.client._training_start(self.generator.id)
+
+        def cancel(self) -> None:
+            """
+            Cancel training
+            """
+            return self.generator.client._training_cancel(self.generator.id)
+
+        def progress(self) -> JobProgress:
+            """
+            Retrieve job progress of training
+            """
+            return self.generator.client._training_progress(self.generator.id)
+
+        def wait(self, interval: float = 5) -> "Generator":
+            """
+            Poll training progress and loop until training has completed
+
+            :param interval: The interval in seconds to poll the job progress
+            """
+            return self.generator.client._training_wait(
+                self.generator.id, interval=interval
             )
 
-    def get_table(self, table_id: str) -> "SourceTable":
-        if self.client and hasattr(self.client, "get_table"):
-            return self.client.get_table(generator_id=self.id, table_id=table_id)
+        def generate(
+            self, start: bool = True, wait: bool = True, **kwargs: dict[str, Any]
+        ):
+            """
+            Generate a synthetic dataset based on this generator
 
-    def update_table(self, **kwargs) -> "SourceTable":
-        if self.client and hasattr(self.client, "update_table"):
-            return self.client.update_table(generator_id=self.id, **kwargs)
+            :param kwargs: The configuration parameters of the synthetic dataset to be created.
+            :return: The synthetic dataset
+            """
+            raise "Not implemented yet. Call the client.synthetic_datasets.create method instead."
+            # FIXME @michdr: how can we access the synthetic dataset client here?
+            # return self.synthetic_datasets.create(generator_id=self.generator.id, start=start, wait=wait, **kwargs)
+            pass
 
-    def delete_table(self, **kwargs) -> "SourceTable":
-        if self.client and hasattr(self.client, "delete_table"):
-            return self.client.delete_table(generator_id=self.id, **kwargs)
+        def list_synthetic_dataset(self) -> list["SyntheticDataset"]:
+            """
+            List synthetic datasets
 
-    def synthesize(self) -> None:
-        if self.client:
-            debug = True
+            List the synthetic datasets that were created based on this generator.
 
-
-class SourceTable:
-    def model_qa_report(self) -> "ModelQAReport":
-        if self.client and hasattr(self.client, "model_qa_report"):
-            return self.client.model_qa_report(
-                generator_id=self.extra_key_values["generator_id"], table_id=self.id
-            )
-
-    def model_samples(self, **kwargs):
-        if self.client and hasattr(self.client, "model_samples"):
-            return self.client.model_qa_report(
-                generator_id=self.extra_key_values["generator_id"],
-                table_id=self.id,
-                **kwargs
-            )
-
-    def get_column(self, column_id: str):
-        if self.client and hasattr(self.client, "get_column"):
-            return self.client.get_column(
-                generator_id=self.extra_key_values["generator_id"],
-                table_id=self.id,
-                column_id=column_id,
-            )
-
-    def create_foreign_key(self, **kwargs):
-        if self.client and hasattr(self.client, "create_foreign_key"):
-            return self.client.create_foreign_key(
-                generator_id=self.extra_key_values["generator_id"],
-                table_id=self.id,
-                **kwargs
-            )
-
-    def update_foreign_key(self, **kwargs):
-        if self.client and hasattr(self.client, "update_foreign_key"):
-            return self.client.update_foreign_key(
-                generator_id=self.extra_key_values["generator_id"],
-                table_id=self.id,
-                **kwargs
-            )
-
-    def delete_foreign_key(self, **kwargs):
-        if self.client and hasattr(self.client, "delete_foreign_key"):
-            return self.client.delete_foreign_key(
-                generator_id=self.extra_key_values["generator_id"],
-                table_id=self.id,
-                **kwargs
-            )
+            :return: A list of synthetic datasets
+            """
+            raise "Not implemented yet."
+            # return self.generator.client._list_synthetic_datasets(self.generator.id)
+            pass
 
 
 class SyntheticDataset:
     generation: Annotated[Optional[Any], Field(exclude=True)] = None
 
-    class Generation:
-        def __init__(self, _synthetic_dataset: "SyntheticDataset"):
-            self.synthetic_dataset = _synthetic_dataset
-
-        def progress(self):
-            self.synthetic_dataset.client.get_generation_progress(
-                self.synthetic_dataset.id
-            )
-
-        def start(self):
-            self.synthetic_dataset.client.start_generation(self.synthetic_dataset.id)
-
-        def wait(self, interval: float = 5):
-            # block until training is done
-            # poll every {interval} seconds
-            self.synthetic_dataset.client.generation_wait(
-                self.synthetic_dataset.id, interval=interval
-            )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.generation = self.Generation(self)
 
-    def get_config(self):
-        if self.client and hasattr(self.client, "get_config"):
-            return self.client.get_config(synthetic_dataset_id=self.id)
+    def update(self, **kwargs) -> "SyntheticDataset":
+        """
+        Update synthetic dataset
 
-    def download_zip(self, fmt: str):
-        return self.client.download_zip(synthetic_dataset_id=self.id, fmt=fmt)
+        See to_dict for the structure of the parameters.
 
-    def download(self):
-        return self.client.download(synthetic_dataset_id=self.id)
+        :return: The updated synthetic dataset
+        """
+        return self.client._update(synthetic_dataset_id=self.id, **kwargs)
+
+    def delete(self):
+        """
+        Delete synthetic dataset
+        """
+        return self.client._delete(synthetic_dataset_id=self.id)
+
+    def to_dict(self) -> dict[str, Any]:
+        """
+        Retrieve writeable synthetic dataset properties
+
+        :return: The synthetic dataset properties as dictionary
+        """
+        return self.client._to_dict(synthetic_dataset_id=self.id)
+
+    def data(self) -> dict[str, pd.DataFrame]:
+        """
+        Download synthetic dataset and return as dictionary of pandas DataFrames
+
+        :return: The synthetic dataset as dictionary of pandas DataFrames
+        """
+        return self.client._data(synthetic_dataset_id=self.id)
+
+    class Generation:
+        def __init__(self, _synthetic_dataset: "SyntheticDataset"):
+            self.synthetic_dataset = _synthetic_dataset
+
+        def start(self) -> None:
+            """
+            Start generation
+            """
+            return self.synthetic_dataset.client._generation_start(
+                self.synthetic_dataset.id
+            )
+
+        def cancel(self) -> None:
+            """
+            Cancel generation
+            """
+            return self.synthetic_dataset.client._generation_cancel(
+                self.synthetic_dataset.id
+            )
+
+        def progress(self) -> JobProgress:
+            """
+            Retrieve job progress of generation
+            """
+            return self.synthetic_dataset.client._generation_progress(
+                self.synthetic_dataset.id
+            )
+
+        def wait(self, interval: float = 5) -> "SyntheticDataset":
+            """
+            Poll generation progress and loop until generation has completed
+
+            :param interval: The interval in seconds to poll the job progress
+            """
+            return self.synthetic_dataset.client._generation_wait(
+                self.synthetic_dataset.id, interval=interval
+            )
