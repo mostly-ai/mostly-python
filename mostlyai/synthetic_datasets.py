@@ -70,7 +70,9 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
                             table["sampleSeedData"]
                         )
                     elif isinstance(table["sampleSeedData"], str):
-                        if table["sampleSeedData"].lower().endswith(".csv"):
+                        if table["sampleSeedData"].lower().endswith(".csv") or table[
+                            "sampleSeedData"
+                        ].lower().endswith(".csv.gz"):
                             df = pd.read_csv(table["sampleSeedData"])
                         elif table["sampleSeedData"].lower().endswith(
                             ".parquet"

@@ -65,7 +65,9 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
                     if isinstance(table["data"], pd.DataFrame):
                         table["data"] = _convert_df_to_base64(table["data"])
                     elif isinstance(table["data"], str):
-                        if table["data"].lower().endswith(".csv"):
+                        if table["data"].lower().endswith(".csv") or table[
+                            "data"
+                        ].lower().endswith(".csv.gz"):
                             df = pd.read_csv(table["data"])
                         elif table["data"].lower().endswith(".parquet") or table[
                             "data"
