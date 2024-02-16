@@ -5,9 +5,9 @@ from pydantic import Field
 
 
 class Connector:
-    def config(self):
-        if self.client and hasattr(self.client, "config"):
-            return self.client.config(connector_id=self.id)
+    def get_config(self):
+        if self.client and hasattr(self.client, "get_config"):
+            return self.client.get_config(connector_id=self.id)
 
     def update(self, **kwargs):
         if self.client and hasattr(self.client, "update"):
@@ -55,6 +55,10 @@ class Generator:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.training = self.Training(self)
+
+    def get_config(self):
+        if self.client and hasattr(self.client, "get_config"):
+            return self.client.get_config(generator_id=self.id)
 
     def add_table(
         self,
@@ -157,6 +161,10 @@ class Generator:
         if self.client and hasattr(self.client, "delete_table"):
             return self.client.delete_table(generator_id=self.id, **kwargs)
 
+    def synthesize(self) -> None:
+        if self.client:
+            debug = True
+
 
 class SourceTable:
     def model_qa_report(self) -> "ModelQAReport":
@@ -204,3 +212,40 @@ class SourceTable:
                 table_id=self.id,
                 **kwargs
             )
+
+
+class SyntheticDataset:
+    generation: Annotated[Optional[Any], Field(exclude=True)] = None
+
+    class Generation:
+        def __init__(self, _synthetic_dataset: "SyntheticDataset"):
+            self.synthetic_dataset = _synthetic_dataset
+
+        def progress(self):
+            self.synthetic_dataset.client.get_generation_progress(
+                self.synthetic_dataset.id
+            )
+
+        def start(self):
+            self.synthetic_dataset.client.start_generation(self.synthetic_dataset.id)
+
+        def wait(self, interval: float = 5):
+            # block until training is done
+            # poll every {interval} seconds
+            self.synthetic_dataset.client.generation_wait(
+                self.synthetic_dataset.id, interval=interval
+            )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.generation = self.Generation(self)
+
+    def get_config(self):
+        if self.client and hasattr(self.client, "get_config"):
+            return self.client.get_config(synthetic_dataset_id=self.id)
+
+    def download_zip(self, fmt: str):
+        return self.client.download_zip(synthetic_dataset_id=self.id, fmt=fmt)
+
+    def download(self):
+        return self.client.download(synthetic_dataset_id=self.id)

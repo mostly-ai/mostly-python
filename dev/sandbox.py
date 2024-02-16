@@ -18,7 +18,9 @@ print(client.connectors.list())
 
 
 client = MostlyAI(api_key='..')
-g = client.generators.create(tables=[{'data': tgt_df}]) # train generator
+config = client.generators.get(g_id).get_config()
+config.tables = [{"data": df, name="census", ...}]
+g = client.generators.create(tables={'data': tgt_df}) # train generator
 sd = client.synthetic_datasets.create(generator=g.id)   # generate synthetic data
 syn_df = sd.download()['data']
 

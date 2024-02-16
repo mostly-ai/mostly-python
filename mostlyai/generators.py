@@ -1,5 +1,8 @@
+import base64
+import io
 import tempfile
 import time
+import uuid
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -21,6 +24,9 @@ from mostlyai.model import (
     SourceForeignKey,
     SourceTable,
     JobProgress,
+    ModelEncodingType,
+    Model,
+    ModelConfiguration,
 )
 
 
@@ -32,7 +38,41 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             for item in paginator:
                 yield item
 
+    def _tables_from_df(self, tables: dict[str, pd.DataFrame]):
+        source_tables = []
+        for table_name, table_df in tables.items():
+            columns = [
+                dict(
+                    name=c,
+                    included=True,
+                    modelEncodingType=ModelEncodingType.categorical.value,
+                )
+                for c in table_df.columns
+            ]
+
+            # Save the DataFrame to a buffer in Parquet format
+            buffer = io.BytesIO()
+            table_df.to_parquet(buffer, index=False)
+
+            # Read the binary data from the buffer
+            buffer.seek(0)
+            binary_data = buffer.read()
+
+            # Convert the binary data to a base64 string
+            base64_encoded_str = base64.b64encode(binary_data).decode()
+
+            source_table = dict(
+                name=table_name,
+                data=base64_encoded_str,
+                columns=columns,
+            )
+            source_tables.append(source_table)
+
+        return source_tables
+
     def create(self, start: bool = True, wait: bool = True, **params) -> Generator:
+        if "tables" in params and isinstance(params["tables"], dict):
+            params["tables"] = self._tables_from_df(params["tables"])
         new_generator = dict(params)
         response = self.request(
             verb=POST, path=[], json=new_generator, response_type=Generator

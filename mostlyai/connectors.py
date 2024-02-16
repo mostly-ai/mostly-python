@@ -37,7 +37,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         response = self.request(path=[connector_id], response_type=Connector)
         return response
 
-    def config(self, connector_id: StrUUID) -> dict:
+    def get_config(self, connector_id: StrUUID) -> dict:
         """
         Retrieve the configuration of a specific connector.
 
