@@ -39,10 +39,10 @@ def _job_wait(
             # progress_bars[step.id].update(step.progress.value)
             # break if step has failed or been canceled
             if step.status == ProgressStatus.failed:
-                print(f"Step {step.name} failed")
+                print(f"Step {step.model_label} {step.step_code} failed")
                 return
             if step.status == ProgressStatus.canceled:
-                print(f"Step {step.name} canceled")
+                print(f"Step {step.model_label} {step.step_code} canceled")
                 return
         # check whether we are done
         if job.progress.value >= job.progress.max:
