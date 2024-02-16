@@ -3,16 +3,23 @@ import os
 import pandas as pd
 import numpy as np
 
-os.environ['MOSTLY_AI_PASSWORD'] = 'Mostly01!'
+os.environ["MOSTLY_AI_PASSWORD"] = "Mostly01!"
 
 from mostlyai import MostlyAI
+
 client = MostlyAI()
 
-df = pd.DataFrame({'name': np.random.choice(['Alice', 'Bob', 'Charlie', 'David', 'Eva'], 10000),
-                   'age': np.random.randint(18, 65, size=10000),
-                   'income': np.random.normal(50000, 15000, 10000)})
+df = pd.DataFrame(
+    {
+        "name": np.random.choice(["Alice", "Bob", "Charlie", "David", "Eva"], 10000),
+        "age": np.random.randint(18, 65, size=10000),
+        "income": np.random.normal(50000, 15000, 10000),
+    }
+)
 
-g = client.generators.create(tables=[{'data': df, 'name': 'michi'}], start=True, wait=True)
+g = client.generators.create(
+    tables=[{"data": df, "name": "michi"}], start=True, wait=True
+)
 sd = client.synthetic_datasets.create(generatorId=g.id, start=True, wait=True)
 dfs = sd.data()
 print(dfs)
