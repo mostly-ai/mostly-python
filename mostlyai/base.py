@@ -41,25 +41,25 @@ class _MostlyBaseClient:
     API_SECTION = ["api", "v2"]
     SECTION = []
 
-    def env_var(self, name: str):
-        return f"{self.ENV_VAR_PREFIX}_{name.upper()}"
-
-    def load_from_env_var(self, name: str) -> Optional[str]:
-        return os.getenv(self.env_var(name))
-
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         self.base_url = (
-            base_url or self.load_from_env_var("BASE_URL") or _EXAMPLE_BASE_URL
+                base_url or self._load_from_env_var("BASE_URL") or _EXAMPLE_BASE_URL
         )
         self.api_key = (
-            api_key or self.load_from_env_var("API_KEY") or self._temp_get_token()
+                api_key or self._load_from_env_var("API_KEY") or self._temp_get_token()
         )
+
+    def _env_var(self, name: str):
+        return f"{self.ENV_VAR_PREFIX}_{name.upper()}"
+
+    def _load_from_env_var(self, name: str) -> Optional[str]:
+        return os.getenv(self._env_var(name))
 
     def _temp_get_token(self) -> str:
         path = "auth/realms/mostly-generate/protocol/openid-connect/token"
         data = {
             "username": "superadmin@mostly.ai",
-            "password": self.load_from_env_var("PASSWORD"),
+            "password": self._load_from_env_var("PASSWORD"),
             "client_id": "mostly-app-frontend",
             "grant_type": "password",
         }

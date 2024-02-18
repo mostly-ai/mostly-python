@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 from typing import Any, Iterator, Optional
 import pandas as pd
 from mostlyai.base import (
@@ -45,49 +46,11 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         return response
 
     def create(
-        self, start: bool = True, wait: bool = True, **kwargs: dict[str, Any]
+        self, **kwargs: dict[str, Any]
     ) -> Generator:
-        """
-        Create generator
-
-        See Generator.to_dict for the structure of the parameters.
-
-        :param start: If true, then training is started right away.
-        :param wait: If true, then the function only returns once training has finished.
-        :param **kwargs: The configuration parameters of the generator to be created.
-        :return: The created generator.
-        """
-
-        # convert `data` field to base64-encoded Parquet files
-        if "tables" in kwargs:
-            for table in kwargs["tables"]:
-                if "data" in table:
-                    if isinstance(table["data"], pd.DataFrame):
-                        table["data"] = _convert_df_to_base64(table["data"])
-                    elif isinstance(table["data"], str):
-                        if table["data"].lower().endswith(".csv") or table[
-                            "data"
-                        ].lower().endswith(".csv.gz"):
-                            df = pd.read_csv(table["data"])
-                        elif table["data"].lower().endswith(".parquet") or table[
-                            "data"
-                        ].lower().endswith(".pqt"):
-                            df = pd.read_parquet(table["data"])
-                        else:
-                            raise ValueError("data must be a DataFrame or a file path")
-                        table["data"] = _convert_df_to_base64(df)
-                        del df
-                    else:
-                        raise ValueError("data must be a DataFrame or a file path")
         generator = self.request(
             verb=POST, path=[], json=dict(kwargs), response_type=Generator
         )
-        if start:
-            generator.training.start()
-            # self._training_start(generator.id)
-        if start and wait:
-            generator = generator.training.wait()
-            # generator = self._training_wait(generator.id)
         return generator
 
     def _update(self, generator_id: StrUUID, **kwargs: dict[str, Any]) -> Generator:
