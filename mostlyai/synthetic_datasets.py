@@ -48,21 +48,19 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         return response
 
     def create(
-        self, start: bool = True, wait: bool = True, **kwargs: dict[str, Any]
+        self, config: dict[str, Any]
     ) -> SyntheticDataset:
         """
         Create synthetic dataset
 
         See SyntheticDataset.to_dict for the structure of the parameters.
 
-        :param start: If true, then generation is started right away.
-        :param wait: If true, then the function only returns once generation has finished.
-        :param **kwargs: The configuration parameters of the synthetic dataset to be created.
+        :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
         """
         # convert `sample_seed_data` to base64-encoded Parquet files
-        if "tables" in kwargs:
-            for table in kwargs["tables"]:
+        if "tables" in config:
+            for table in config["tables"]:
                 if "sampleSeedData" in table:
                     if isinstance(table["sampleSeedData"], pd.DataFrame):
                         table["sampleSeedData"] = _convert_df_to_base64(
@@ -84,26 +82,22 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
                     else:
                         raise ValueError("data must be a DataFrame or a file path")
         # convert generator_id to str
-        kwargs["generatorId"] = str(kwargs["generatorId"])
+        config["generatorId"] = str(config["generatorId"])
         synthetic_dataset = self.request(
             verb=POST,
             path=[],
-            json=dict(kwargs),
+            json=dict(config),
             response_type=SyntheticDataset,
         )
-        if start:
-            synthetic_dataset.generation.start()
-        if start and wait:
-            synthetic_dataset = synthetic_dataset.generation.wait()
         return synthetic_dataset
 
     def _update(
-        self, synthetic_dataset_id: StrUUID, **kwargs: dict[str, Any]
+        self, synthetic_dataset_id: StrUUID, config: dict[str, Any]
     ) -> SyntheticDataset:
         response = self.request(
             verb=PATCH,
             path=[synthetic_dataset_id],
-            json=dict(kwargs),
+            json=config,
             response_type=SyntheticDataset,
         )
         return response
@@ -121,13 +115,12 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         synthetic_dataset_id: StrUUID,
         format: SyntheticDatasetFormat | str = SyntheticDatasetFormat.parquet,
     ) -> (bytes, str | None):
+        format = format.value if isinstance(format, SyntheticDatasetFormat) else format.upper()
         response = self.request(
             verb=GET,
             path=[synthetic_dataset_id, "download"],
             params={
-                "format": isinstance(format, SyntheticDatasetFormat)
-                and format.value
-                or format.upper()
+                "format": format
             },
             headers={
                 "Content-Type": "application/zip",
