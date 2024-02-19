@@ -133,7 +133,7 @@ class _MostlyBaseClient:
             ) from exc
 
         if raw_response:
-            return response.content
+            return response
 
         if response.content:
             # this section could be split into a separate method

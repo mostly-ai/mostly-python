@@ -1,9 +1,10 @@
-from typing import Optional, Annotated, Any
+from pathlib import Path
+from typing import Optional, Annotated, Any, Literal
 
 import pandas as pd
 from pydantic import Field
 
-from mostlyai.model import JobProgress
+from mostlyai.model import JobProgress, SyntheticDatasetFormat
 
 
 class Connector:
@@ -173,13 +174,31 @@ class SyntheticDataset:
         """
         return self.client._to_dict(synthetic_dataset_id=self.id)
 
-    def data(self) -> dict[str, pd.DataFrame]:
+    def download(self, file_path: str | Path | None = None, format: str | SyntheticDatasetFormat = None) -> Path:
+        """
+        Download synthetic dataset and save to file
+
+        :param file_path: The file path to save the synthetic dataset
+        :param format: The format of the synthetic dataset
+        """
+        bytes, filename = self.client._download(synthetic_dataset_id=self.id, format=format)
+        file_path = Path(file_path or '.')
+        if file_path.is_dir():
+            file_path = file_path / filename
+        file_path.write_bytes(bytes)
+        return file_path
+
+    def data(self, return_type: Literal['auto', 'dict'] = 'auto') -> dict[str, pd.DataFrame] | pd.DataFrame:
         """
         Download synthetic dataset and return as dictionary of pandas DataFrames
 
         :return: The synthetic dataset as dictionary of pandas DataFrames
         """
-        return self.client._data(synthetic_dataset_id=self.id)
+        dfs = self.client._data(synthetic_dataset_id=self.id)
+        if return_type == 'auto' and len(dfs) == 1:
+            return dfs.values()[0]
+        else:
+            return dfs
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):

@@ -46,18 +46,39 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         return response
 
     def create(
-        self, **kwargs: dict[str, Any]
+        self, config: dict[str, Any]
     ) -> Generator:
+
+        # convert `data` to base64-encoded Parquet files
+        if "tables" in config:
+            for table in config["tables"]:
+                if "data" in table:
+                    if isinstance(table["data"], (str, Path)):
+                        fn = str(table["data"])
+                        if fn.lower().endswith((".pqt", ".parquet")):
+                            df = pd.read_parquet(fn)
+                        else:
+                            df = pd.read_csv(fn)
+                        name = Path(fn).stem
+                        table["data"] = _convert_df_to_base64(df)
+                        if "name" not in table:
+                            table["name"] = name
+                        del df
+                    elif isinstance(table["data"], pd.DataFrame):
+                        table["data"] = _convert_df_to_base64(table["data"])
+                    else:
+                        raise ValueError("data must be a DataFrame or a file path")
+
         generator = self.request(
-            verb=POST, path=[], json=dict(kwargs), response_type=Generator
+            verb=POST, path=[], json=config, response_type=Generator
         )
         return generator
 
-    def _update(self, generator_id: StrUUID, **kwargs: dict[str, Any]) -> Generator:
+    def _update(self, generator_id: StrUUID, config: dict[str, Any]) -> Generator:
         response = self.request(
             verb=PATCH,
             path=[generator_id],
-            json=dict(kwargs),
+            json=config,
             response_type=Generator,
         )
         return response

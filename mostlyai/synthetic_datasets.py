@@ -1,4 +1,5 @@
 import io
+import re
 import zipfile
 from typing import Iterator, Any, Optional
 import pandas as pd
@@ -117,19 +118,31 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         response = self.request(verb=GET, path=[synthetic_dataset_id, "config"])
         return response
 
-    def _data(self, synthetic_dataset_id: StrUUID) -> dict[str, pd.DataFrame]:
-        pqt_zip = self.request(
+    def _download(self, synthetic_dataset_id: StrUUID, format: SyntheticDatasetFormat | str = SyntheticDatasetFormat.parquet) -> (bytes, str | None):
+        response = self.request(
             verb=GET,
             path=[synthetic_dataset_id, "download"],
-            params={"format": SyntheticDatasetFormat.parquet.value},
+            params={"format": isinstance(format, SyntheticDatasetFormat) and format.value or format.upper()},
             headers={
                 "Content-Type": "application/zip",
                 "Accept": "application/json, text/plain, */*",
             },
             raw_response=True,
         )
+        bytes = response.content
+        # Check if 'Content-Disposition' header is present
+        if 'Content-Disposition' in response.headers:
+            content_disposition = response.headers['Content-Disposition']
+            filename = re.findall('filename=(.+)', content_disposition)[0]
+        else:
+            filename = None
+        return bytes, filename
+
+    def _data(self, synthetic_dataset_id: StrUUID) -> dict[str, pd.DataFrame]:
+        # download pqt
+        pqt_zip_bytes, filename = self._download(synthetic_dataset_id, SyntheticDatasetFormat.parquet)
         # read each parquet file into a pandas dataframe
-        with zipfile.ZipFile(io.BytesIO(pqt_zip), "r") as z:
+        with zipfile.ZipFile(io.BytesIO(pqt_zip_bytes), "r") as z:
             dir_list = set([name.split("/")[0] for name in z.namelist()])
             dfs = {}
             for table in dir_list:
@@ -141,6 +154,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
                 dfs[table] = pd.concat(
                     [pd.read_parquet(z.open(name)) for name in pqt_files], axis=0
                 )
+                dfs[table].name = table
         return dfs
 
     def _generation_start(self, synthetic_dataset_id: StrUUID) -> None:
