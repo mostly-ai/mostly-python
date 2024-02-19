@@ -1,6 +1,7 @@
-import pandas as pd
-import numpy as np
 import os
+
+import numpy as np
+import pandas as pd
 
 os.environ["MOSTLY_AI_PASSWORD"] = "Mostly01!"
 

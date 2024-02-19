@@ -2,12 +2,12 @@ from typing import Any, Dict, Iterator, Optional
 
 from mostlyai.base import (
     DELETE,
+    GET,
     PATCH,
     POST,
     Paginator,
     StrUUID,
     _MostlyBaseClient,
-    GET,
 )
 from mostlyai.model import Connector, ConnectorAccessType, ConnectorType
 

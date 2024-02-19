@@ -1,14 +1,5 @@
 import os
-from typing import (
-    Annotated,
-    Any,
-    Generic,
-    List,
-    Literal,
-    Optional,
-    TypeVar,
-    Union,
-)
+from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Union
 from uuid import UUID
 
 import httpx
@@ -43,10 +34,10 @@ class _MostlyBaseClient:
 
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         self.base_url = (
-                base_url or self._load_from_env_var("BASE_URL") or _EXAMPLE_BASE_URL
+            base_url or self._load_from_env_var("BASE_URL") or _EXAMPLE_BASE_URL
         )
         self.api_key = (
-                api_key or self._load_from_env_var("API_KEY") or self._temp_get_token()
+            api_key or self._load_from_env_var("API_KEY") or self._temp_get_token()
         )
 
     def _env_var(self, name: str):

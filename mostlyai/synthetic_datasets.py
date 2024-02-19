@@ -1,23 +1,21 @@
 import io
 import re
 import zipfile
-from typing import Iterator, Any, Optional
+from typing import Any, Iterator, Optional
+
 import pandas as pd
+
 from mostlyai.base import (
+    DELETE,
+    GET,
+    PATCH,
     POST,
     Paginator,
     StrUUID,
     _MostlyBaseClient,
-    GET,
-    PATCH,
-    DELETE,
 )
-from mostlyai.utils import _job_wait, _convert_df_to_base64
-from mostlyai.model import (
-    SyntheticDataset,
-    SyntheticDatasetFormat,
-    JobProgress,
-)
+from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat
+from mostlyai.utils import _convert_df_to_base64, _job_wait
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
@@ -118,11 +116,19 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         response = self.request(verb=GET, path=[synthetic_dataset_id, "config"])
         return response
 
-    def _download(self, synthetic_dataset_id: StrUUID, format: SyntheticDatasetFormat | str = SyntheticDatasetFormat.parquet) -> (bytes, str | None):
+    def _download(
+        self,
+        synthetic_dataset_id: StrUUID,
+        format: SyntheticDatasetFormat | str = SyntheticDatasetFormat.parquet,
+    ) -> (bytes, str | None):
         response = self.request(
             verb=GET,
             path=[synthetic_dataset_id, "download"],
-            params={"format": isinstance(format, SyntheticDatasetFormat) and format.value or format.upper()},
+            params={
+                "format": isinstance(format, SyntheticDatasetFormat)
+                and format.value
+                or format.upper()
+            },
             headers={
                 "Content-Type": "application/zip",
                 "Accept": "application/json, text/plain, */*",
@@ -131,16 +137,18 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         )
         bytes = response.content
         # Check if 'Content-Disposition' header is present
-        if 'Content-Disposition' in response.headers:
-            content_disposition = response.headers['Content-Disposition']
-            filename = re.findall('filename=(.+)', content_disposition)[0]
+        if "Content-Disposition" in response.headers:
+            content_disposition = response.headers["Content-Disposition"]
+            filename = re.findall("filename=(.+)", content_disposition)[0]
         else:
             filename = None
         return bytes, filename
 
     def _data(self, synthetic_dataset_id: StrUUID) -> dict[str, pd.DataFrame]:
         # download pqt
-        pqt_zip_bytes, filename = self._download(synthetic_dataset_id, SyntheticDatasetFormat.parquet)
+        pqt_zip_bytes, filename = self._download(
+            synthetic_dataset_id, SyntheticDatasetFormat.parquet
+        )
         # read each parquet file into a pandas dataframe
         with zipfile.ZipFile(io.BytesIO(pqt_zip_bytes), "r") as z:
             dir_list = set([name.split("/")[0] for name in z.namelist()])

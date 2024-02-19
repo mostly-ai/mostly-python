@@ -19,7 +19,6 @@ jobs:
         - poetry run isort --check .
       before_script: skip
 
-# TODO setup travis settings to have a VPN access
-#    - name: Tests - unit
-#      if: branch NOT IN (test, main) AND tag IS NOT present
-#      script: poetry run pytest tests/unit -vv
+    - name: Tests - unit
+      if: branch NOT IN (test, main) AND tag IS NOT present
+      script: poetry run pytest tests/unit -vv

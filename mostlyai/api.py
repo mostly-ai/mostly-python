@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any, Optional
 from uuid import UUID
 
 import pandas as pd
@@ -7,7 +7,7 @@ import pandas as pd
 from mostlyai.base import _MostlyBaseClient
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
-from mostlyai.model import Generator, Connector
+from mostlyai.model import Connector, Generator
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
 from mostlyai.utils import _convert_df_to_base64
 
@@ -128,7 +128,12 @@ class MostlyAI(_MostlyBaseClient):
         """
         return self.connectors.create(config)
 
-    def train(self, data_or_config: pd.DataFrame | str | Path | dict[str, Any], start: bool = True, wait: bool = True):
+    def train(
+        self,
+        data_or_config: pd.DataFrame | str | Path | dict[str, Any],
+        start: bool = True,
+        wait: bool = True,
+    ):
         """
         Train a generator
 
@@ -148,11 +153,16 @@ class MostlyAI(_MostlyBaseClient):
             config = {"name": name, "tables": [{"data": df, "name": name}]}
         elif isinstance(data_or_config, pd.DataFrame):
             df = data_or_config
-            config = {"name": f"DataFrame {df.shape}", "tables": [{"data": df, "name": "data"}]}
+            config = {
+                "name": f"DataFrame {df.shape}",
+                "tables": [{"data": df, "name": "data"}],
+            }
         elif isinstance(data_or_config, dict):
             config = data_or_config
         else:
-            raise ValueError("data_or_config must be a DataFrame, a file path or a dictionary")
+            raise ValueError(
+                "data_or_config must be a DataFrame, a file path or a dictionary"
+            )
 
         g = self.generators.create(config)
         if start:
@@ -161,7 +171,14 @@ class MostlyAI(_MostlyBaseClient):
             g = g.training.wait()
         return g
 
-    def generate(self, generator: Generator | str | UUID | None, config: dict | None = None, seed: pd.DataFrame | str | Path | None = None, start: bool = True, wait: bool = True):
+    def generate(
+        self,
+        generator: Generator | str | UUID | None,
+        config: dict | None = None,
+        seed: pd.DataFrame | str | Path | None = None,
+        start: bool = True,
+        wait: bool = True,
+    ):
         """
         Train a generator
 
@@ -179,7 +196,9 @@ class MostlyAI(_MostlyBaseClient):
         elif generator is not None:
             config["generatorId"] = str(generator)
         elif "generatorId" not in config:
-            raise ValueError("Either a generator or a configuration with a generatorId must be provided.")
+            raise ValueError(
+                "Either a generator or a configuration with a generatorId must be provided."
+            )
         if seed is not None:
             if isinstance(seed, (str, Path)):
                 fn = str(seed)

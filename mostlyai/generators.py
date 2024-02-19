@@ -1,7 +1,9 @@
 import time
 from pathlib import Path
 from typing import Any, Iterator, Optional
+
 import pandas as pd
+
 from mostlyai.base import (
     DELETE,
     GET,
@@ -11,11 +13,8 @@ from mostlyai.base import (
     StrUUID,
     _MostlyBaseClient,
 )
-from mostlyai.utils import _job_wait, _convert_df_to_base64
-from mostlyai.model import (
-    Generator,
-    JobProgress,
-)
+from mostlyai.model import Generator, JobProgress
+from mostlyai.utils import _convert_df_to_base64, _job_wait
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient):
@@ -45,9 +44,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         response = self.request(verb=GET, path=[generator_id], response_type=Generator)
         return response
 
-    def create(
-        self, config: dict[str, Any]
-    ) -> Generator:
+    def create(self, config: dict[str, Any]) -> Generator:
 
         # convert `data` to base64-encoded Parquet files
         if "tables" in config:
