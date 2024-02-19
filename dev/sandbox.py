@@ -18,7 +18,7 @@ from mostlyai import MostlyAI
 
 client = MostlyAI()
 g = client.generators.create(
-    tables=[{"data": df, "name": "customers"}], start=True, wait=True
+    {"tables": [{"data": df, "name": "customers"}]}, start=True, wait=True
 )
 sd = client.synthetic_datasets.create(generatorId=g.id, start=True, wait=True)
 dfs = sd.data()

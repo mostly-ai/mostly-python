@@ -38,7 +38,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
 {%- endfor -%}
 {%- endfor -%}
 {%- if class_name == "Connector" %}
-    def update(self, **kwargs) -> "Connector":
+    def update(self, config) -> "Connector":
         """
         Update a connector, and optionally validate the connection before saving.
 
@@ -46,14 +46,9 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
 
         For the structure of the config, secrets and ssl parameters, see the CREATE method.
 
-        :param name: The name of a connector
-        :param config: The config parameter contains any configuration of the connector
-        :param secrets: The secrets parameter contains any sensitive credentials of the connector
-        :param ssl: The ssl parameter contains any SSL related configurations of the connector
-        :param testConnection: If true, the connection will be tested before saving
         :return: The updated connector
         """
-        return self.client._update(connector_id=self.id, **kwargs)
+        return self.client._update(connector_id=self.id, config=config)
 
     def delete(self):
         """
@@ -89,7 +84,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         super().__init__(*args, **kwargs)
         self.training = self.Training(self)
 
-    def update(self, **kwargs) -> "Generator":
+    def update(self, config) -> "Generator":
         """
         Update generator
 
@@ -97,7 +92,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
 
         :return: The updated generator
         """
-        return self.client._update(generator_id=self.id, **kwargs)
+        return self.client._update(generator_id=self.id, config=config)
 
     def delete(self):
         """
@@ -146,7 +141,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
             )
 
         def generate(
-            self, start: bool = True, wait: bool = True, **kwargs: dict[str, Any]
+            self, config: dict[str, Any], start: bool = True, wait: bool = True
         ):
             """
             Generate a synthetic dataset based on this generator
@@ -224,7 +219,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         super().__init__(*args, **kwargs)
         self.generation = self.Generation(self)
 
-    def update(self, **kwargs) -> "SyntheticDataset":
+    def update(self, config) -> "SyntheticDataset":
         """
         Update synthetic dataset
 
@@ -232,7 +227,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
 
         :return: The updated synthetic dataset
         """
-        return self.client._update(synthetic_dataset_id=self.id, **kwargs)
+        return self.client._update(synthetic_dataset_id=self.id, config=config)
 
     def delete(self):
         """
@@ -248,28 +243,36 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         """
         return self.client._to_dict(synthetic_dataset_id=self.id)
 
-    def download(self, file_path: str | Path | None = None, format: str | SyntheticDatasetFormat = None) -> Path:
+    def download(
+        self,
+        file_path: str | Path | None = None,
+        format: str | SyntheticDatasetFormat = SyntheticDatasetFormat.parquet,
+    ) -> Path:
         """
         Download synthetic dataset and save to file
 
         :param file_path: The file path to save the synthetic dataset
         :param format: The format of the synthetic dataset
         """
-        bytes, filename = self.client._download(synthetic_dataset_id=self.id, format=format)
-        file_path = Path(file_path or '.')
+        bytes, filename = self.client._download(
+            synthetic_dataset_id=self.id, format=format
+        )
+        file_path = Path(file_path or ".")
         if file_path.is_dir():
             file_path = file_path / filename
         file_path.write_bytes(bytes)
         return file_path
 
-    def data(self, return_type: Literal['auto', 'dict'] = 'auto') -> dict[str, pd.DataFrame] | pd.DataFrame:
+    def data(
+        self, return_type: Literal["auto", "dict"] = "auto"
+    ) -> dict[str, pd.DataFrame] | pd.DataFrame:
         """
         Download synthetic dataset and return as dictionary of pandas DataFrames
 
         :return: The synthetic dataset as dictionary of pandas DataFrames
         """
         dfs = self.client._data(synthetic_dataset_id=self.id)
-        if return_type == 'auto' and len(dfs) == 1:
+        if return_type == "auto" and len(dfs) == 1:
             return dfs.values()[0]
         else:
             return dfs

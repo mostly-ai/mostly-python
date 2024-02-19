@@ -9,7 +9,9 @@ from mostlyai.base import (
     StrUUID,
     _MostlyBaseClient,
 )
+from mostlyai.components import CreateConnectorRequest, PatchConnectorRequest
 from mostlyai.model import Connector, ConnectorAccessType, ConnectorType
+from mostlyai.utils import _as_dict
 
 
 class _MostlyConnectorsClient(_MostlyBaseClient):
@@ -47,18 +49,19 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         :param connector_id: The unique identifier of a connector
         :return: The retrieved connector
         """
-        response = self.request(path=[connector_id], response_type=Connector)
+        response = self.request(verb=GET, path=[connector_id], response_type=Connector)
         return response
 
     def create(
         self,
-        config: Dict[str, Any],
+        config: CreateConnectorRequest | dict[str, Any],
     ) -> Connector:
         """
         Create a connector, and optionally validate the connection before saving.
 
         See `mostly.connect` for more details.
         """
+        config = _as_dict(config)
         response = self.request(
             verb=POST, path=[], json=config, response_type=Connector
         )
@@ -69,23 +72,13 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
     def _update(
         self,
         connector_id: StrUUID,
-        name: Optional[str] = None,
-        config: Optional[Dict[str, Any]] = None,
-        secrets: Optional[Dict[str, str]] = None,
-        ssl: Optional[Dict[str, str]] = None,
-        testConnection: Optional[bool] = None,
+        config: PatchConnectorRequest | dict[str, Any],
     ) -> Connector:
-        updated_connector = {
-            "name": name,
-            "config": config,
-            "secrets": secrets,
-            "ssl": ssl,
-            "testConnection": testConnection,
-        }
+        config = _as_dict(config)
         response = self.request(
             verb=PATCH,
             path=[connector_id],
-            json=updated_connector,
+            json=config,
             response_type=Connector,
         )
         return response

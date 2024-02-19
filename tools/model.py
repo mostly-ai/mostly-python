@@ -8,7 +8,7 @@ from mostlyai.model import JobProgress, SyntheticDatasetFormat
 
 
 class Connector:
-    def update(self, **kwargs) -> "Connector":
+    def update(self, config) -> "Connector":
         """
         Update a connector, and optionally validate the connection before saving.
 
@@ -16,14 +16,9 @@ class Connector:
 
         For the structure of the config, secrets and ssl parameters, see the CREATE method.
 
-        :param name: The name of a connector
-        :param config: The config parameter contains any configuration of the connector
-        :param secrets: The secrets parameter contains any sensitive credentials of the connector
-        :param ssl: The ssl parameter contains any SSL related configurations of the connector
-        :param testConnection: If true, the connection will be tested before saving
         :return: The updated connector
         """
-        return self.client._update(connector_id=self.id, **kwargs)
+        return self.client._update(connector_id=self.id, config=config)
 
     def delete(self):
         """
@@ -60,7 +55,7 @@ class Generator:
         super().__init__(*args, **kwargs)
         self.training = self.Training(self)
 
-    def update(self, **kwargs) -> "Generator":
+    def update(self, config) -> "Generator":
         """
         Update generator
 
@@ -68,7 +63,7 @@ class Generator:
 
         :return: The updated generator
         """
-        return self.client._update(generator_id=self.id, **kwargs)
+        return self.client._update(generator_id=self.id, config=config)
 
     def delete(self):
         """
@@ -117,7 +112,7 @@ class Generator:
             )
 
         def generate(
-            self, start: bool = True, wait: bool = True, **kwargs: dict[str, Any]
+            self, config: dict[str, Any], start: bool = True, wait: bool = True
         ):
             """
             Generate a synthetic dataset based on this generator
@@ -150,7 +145,7 @@ class SyntheticDataset:
         super().__init__(*args, **kwargs)
         self.generation = self.Generation(self)
 
-    def update(self, **kwargs) -> "SyntheticDataset":
+    def update(self, config) -> "SyntheticDataset":
         """
         Update synthetic dataset
 
@@ -158,7 +153,7 @@ class SyntheticDataset:
 
         :return: The updated synthetic dataset
         """
-        return self.client._update(synthetic_dataset_id=self.id, **kwargs)
+        return self.client._update(synthetic_dataset_id=self.id, config=config)
 
     def delete(self):
         """
@@ -177,7 +172,7 @@ class SyntheticDataset:
     def download(
         self,
         file_path: str | Path | None = None,
-        format: str | SyntheticDatasetFormat = None,
+        format: str | SyntheticDatasetFormat = SyntheticDatasetFormat.parquet,
     ) -> Path:
         """
         Download synthetic dataset and save to file

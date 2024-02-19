@@ -2,8 +2,10 @@ import base64
 import io
 import time
 from typing import Callable
+from uuid import UUID
 
 import pandas as pd
+from pydantic import BaseModel
 from tqdm import tqdm
 
 from mostlyai.model import ProgressStatus
@@ -59,3 +61,12 @@ def _convert_df_to_base64(df: pd.DataFrame) -> str:
     binary_data = buffer.read()
     base64_encoded_str = base64.b64encode(binary_data).decode()
     return base64_encoded_str
+
+
+def _as_dict(pydantic_or_dict: BaseModel | dict):
+    if isinstance(pydantic_or_dict, BaseModel):
+        pydantic_or_dict = pydantic_or_dict.model_dump()
+    pydantic_or_dict = {
+        k: str(v) if isinstance(v, UUID) else v for k, v in pydantic_or_dict.items()
+    }
+    return pydantic_or_dict
