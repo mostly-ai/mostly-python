@@ -63,7 +63,7 @@ def _convert_df_to_base64(df: pd.DataFrame) -> str:
     return base64_encoded_str
 
 
-def _as_dict(pydantic_or_dict: BaseModel | dict):
+def _as_dict(pydantic_or_dict):
     if isinstance(pydantic_or_dict, BaseModel):
         pydantic_or_dict = pydantic_or_dict.model_dump()
     pydantic_or_dict = {

@@ -142,10 +142,6 @@ class _MostlyBaseClient:
         else:
             return None
 
-    def post_json(self, **kwargs):
-        headers = {"Content-Type": "application/json"}
-        return self.request(verb=POST, headers=headers, **kwargs)
-
 
 class Paginator(Generic[T]):
     def __init__(self, request_context, object_class: T, **kwargs):
