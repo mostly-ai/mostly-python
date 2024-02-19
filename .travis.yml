@@ -4,7 +4,7 @@ env:
   global:
    - POETRY_VERSION="1.6.0"
 python:
- - "3.9.16"
+ - "3.10"
 install:
   - pip install poetry==$POETRY_VERSION
   - poetry config virtualenvs.create false
