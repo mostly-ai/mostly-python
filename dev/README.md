@@ -55,4 +55,4 @@ Be mindful of the following:
 
 # Notes
 
-- Make sure to set `MOSTLY_PASSWORD` env var to be able to authenticate using the default values.
+- Make sure to set `MOSTLY_AI_PASSWORD` env var to be able to authenticate using the default values.
