@@ -45,7 +45,7 @@ print(dfs)
 #
 #
 # client = MostlyAI(api_key='..')
-# config = client.generators.get(g_id).to_dict()
+# config = client.generators.get(g_id).config()
 # config.tables = [{"data": df, name="census", ...}]
 # g = client.generators.create(tables={'data': tgt_df}) # train generator
 # sd = client.synthetic_datasets.create(generator=g.id)   # generate synthetic data
@@ -102,7 +102,7 @@ print(dfs)
 # )
 #
 # # or via single config JSON (that can be retrieved via /config endpoint)
-# c = client.connectors.create(json_to_dict={
+# c = client.connectors.create(json_config={
 #     'name': 'My Database',
 #     'type': 'POSTGRES',
 #     'accessType': 'SOURCE',
