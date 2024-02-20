@@ -86,7 +86,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
     def _delete(self, connector_id: StrUUID) -> None:
         self.request(verb=DELETE, path=[connector_id])
 
-    def _to_dict(self, connector_id: StrUUID):
+    def _config(self, connector_id: StrUUID):
         response = self.request(verb=GET, path=[connector_id, "config"])
         return response
 

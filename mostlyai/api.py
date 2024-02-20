@@ -137,7 +137,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Train a generator
 
-        :param data_or_config: Either a single pandas DataFrame data, a path to a CSV or PARQUET file, or a dictionary with the configuration parameters of the generator to be created. See Generator.to_dict for the structure of the parameters.
+        :param data_or_config: Either a single pandas DataFrame data, a path to a CSV or PARQUET file, or a dictionary with the configuration parameters of the generator to be created. See Generator.config for the structure of the parameters.
         :param start: If true, then training is started right away. Default: true.
         :param wait: If true, then the function only returns once training has finished. Default: true.
         :return: The created generator.
@@ -179,7 +179,8 @@ class MostlyAI(_MostlyBaseClient):
         self,
         generator: Generator | str | UUID | None,
         config: dict | None = None,
-        seed: pd.DataFrame | str | Path | None = None,
+        size: int | dict[str, int] | None = None,  # TODO
+        seed: pd.DataFrame | str | Path | dict[str, pd.DataFrame | str | Path] | None = None,  # TODO
         start: bool = True,
         wait: bool = True,
     ):
@@ -187,7 +188,7 @@ class MostlyAI(_MostlyBaseClient):
         Train a generator
 
         :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
-        :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.to_dict for the structure of the parameters.
+        :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
         :param seed: Either a single pandas DataFrame data, or a path to a CSV or PARQUET file. Used for seeding the subject table.
         :param start: If true, then generation is started right away. Default: true.
         :param wait: If true, then the function only returns once generation has finished. Default: true.

@@ -84,7 +84,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         response = self.request(verb=DELETE, path=[generator_id])
         return response
 
-    def _to_dict(self, generator_id: StrUUID) -> Generator:
+    def _config(self, generator_id: StrUUID) -> Generator:
         response = self.request(verb=GET, path=[generator_id, "config"])
         return response
 

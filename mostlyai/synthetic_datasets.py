@@ -51,7 +51,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         """
         Create synthetic dataset
 
-        See SyntheticDataset.to_dict for the structure of the parameters.
+        See SyntheticDataset.config for the structure of the parameters.
 
         :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
@@ -104,7 +104,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         response = self.request(verb=DELETE, path=[synthetic_dataset_id])
         return response
 
-    def _to_dict(self, synthetic_dataset_id: StrUUID) -> SyntheticDataset:
+    def _config(self, synthetic_dataset_id: StrUUID) -> SyntheticDataset:
         response = self.request(verb=GET, path=[synthetic_dataset_id, "config"])
         return response
 

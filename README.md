@@ -2,14 +2,15 @@
 
 A Python wrapper for the MOSTLY AI platform.
 
-| intent                                         | call              |
-|------------------------------------------------|-------------------|
-| Train a Generative AI on your tabular data     | `mostly.train`    |
-| Generate unlimited synthetic data on demand    | `mostly.generate` |
-| Empower your team with safe synthetic data     | `mostly.share`    |
-| Connect to any data source within your org     | `mostly.connect`  |
-| Probe the generator for the data that you need | `mostly.probe`    |
-| Enrich the data with new LLM intelligence      | `mostly.enrich`   |
+| intent                                         | call                       |
+|------------------------------------------------|----------------------------|
+| Train a Generative AI on your tabular data     | `mostly.train(data)`       |
+| Generate unlimited synthetic data on demand    | `mostly.generate(g, size)` |
+| Empower your team with safe synthetic data     | `mostly.share(g)`          |
+| Connect to any data source within your org     | `mostly.connect(config)`   |
+| Probe the generator for the data that you need | `mostly.generate(g, seed)` |
+| Enrich the data with new LLM intelligence      | `mostly.enrich(data)`      |
+
 
 
 ## Installation

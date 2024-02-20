@@ -40,13 +40,13 @@ class Connector:
         """
         return self.client._locations(connector_id=self.id, prefix=prefix)
 
-    def to_dict(self) -> dict[str, Any]:
+    def config(self) -> dict[str, Any]:
         """
         Retrieve writeable generator properties
 
         :return: The generator properties as dictionary
         """
-        return self.client._to_dict(connector_id=self.id)
+        return self.client._config(connector_id=self.id)
 
 
 class Generator:
@@ -60,7 +60,7 @@ class Generator:
         """
         Update generator
 
-        See to_dict for the structure of the parameters.
+        See config for the structure of the parameters.
 
         :return: The updated generator
         """
@@ -72,13 +72,13 @@ class Generator:
         """
         return self.client._delete(generator_id=self.id)
 
-    def to_dict(self) -> dict[str, Any]:
+    def config(self) -> dict[str, Any]:
         """
         Retrieve writeable generator properties
 
         :return: The generator properties as dictionary
         """
-        return self.client._to_dict(generator_id=self.id)
+        return self.client._config(generator_id=self.id)
 
     class Training:
         def __init__(self, _generator: "Generator"):
@@ -150,7 +150,7 @@ class SyntheticDataset:
         """
         Update synthetic dataset
 
-        See to_dict for the structure of the parameters.
+        See config for the structure of the parameters.
 
         :return: The updated synthetic dataset
         """
@@ -162,13 +162,13 @@ class SyntheticDataset:
         """
         return self.client._delete(synthetic_dataset_id=self.id)
 
-    def to_dict(self) -> dict[str, Any]:
+    def config(self) -> dict[str, Any]:
         """
         Retrieve writeable synthetic dataset properties
 
         :return: The synthetic dataset properties as dictionary
         """
-        return self.client._to_dict(synthetic_dataset_id=self.id)
+        return self.client._config(synthetic_dataset_id=self.id)
 
     def download(
         self,
