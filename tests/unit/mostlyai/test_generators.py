@@ -15,9 +15,8 @@ def create_generator_config():
 @pytest.fixture
 def sample_data():
     np.random.seed(0)  # For reproducible results
-    df = pd.DataFrame(np.random.rand(5, 3), columns=['A', 'B', 'C'])
+    df = pd.DataFrame(np.random.rand(5, 3), columns=["A", "B", "C"])
     return df
-
 
 
 class TestGenerators:

@@ -180,7 +180,11 @@ class MostlyAI(_MostlyBaseClient):
         generator: Generator | str | UUID | None,
         config: dict | None = None,
         size: int | dict[str, int] | None = None,  # TODO
-        seed: pd.DataFrame | str | Path | dict[str, pd.DataFrame | str | Path] | None = None,  # TODO
+        seed: pd.DataFrame
+        | str
+        | Path
+        | dict[str, pd.DataFrame | str | Path]
+        | None = None,  # TODO
         start: bool = True,
         wait: bool = True,
     ):

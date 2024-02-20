@@ -15,7 +15,7 @@ from mostlyai.base import (
 )
 from mostlyai.components import CreateGeneratorRequest
 from mostlyai.model import Generator, JobProgress
-from mostlyai.utils import _convert_df_to_base64, _job_wait, _as_dict
+from mostlyai.utils import _as_dict, _convert_df_to_base64, _job_wait
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient):
