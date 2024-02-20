@@ -5,6 +5,10 @@ env:
    - POETRY_VERSION="1.6.0"
 python:
  - "3.10"
+sudo: required
+before_script:
+  - sudo ssh -o StrictHostKeyChecking=no -fNT -4L 443:llb2.dev.mostlylab.com:443 mostlyai@ssh.dev.mostlylab.com
+  - sudo bash -c 'echo "127.0.0.1 llb2.dev.mostlylab.com" >> /etc/hosts'
 install:
   - pip install poetry==$POETRY_VERSION
   - poetry config virtualenvs.create false
