@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -11,17 +12,25 @@ def create_generator_config():
     return CreateGeneratorRequest(name="Test Generator")
 
 
+@pytest.fixture
+def sample_data():
+    np.random.seed(0)  # For reproducible results
+    df = pd.DataFrame(np.random.rand(5, 3), columns=['A', 'B', 'C'])
+    return df
+
+
+
 class TestGenerators:
-    def test_list(self, mostly_client):
-        for generator in mostly_client.generators.list():
+    def test_list(self, mostly):
+        for generator in mostly.generators.list():
             assert isinstance(generator, Generator)
 
-    def test_create_get_update_delete(self, mostly_client, create_generator_config):
-        generator = mostly_client.generators.create(create_generator_config)
+    def test_create_get_update_delete(self, mostly, create_generator_config):
+        generator = mostly.generators.create(create_generator_config)
         assert isinstance(generator, Generator)
 
         generator_id = str(generator.id)
-        generator = mostly_client.generators.get(generator_id)
+        generator = mostly.generators.get(generator_id)
         assert str(generator.id) == generator_id
 
         updated_params = {"name": "Updated Test Generator"}
@@ -30,23 +39,14 @@ class TestGenerators:
 
         generator.delete()
 
-    def test_create_and_delete(self):
-        pass
-
-    def test_add_get_update_delete_table(
-        self, mostly_client, create_generator_config, local_connector
-    ):
-        generator = mostly_client.generators.create(**create_generator_config)
-        df = pd.DataFrame({"id": [1, 2], "num": [3, 4]})
-        new_table = generator.add_table_from_df_by_upload(df=df, name="simple")
-        assert [c.name for c in new_table.columns] == ["id", "num"]
-        table = generator.get_table(table_id=new_table.id)
-        assert table.name == "simple"
-        updated_table = generator.update_table(table_id=str(table.id), name="new")
-        assert updated_table.name == "new"
-        generator.delete_table(table_id=str(table.id))
-
+    def test_create_and_delete(self, mostly, sample_data):
+        generator = mostly.generators.create(
+            {"tables": [{"data": sample_data, "name": "sample"}]}
+        )
+        assert generator.name == "sample"  # defaulted after the single table name
+        assert [c.name for c in generator.tables[0].columns] == ["A", "B", "C"]
+        generator_id = generator.id
+        generator.delete()
         with pytest.raises(APIStatusError) as err:
-            generator.get_table(table_id=new_table.id)
-
+            mostly.generators.get(generator_id)
         assert "not found" in err.value.message

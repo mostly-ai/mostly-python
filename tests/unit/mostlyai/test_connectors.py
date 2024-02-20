@@ -27,12 +27,12 @@ def new_connector():
 
 
 class TestConnectors:
-    def test_list(self, mostly_client):
-        for connector in mostly_client.connectors.list():
+    def test_list(self, mostly):
+        for connector in mostly.connectors.list():
             assert isinstance(connector, Connector)
 
-    def test_create_update_delete(self, mostly_client, new_connector):
-        fetched_connector = mostly_client.connectors.create(new_connector)
+    def test_create_update_delete(self, mostly, new_connector):
+        fetched_connector = mostly.connectors.create(new_connector)
         assert isinstance(fetched_connector, Connector)
         updated_connector = PatchConnectorRequest(
             name=fetched_connector.name.replace("New", "Updated"),
@@ -42,8 +42,8 @@ class TestConnectors:
         assert "Updated" in response.name
         fetched_connector.delete()
 
-    def test_get_and_locations(self, mostly_client, connector_id):
-        connector = mostly_client.connectors.get(connector_id)
+    def test_get_and_locations(self, mostly, connector_id):
+        connector = mostly.connectors.get(connector_id)
         assert isinstance(connector, Connector)
         assert str(connector.id) == connector_id
         locations = connector.locations()
@@ -54,8 +54,8 @@ class TestConnectors:
             "public",
         ]
 
-    def test_not_found(self, mostly_client):
+    def test_not_found(self, mostly):
         with pytest.raises(APIStatusError) as err:
-            mostly_client.connectors.get("does_not_exist")
+            mostly.connectors.get("does_not_exist")
 
         assert str(400) in err.value.message

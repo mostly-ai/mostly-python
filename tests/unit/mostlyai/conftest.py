@@ -4,10 +4,10 @@ from mostlyai import MostlyAI
 
 
 @pytest.fixture
-def mostly_client():
+def mostly():
     return MostlyAI()
 
 
 @pytest.fixture
-def local_connector(mostly_client):
-    return mostly_client.connectors.create(name="Local Connector", type="LOCAL_STORAGE")
+def local_connector(mostly):
+    return mostly.connectors.create(name="Local Connector", type="LOCAL_STORAGE")
