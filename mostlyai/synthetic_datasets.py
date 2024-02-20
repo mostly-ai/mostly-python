@@ -47,9 +47,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         )
         return response
 
-    def create(
-        self, config: dict[str, Any]
-    ) -> SyntheticDataset:
+    def create(self, config: dict[str, Any]) -> SyntheticDataset:
         """
         Create synthetic dataset
 
@@ -119,9 +117,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         response = self.request(
             verb=GET,
             path=[synthetic_dataset_id, "download"],
-            params={
-                "format": format
-            },
+            params={"format": format},
             headers={
                 "Content-Type": "application/zip",
                 "Accept": "application/json, text/plain, */*",

@@ -92,6 +92,6 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
 
     def _locations(self, connector_id: str, prefix: str = "") -> list:
         response = self.request(
-            path=[connector_id, "locations"], params={"prefix": prefix}
+            verb=GET, path=[connector_id, "locations"], params={"prefix": prefix}
         )
         return response

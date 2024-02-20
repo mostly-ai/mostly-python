@@ -42,14 +42,17 @@ class TestConnectors:
         assert "Updated" in response.name
         fetched_connector.delete()
 
-    def test_get(self, mostly_client, connector_id):
-        result = mostly_client.connectors.get(connector_id)
-        assert isinstance(result, Connector)
-        assert str(result.id) == connector_id
-
-    def test_locations(self, mostly_client, connector_id):
-        result = mostly_client.connectors.locations(connector_id=connector_id)
-        assert result == ["QA_Automation_Output_2", "information_schema", "public"]
+    def test_get_and_locations(self, mostly_client, connector_id):
+        connector = mostly_client.connectors.get(connector_id)
+        assert isinstance(connector, Connector)
+        assert str(connector.id) == connector_id
+        locations = connector.locations()
+        assert locations == [
+            "Berka_Demo",
+            "QA_Automation_Output_2",
+            "information_schema",
+            "public",
+        ]
 
     def test_not_found(self, mostly_client):
         with pytest.raises(APIStatusError) as err:
