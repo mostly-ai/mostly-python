@@ -65,7 +65,7 @@ def _convert_df_to_base64(df: pd.DataFrame) -> str:
 
 def _as_dict(pydantic_or_dict):
     if isinstance(pydantic_or_dict, BaseModel):
-        pydantic_or_dict = pydantic_or_dict.model_dump()
+        pydantic_or_dict = pydantic_or_dict.model_dump(by_alias=True)
     pydantic_or_dict = {
         k: str(v) if isinstance(v, UUID) else v for k, v in pydantic_or_dict.items()
     }
