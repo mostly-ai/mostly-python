@@ -273,7 +273,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         """
         dfs = self.client._data(synthetic_dataset_id=self.id)
         if return_type == "auto" and len(dfs) == 1:
-            return dfs.values()[0]
+            return list(dfs.values())[0]
         else:
             return dfs
 

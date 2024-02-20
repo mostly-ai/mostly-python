@@ -1,3 +1,4 @@
+import pathlib
 from pathlib import Path
 from typing import Annotated, Any, Literal, Optional
 
@@ -199,7 +200,7 @@ class SyntheticDataset:
         """
         dfs = self.client._data(synthetic_dataset_id=self.id)
         if return_type == "auto" and len(dfs) == 1:
-            return dfs.values()[0]
+            return list(dfs.values())[0]
         else:
             return dfs
 

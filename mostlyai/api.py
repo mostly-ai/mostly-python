@@ -165,10 +165,14 @@ class MostlyAI(_MostlyBaseClient):
             )
 
         g = self.generators.create(config)
+        print(f'generator {g.id} created')
         if start:
+            print(f'start training')
             g.training.start()
         if start and wait:
+            print(f'wait for training to finish')
             g = g.training.wait()
+            print(f'finished training')
         return g
 
     def generate(
@@ -213,8 +217,12 @@ class MostlyAI(_MostlyBaseClient):
             config["tables"][0]["sampleSeedData"] = seed_df
 
         sd = self.synthetic_datasets.create(config)
+        print(f'synthetic dataset {sd.id} created')
         if start:
+            print(f'start generation')
             sd.generation.start()
         if start and wait:
+            print(f'wait for generation to finish')
             sd = sd.generation.wait()
+            print(f'finished generation')
         return sd

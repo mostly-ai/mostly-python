@@ -115,7 +115,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         synthetic_dataset_id: StrUUID,
         format: SyntheticDatasetFormat | str = SyntheticDatasetFormat.parquet,
     ) -> (bytes, str | None):
-        format = format.value if isinstance(format, SyntheticDatasetFormat) else format.upper()
+        format = format.upper() if isinstance(format, str) else format.value
         response = self.request(
             verb=GET,
             path=[synthetic_dataset_id, "download"],
