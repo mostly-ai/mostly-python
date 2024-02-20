@@ -3,6 +3,8 @@ import os
 import numpy as np
 import pandas as pd
 
+from mostlyai import MostlyAI
+
 os.environ["MOSTLY_AI_PASSWORD"] = "Mostly01!"
 
 df = pd.DataFrame(
@@ -12,9 +14,6 @@ df = pd.DataFrame(
         "income": np.random.normal(50000, 15000, 10_000),
     }
 )
-
-
-from mostlyai import MostlyAI
 
 client = MostlyAI()
 g = client.generators.create(

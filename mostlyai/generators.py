@@ -13,8 +13,9 @@ from mostlyai.base import (
     StrUUID,
     _MostlyBaseClient,
 )
+from mostlyai.components import CreateGeneratorRequest
 from mostlyai.model import Generator, JobProgress
-from mostlyai.utils import _convert_df_to_base64, _job_wait
+from mostlyai.utils import _convert_df_to_base64, _job_wait, _as_dict
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient):
@@ -44,10 +45,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         response = self.request(verb=GET, path=[generator_id], response_type=Generator)
         return response
 
-    def create(self, config: dict[str, Any]) -> Generator:
-
+    def create(self, config: CreateGeneratorRequest | dict[str, Any]) -> Generator:
+        config = _as_dict(config)
         # convert `data` to base64-encoded Parquet files
-        if "tables" in config:
+        if "tables" in config and config["tables"]:
             for table in config["tables"]:
                 if "data" in table:
                     if isinstance(table["data"], (str, Path)):
