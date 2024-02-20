@@ -13,7 +13,9 @@ from mostlyai.model import (
 
 
 class BaseComponent(BaseModel):
-    model_config = ConfigDict(populate_by_name=True, use_enum_values=True)
+    model_config = ConfigDict(
+        populate_by_name=True, use_enum_values=True, protected_namespaces=()
+    )
 
 
 class CreateConnectorRequest(BaseComponent):
@@ -64,7 +66,7 @@ class TableItem(BaseComponent):
     columns: list[Column]
 
 
-class CreateGeneratorRequest(BaseModel):
+class CreateGeneratorRequest(BaseComponent):
     name: str
     description: str | None = None
     tables: list[TableItem] | None = None
