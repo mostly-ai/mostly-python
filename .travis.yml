@@ -9,14 +9,16 @@ sudo: required
 before_script:
   - sudo ssh -o StrictHostKeyChecking=no -fNT -4L 443:llb2.dev.mostlylab.com:443 mostlyai@ssh.dev.mostlylab.com
   - sudo bash -c 'echo "127.0.0.1 llb2.dev.mostlylab.com" >> /etc/hosts'
-  - 'if [ -n "$MOSTLY_PASSWORD" ]; then export MOSTLY_AI_PASSWORD="$MOSTLY_PASSWORD"; fi'
+  - if [ -n "$MOSTLY_PASSWORD" ]; then
+      export MOSTLY_AI_PASSWORD="$MOSTLY_PASSWORD";
+    fi
 install:
   - pip install poetry==$POETRY_VERSION
   - poetry config virtualenvs.create false
   - poetry install -v --no-interaction --no-ansi --no-root  # Install dependencies
 jobs:
   include:
-    - name: Tests - static analysis [mypy, black, isort]
+    - name: Tests - static analysis [black, isort]
       if: branch NOT IN (test, main) AND tag IS NOT present
       script:
         # - poetry run mypy mostlyai/
