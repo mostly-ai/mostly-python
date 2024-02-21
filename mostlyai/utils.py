@@ -70,3 +70,19 @@ def _as_dict(pydantic_or_dict):
         k: str(v) if isinstance(v, UUID) else v for k, v in pydantic_or_dict.items()
     }
     return pydantic_or_dict
+
+
+def _get_subject_table_names(config) -> list[str]:
+    subject_tables = []
+    for table in config["tables"]:
+        ctx_fks = [fk for fk in table["foreign_keys"] if fk["is_context"]]
+        if len(ctx_fks) == 0:
+            subject_tables.append(table["name"])
+    return subject_tables
+
+
+def _get_table_name_index(config) -> dict[str, int]:
+    table_name_index = {}
+    for i, table in enumerate(config["tables"]):
+        table_name_index[table["name"]] = i
+    return table_name_index

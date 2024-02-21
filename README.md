@@ -6,10 +6,9 @@ A Python wrapper for the MOSTLY AI platform.
 |------------------------------------------------|----------------------------|
 | Train a Generative AI on your tabular data     | `mostly.train(data)`       |
 | Generate unlimited synthetic data on demand    | `mostly.generate(g, size)` |
+| Probe the generator for the data that you need | `mostly.generate(g, seed)` |
 | Empower your team with safe synthetic data     | `mostly.share(g)`          |
 | Connect to any data source within your org     | `mostly.connect(config)`   |
-| Probe the generator for the data that you need | `mostly.generate(g, seed)` |
-| Enrich the data with new LLM intelligence      | `mostly.enrich(data)`      |
 
 
 
@@ -27,8 +26,57 @@ sd = mostly.generate(g)     # generate a synthetic dataset
 syn = sd.data()             # consume synthetic as pd.DataFrame
 ```
 
-## Advanced Usage
+## Supported Methods
+
+### Connectors
+
 ```python
-from mostlyai import MostlyAI
-mostly = MostlyAI(api_key='your_api_key') 
+c = mostly.connect(config)
+
+c = mostly.connectors.create(config)
+c = mostly.connectors.get(id)
+it = mostly.connectors.list()
+c = c.update(config)
+locations = c.locations()
+config = c.config()
+c.delete()
+```
+### Generators
+
+```python
+g = mostly.train(data_or_config, start=True, wait=True)
+
+g = mostly.generators.create(config)
+g = mostly.generators.get(id)
+it = mostly.generators.list()
+g = g.update(config)
+config = g.config()
+g.delete()
+
+g.training.start()
+g.training.progress()
+g.training.cancel()
+g.training.wait()
+```
+
+### Synthetic Data
+
+```python
+sd = mostly.generate(g, seed=seed)
+sd = mostly.generate(g, size=size)
+sd = mostly.generate(g, config=config)
+
+sd = mostly.synthetic_datasets.create(g, config)
+sd = mostly.synthetic_datasets.get(id)
+it = mostly.synthetic_datasets.list()
+config = sd.config()
+sd.delete()
+
+sd.generation.start()
+sd.generation.progress()
+sd.generation.cancel()
+sd.generation.wait()
+
+sd.data()
+sd.download(file, format)
 ```

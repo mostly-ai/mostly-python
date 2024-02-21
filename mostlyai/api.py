@@ -9,7 +9,7 @@ from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
 from mostlyai.model import Connector, Generator
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
-from mostlyai.utils import _convert_df_to_base64
+from mostlyai.utils import _convert_df_to_base64, _get_subject_table_names
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -179,12 +179,12 @@ class MostlyAI(_MostlyBaseClient):
         self,
         generator: Generator | str | UUID | None,
         config: dict | None = None,
-        size: int | dict[str, int] | None = None,  # TODO
+        size: int | dict[str, int] | None = None,
         seed: pd.DataFrame
         | str
         | Path
         | dict[str, pd.DataFrame | str | Path]
-        | None = None,  # TODO
+        | None = None,
         start: bool = True,
         wait: bool = True,
     ):
@@ -193,7 +193,8 @@ class MostlyAI(_MostlyBaseClient):
 
         :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
         :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
-        :param seed: Either a single pandas DataFrame data, or a path to a CSV or PARQUET file. Used for seeding the subject table.
+        :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
+        :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or a dictionary of those. Used for seeding the subject table(s).
         :param start: If true, then generation is started right away. Default: true.
         :param wait: If true, then the function only returns once generation has finished. Default: true.
         :return: The created synthetic dataset.
@@ -217,9 +218,20 @@ class MostlyAI(_MostlyBaseClient):
                     seed_df = pd.read_csv(fn)
             elif isinstance(seed, pd.DataFrame):
                 seed_df = seed
+            elif isinstance(seed, dict):
+                seed_df = list(seed.values())[0]  # FIXME
             else:
                 raise ValueError("seed must be a DataFrame or a file path")
             config["tables"][0]["sampleSeedData"] = seed_df
+        elif size is not None:
+            if isinstance(size, int):
+                config["tables"][0]["configuration"]["sampleSize"] = size
+            elif isinstance(size, dict):
+                config["tables"][0]["configuration"]["sampleSize"] = list(
+                    size.values()
+                )[0]  # FIXME
+            else:
+                raise ValueError("size must be an integer or a dictionary of integers")
 
         sd = self.synthetic_datasets.create(config)
         print(f"synthetic dataset {sd.id} created")
