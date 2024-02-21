@@ -229,7 +229,9 @@ class MostlyAI(_MostlyBaseClient):
             elif isinstance(size, dict):
                 config["tables"][0]["configuration"]["sampleSize"] = list(
                     size.values()
-                )[0]  # FIXME
+                )[
+                    0
+                ]  # FIXME
             else:
                 raise ValueError("size must be an integer or a dictionary of integers")
 
