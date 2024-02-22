@@ -203,26 +203,15 @@ class MostlyAI(_MostlyBaseClient):
             raise ValueError(
                 "Either a generator or a configuration with a generatorId must be provided."
             )
-        if seed is not None:
-            if isinstance(seed, (str, Path)):
-                _, seed_df = _read_table_from_path(seed)
-            elif isinstance(seed, pd.DataFrame):
-                seed_df = seed
-            elif isinstance(seed, dict):
-                seed_df = list(seed.values())[0]  # FIXME
-            else:
-                raise ValueError("seed must be a DataFrame or a file path")
-            config["tables"][0]["sampleSeedData"] = seed_df
-        elif size is not None:
-            if isinstance(size, int):
-                config["tables"][0]["configuration"]["sampleSize"] = size
-            elif isinstance(size, dict):
-                for table_config in config["tables"]:
-                    table_name = table_config["name"]
-                    if table_name in size:
-                        table_config["configuration"]["sampleSize"] = size[table_name]
-            else:
-                raise ValueError("size must be an integer or a dictionary of integers")
+        if "tables" not in config:
+            g = self.generators.get(config["generatorId"])
+            config["tables"] = [{
+                "name": table.name,
+                "configuration": {
+                    "sampleSize": size.get(table.name) if isinstance(size, dict) else size,
+                    "sampleSeedData": seed.get(table.name) if isinstance(seed, dict) else seed,
+                },
+            } for table in g.tables]
 
         sd = self.synthetic_datasets.create(config)
         print(f"synthetic dataset {sd.id} created")
