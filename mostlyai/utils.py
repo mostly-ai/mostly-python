@@ -1,9 +1,11 @@
 import base64
 import io
 import time
+from pathlib import Path
 from typing import Callable
 from uuid import UUID
 
+import pandas
 import pandas as pd
 from pydantic import BaseModel
 from tqdm import tqdm
@@ -86,3 +88,14 @@ def _get_table_name_index(config) -> dict[str, int]:
     for i, table in enumerate(config["tables"]):
         table_name_index[table["name"]] = i
     return table_name_index
+
+
+def _read_table_from_path(path: str | Path) -> (str, pd.DataFrame):
+    # read data from file
+    fn = str(path)
+    if fn.lower().endswith((".pqt", ".parquet")):
+        df = pd.read_parquet(fn)
+    else:
+        df = pd.read_csv(fn)
+    name = Path(fn).stem
+    return name, df

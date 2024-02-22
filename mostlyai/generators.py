@@ -15,7 +15,12 @@ from mostlyai.base import (
 )
 from mostlyai.components import CreateGeneratorRequest
 from mostlyai.model import Generator, JobProgress
-from mostlyai.utils import _as_dict, _convert_df_to_base64, _job_wait
+from mostlyai.utils import (
+    _as_dict,
+    _convert_df_to_base64,
+    _job_wait,
+    _read_table_from_path,
+)
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient):
@@ -52,12 +57,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
             for table in config["tables"]:
                 if "data" in table:
                     if isinstance(table["data"], (str, Path)):
-                        fn = str(table["data"])
-                        if fn.lower().endswith((".pqt", ".parquet")):
-                            df = pd.read_parquet(fn)
-                        else:
-                            df = pd.read_csv(fn)
-                        name = Path(fn).stem
+                        name, df = _read_table_from_path(table["data"])
                         table["data"] = _convert_df_to_base64(df)
                         if "name" not in table:
                             table["name"] = name

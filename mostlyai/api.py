@@ -9,7 +9,7 @@ from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
 from mostlyai.model import Connector, Generator
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
-from mostlyai.utils import _convert_df_to_base64, _get_subject_table_names
+from mostlyai.utils import _read_table_from_path
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -143,13 +143,7 @@ class MostlyAI(_MostlyBaseClient):
         :return: The created generator.
         """
         if isinstance(data_or_config, (str, Path)):
-            # read data from file
-            fn = str(data_or_config)
-            if fn.lower().endswith((".pqt", ".parquet")):
-                df = pd.read_parquet(fn)
-            else:
-                df = pd.read_csv(fn)
-            name = Path(fn).stem
+            name, df = _read_table_from_path(data_or_config)
             config = {"name": name, "tables": [{"data": df, "name": name}]}
         elif isinstance(data_or_config, pd.DataFrame):
             df = data_or_config
@@ -211,11 +205,7 @@ class MostlyAI(_MostlyBaseClient):
             )
         if seed is not None:
             if isinstance(seed, (str, Path)):
-                fn = str(seed)
-                if fn.lower().endswith((".pqt", ".parquet")):
-                    seed_df = pd.read_parquet(fn)
-                else:
-                    seed_df = pd.read_csv(fn)
+                _, seed_df = _read_table_from_path(seed)
             elif isinstance(seed, pd.DataFrame):
                 seed_df = seed
             elif isinstance(seed, dict):
@@ -227,11 +217,10 @@ class MostlyAI(_MostlyBaseClient):
             if isinstance(size, int):
                 config["tables"][0]["configuration"]["sampleSize"] = size
             elif isinstance(size, dict):
-                config["tables"][0]["configuration"]["sampleSize"] = list(
-                    size.values()
-                )[
-                    0
-                ]  # FIXME
+                for table_config in config["tables"]:
+                    table_name = table_config["name"]
+                    if table_name in size:
+                        table_config["configuration"]["sampleSize"] = size[table_name]
             else:
                 raise ValueError("size must be an integer or a dictionary of integers")
 
