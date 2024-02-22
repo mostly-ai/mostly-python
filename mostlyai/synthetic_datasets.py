@@ -15,7 +15,7 @@ from mostlyai.base import (
     _MostlyBaseClient,
 )
 from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat
-from mostlyai.utils import _convert_df_to_base64, _job_wait
+from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_path
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
@@ -57,28 +57,19 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         :return: The created synthetic dataset.
         """
         # convert `sample_seed_data` to base64-encoded Parquet files
-        if "tables" in config:
-            for table in config["tables"]:
-                if "sampleSeedData" in table:
-                    if isinstance(table["sampleSeedData"], pd.DataFrame):
-                        table["sampleSeedData"] = _convert_df_to_base64(
-                            table["sampleSeedData"]
-                        )
-                    elif isinstance(table["sampleSeedData"], str):
-                        if table["sampleSeedData"].lower().endswith(".csv") or table[
-                            "sampleSeedData"
-                        ].lower().endswith(".csv.gz"):
-                            df = pd.read_csv(table["sampleSeedData"])
-                        elif table["sampleSeedData"].lower().endswith(
-                            ".parquet"
-                        ) or table["sampleSeedData"].lower().endswith(".pqt"):
-                            df = pd.read_parquet(table["sampleSeedData"])
-                        else:
-                            raise ValueError("data must be a DataFrame or a file path")
-                        table["sampleSeedData"] = _convert_df_to_base64(df)
-                        del df
-                    else:
-                        raise ValueError("data must be a DataFrame or a file path")
+        tables = config["tables"] if "tables" in config else []
+        for table in tables:
+            if "sampleSeedData" in table:
+                if isinstance(table["sampleSeedData"], pd.DataFrame):
+                    table["sampleSeedData"] = _convert_df_to_base64(
+                        table["sampleSeedData"]
+                    )
+                elif isinstance(table["sampleSeedData"], (zipfile.Path, str)):
+                    _, df = _read_table_from_path(table["sampleSeedData"])
+                    table["sampleSeedData"] = _convert_df_to_base64(df)
+                    del df
+                else:
+                    raise ValueError("data must be a DataFrame or a file path")
         # convert generator_id to str
         config["generatorId"] = str(config["generatorId"])
         synthetic_dataset = self.request(
