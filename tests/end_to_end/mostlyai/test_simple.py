@@ -1,8 +1,11 @@
+from time import sleep
+
 import numpy as np
 import pandas as pd
 import pytest
 
 from mostlyai.components import CreateGeneratorRequest, ForeignKey, TableItem
+from mostlyai.exceptions import APIStatusError
 
 
 @pytest.fixture
@@ -66,3 +69,20 @@ def test_subject_linked(mostly, subject_and_linked_df):
     sd = mostly.generate(g)
     syn = sd.data()
     assert syn is not None  # TODO
+
+
+def test_share(mostly):
+    test_user = "test1@mostly.ai"
+    df = pd.DataFrame({"col": [1, 2, 3]})
+    g = mostly.train(df, start=False)
+    mostly.share(g, test_user)
+    shares_emails = [share.email for share in mostly.shares.get(g)]
+    assert test_user in shares_emails
+    # mostly.shares.revoke(g, test_user)
+    # shares_emails = [share.email for share in mostly.shares.get(g)]
+    # assert test_user not in shares_emails
+    with pytest.raises(APIStatusError) as err:
+        mostly.share(g, "superadmin@mostly.ai")
+    assert "the same user" in err.value.message
+    # cleanup
+    g.delete()

@@ -94,5 +94,5 @@ class CreateShareRequest(BaseComponent):
     )
 
 
-class DeleteShareRequest(BaseModel):
+class DeleteShareRequest(BaseComponent):
     user_email: str = Field(..., alias="userEmail", description="The email of a user")

@@ -60,17 +60,24 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         # convert `sample_seed_data` to base64-encoded Parquet files
         tables = config["tables"] if "tables" in config else []
         for table in tables:
-            if "sampleSeedData" in table["configuration"]:
+            if (
+                "sampleSeedData" in table["configuration"]
+                and table["configuration"]["sampleSeedData"]
+            ):
                 if isinstance(table["configuration"]["sampleSeedData"], pd.DataFrame):
                     table["configuration"]["sampleSeedData"] = _convert_df_to_base64(
                         table["configuration"]["sampleSeedData"]
                     )
                 elif isinstance(table["configuration"]["sampleSeedData"], (Path, str)):
-                    _, df = _read_table_from_path(table["configuration"]["sampleSeedData"])
+                    _, df = _read_table_from_path(
+                        table["configuration"]["sampleSeedData"]
+                    )
                     table["configuration"]["sampleSeedData"] = _convert_df_to_base64(df)
                     del df
                 else:
-                    raise ValueError("sampleSeedData must be a DataFrame or a file path")
+                    raise ValueError(
+                        "sampleSeedData must be a DataFrame or a file path"
+                    )
         # convert generator_id to str
         config["generatorId"] = str(config["generatorId"])
         synthetic_dataset = self.request(

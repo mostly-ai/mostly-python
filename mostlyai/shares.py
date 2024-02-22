@@ -1,4 +1,4 @@
-from mostlyai.base import DELETE, GET, POST, StrUUID, _MostlyBaseClient
+from mostlyai.base import DELETE, GET, POST, REQUEST, StrUUID, _MostlyBaseClient
 from mostlyai.components import (
     CreateShareRequest,
     DeleteShareRequest,
@@ -38,12 +38,8 @@ class _MostlySharesClient(_MostlyBaseClient):
         config = _as_dict(
             CreateShareRequest(user_email=user_email, permission_level=permission_level)
         )
-        share = self.request(
-            verb=POST, path=[resource_id], json=config, response_type=Share
-        )
+        self.request(verb=POST, path=[resource_id], json=config)
 
-        return share
-
-    def _revoke(self, resource_id: str, user_email: str):
+    def revoke(self, resource_id: str, user_email: str):
         config = _as_dict(DeleteShareRequest(user_email=user_email))
-        self.request(verb=DELETE, path=[resource_id], json=config)
+        self.request(verb=REQUEST, method=DELETE, path=[resource_id], json=config)

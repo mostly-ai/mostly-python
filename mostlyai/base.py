@@ -11,12 +11,14 @@ GET = "get"
 POST = "post"
 PATCH = "patch"
 DELETE = "delete"
-HttpVerb = Literal[GET, POST, PATCH, DELETE]  # type: ignore
+REQUEST = "request"  # raw request
+HttpVerb = Literal[GET, POST, PATCH, DELETE, REQUEST]
 _VERB_HTTPX_FUNC_MAP = {
     GET: httpx.get,
     POST: httpx.post,
     PATCH: httpx.patch,
     DELETE: httpx.delete,
+    REQUEST: httpx.request,
 }
 _EXAMPLE_BASE_URL = "https://llb2.dev.mostlylab.com"
 T = TypeVar("T")
@@ -110,7 +112,10 @@ class _MostlyBaseClient:
         kwargs["headers"] = self.headers() | kwargs.get("headers", {})
 
         try:
-            response = req_func(full_url, **kwargs)  # type: ignore
+            if verb == REQUEST:
+                response = req_func(kwargs.pop("method"), full_url, **kwargs)
+            else:
+                response = req_func(full_url, **kwargs)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
             # Handle HTTP errors (not in 2XX range)

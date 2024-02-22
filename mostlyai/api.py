@@ -210,13 +210,20 @@ class MostlyAI(_MostlyBaseClient):
             )
         if "tables" not in config:
             g = self.generators.get(config["generatorId"])
-            config["tables"] = [{
-                "name": table.name,
-                "configuration": {
-                    "sampleSize": size.get(table.name) if isinstance(size, dict) else size,
-                    "sampleSeedData": seed.get(table.name) if isinstance(seed, dict) else seed,
-                },
-            } for table in g.tables]
+            config["tables"] = [
+                {
+                    "name": table.name,
+                    "configuration": {
+                        "sampleSize": size.get(table.name)
+                        if isinstance(size, dict)
+                        else size,
+                        "sampleSeedData": seed.get(table.name)
+                        if isinstance(seed, dict)
+                        else seed,
+                    },
+                }
+                for table in g.tables
+            ]
 
         sd = self.synthetic_datasets.create(config)
         print(f"synthetic dataset {sd.id} created")
@@ -237,4 +244,4 @@ class MostlyAI(_MostlyBaseClient):
         user_email: str,
         permission_level: PermissionLevel = PermissionLevel.view,
     ):
-        return self.shares.share(resource, user_email, permission_level)
+        return self.shares._share(resource, user_email, permission_level)
