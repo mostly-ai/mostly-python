@@ -1,20 +1,31 @@
+from enum import Enum
 from typing import Optional
 from uuid import UUID
 
+import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field
 
 from mostlyai.model import (
+    Connector,
     ConnectorAccessType,
     ConnectorTestConnection,
     ConnectorType,
+    Generator,
     ModelConfiguration,
     ModelEncodingType,
+    PermissionLevel,
+    SyntheticDataset,
 )
+
+ShareableResource = Connector | Generator | SyntheticDataset
 
 
 class BaseComponent(BaseModel):
     model_config = ConfigDict(
-        populate_by_name=True, use_enum_values=True, protected_namespaces=()
+        populate_by_name=True,
+        use_enum_values=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True,
     )
 
 
@@ -54,19 +65,34 @@ class Column(BaseComponent):
 
 class TableItem(BaseComponent):
     name: str
-    source_connector_id: UUID = Field(..., alias="sourceConnectorId")
-    location: str
-    data: str
-    model_configuration: ModelConfiguration = Field(..., alias="modelConfiguration")
-    text_model_configuration: ModelConfiguration = Field(
-        ..., alias="textModelConfiguration"
+    source_connector_id: UUID | None = Field(None, alias="sourceConnectorId")
+    location: str | None = None
+    data: str | pd.DataFrame
+    model_configuration: ModelConfiguration | None = Field(
+        None, alias="modelConfiguration"
     )
-    primary_key: str = Field(..., alias="primaryKey")
-    foreign_keys: list[ForeignKey] = Field(..., alias="foreignKeys")
-    columns: list[Column]
+    text_model_configuration: ModelConfiguration | None = Field(
+        None, alias="textModelConfiguration"
+    )
+    primary_key: str | None = Field(None, alias="primaryKey")
+    foreign_keys: list[ForeignKey] | None = Field(None, alias="foreignKeys")
+    columns: list[Column] | None = None
 
 
 class CreateGeneratorRequest(BaseComponent):
     name: str
     description: str | None = None
     tables: list[TableItem] | None = None
+
+
+class CreateShareRequest(BaseComponent):
+    user_email: str = Field(..., alias="userEmail", description="The email of a user")
+    permission_level: PermissionLevel = Field(
+        ...,
+        alias="permissionLevel",
+        description="The permission level of the user or group with respect to this entity",
+    )
+
+
+class DeleteShareRequest(BaseModel):
+    user_email: str = Field(..., alias="userEmail", description="The email of a user")

@@ -14,8 +14,8 @@ def subject_and_linked_df():
         {"id": range(1, 101), "name": np.random.choice(names, 100)}
     )
 
-    # Initialize an empty DataFrame for linked_df
-    linked_df = pd.DataFrame(columns=["id", "subject_id", "count"])
+    # List to store the linked data
+    linked_data = []
 
     event_id = 1
     for user_id in subject_df["id"]:
@@ -23,12 +23,14 @@ def subject_and_linked_df():
         num_events = np.random.randint(1, 6)
 
         for event_count in range(1, num_events + 1):
-            # Append event data to linked_df
-            linked_df = linked_df.append(
-                {"id": event_id, "subject_id": user_id, "count": event_count},
-                ignore_index=True,
+            # Add event data to the list
+            linked_data.append(
+                {"id": event_id, "subject_id": user_id, "count": event_count}
             )
             event_id += 1
+
+    # Convert the list of dictionaries to a DataFrame
+    linked_df = pd.DataFrame(linked_data, columns=["id", "subject_id", "count"])
 
     return subject_df, linked_df
 

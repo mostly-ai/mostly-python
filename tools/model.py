@@ -241,3 +241,9 @@ class SyntheticDataset:
             return self.synthetic_dataset.client._generation_wait(
                 self.synthetic_dataset.id, interval=interval
             )
+
+
+class Share:
+    def revoke(self, user_email: str):
+        # TODO
+        pass

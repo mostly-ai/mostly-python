@@ -4,12 +4,14 @@ from uuid import UUID
 
 import pandas as pd
 
-from mostlyai.base import _MostlyBaseClient
+from mostlyai.base import POST, StrUUID, _MostlyBaseClient
+from mostlyai.components import CreateGeneratorRequest, ShareableResource
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
-from mostlyai.model import Connector, Generator
+from mostlyai.model import Connector, Generator, PermissionLevel
+from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
-from mostlyai.utils import _read_table_from_path
+from mostlyai.utils import _as_dict, _read_table_from_path
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -26,6 +28,7 @@ class MostlyAI(_MostlyBaseClient):
         self.connectors = _MostlyConnectorsClient(**client_kwargs)
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
+        self.shares = _MostlySharesClient(**client_kwargs)
 
     def connect(self, config: dict[str, Any]) -> Connector:
         """
@@ -153,6 +156,8 @@ class MostlyAI(_MostlyBaseClient):
             }
         elif isinstance(data_or_config, dict):
             config = data_or_config
+        elif isinstance(data_or_config, CreateGeneratorRequest):
+            config = _as_dict(data_or_config)
         else:
             raise ValueError(
                 "data_or_config must be a DataFrame, a file path or a dictionary"
@@ -223,3 +228,13 @@ class MostlyAI(_MostlyBaseClient):
             sd = sd.generation.wait()
             print(f"finished generation")
         return sd
+
+    # SHARES
+
+    def share(
+        self,
+        resource: StrUUID | ShareableResource,
+        user_email: str,
+        permission_level: PermissionLevel = PermissionLevel.view,
+    ):
+        return self.shares.share(resource, user_email, permission_level)
