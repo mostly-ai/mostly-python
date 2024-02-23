@@ -40,6 +40,7 @@ class _MostlySharesClient(_MostlyBaseClient):
         )
         self.request(verb=POST, path=[resource_id], json=config)
 
-    def revoke(self, resource_id: str, user_email: str):
+    def _unshare(self, resource_id: str, user_email: str):
+        resource_id = self._resource_id(resource_id)
         config = _as_dict(DeleteShareRequest(user_email=user_email))
-        self.request(verb=REQUEST, method=DELETE, path=[resource_id], json=config)
+        self.request(verb=REQUEST, method="DELETE", path=[resource_id], json=config)

@@ -78,9 +78,9 @@ def test_share(mostly):
     mostly.share(g, test_user)
     shares_emails = [share.email for share in mostly.shares.get(g)]
     assert test_user in shares_emails
-    # mostly.shares.revoke(g, test_user)
-    # shares_emails = [share.email for share in mostly.shares.get(g)]
-    # assert test_user not in shares_emails
+    mostly.unshare(g, test_user)
+    shares_emails = [share.email for share in mostly.shares.get(g)]
+    assert test_user not in shares_emails
     with pytest.raises(APIStatusError) as err:
         mostly.share(g, "superadmin@mostly.ai")
     assert "the same user" in err.value.message

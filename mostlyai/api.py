@@ -245,3 +245,6 @@ class MostlyAI(_MostlyBaseClient):
         permission_level: PermissionLevel = PermissionLevel.view,
     ):
         return self.shares._share(resource, user_email, permission_level)
+
+    def unshare(self, resource: StrUUID | ShareableResource, user_email: str):
+        return self.shares._unshare(resource, user_email)
