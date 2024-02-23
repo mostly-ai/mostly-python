@@ -15,6 +15,7 @@ from mostlyai.base import (
 )
 from mostlyai.components import CreateGeneratorRequest
 from mostlyai.model import Generator, JobProgress
+from mostlyai.shares import _MostlySharesMixin
 from mostlyai.utils import (
     _as_dict,
     _convert_df_to_base64,
@@ -23,7 +24,7 @@ from mostlyai.utils import (
 )
 
 
-class _MostlyGeneratorsClient(_MostlyBaseClient):
+class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
     SECTION = ["generators"]
 
     def list(self, offset: int = 0, limit: int = 50) -> Iterator[Generator]:

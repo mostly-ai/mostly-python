@@ -11,10 +11,11 @@ from mostlyai.base import (
 )
 from mostlyai.components import CreateConnectorRequest, PatchConnectorRequest
 from mostlyai.model import Connector, ConnectorAccessType, ConnectorType
+from mostlyai.shares import _MostlySharesMixin
 from mostlyai.utils import _as_dict
 
 
-class _MostlyConnectorsClient(_MostlyBaseClient):
+class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     SECTION = ["connectors"]
 
     ## PUBLIC METHODS ##

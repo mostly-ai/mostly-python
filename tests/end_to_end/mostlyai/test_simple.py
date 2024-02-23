@@ -64,11 +64,13 @@ def test_subject_linked(mostly, subject_and_linked_df):
                 ],
             ),
         ],
-    )  # This is quite cumbersome, isn't it?
+    )
     g = mostly.train(create_generator)
     sd = mostly.generate(g)
     syn = sd.data()
-    assert syn is not None  # TODO
+    assert sorted(syn.keys()) == sorted(["subject", "linked"])
+    assert syn["subject"].shape == (100, 2)
+    assert len(syn["linked"].columns) == 3
 
 
 def test_share(mostly):
@@ -76,10 +78,10 @@ def test_share(mostly):
     df = pd.DataFrame({"col": [1, 2, 3]})
     g = mostly.train(df, start=False)
     mostly.share(g, test_user)
-    shares_emails = [share.email for share in mostly.shares.get(g)]
+    shares_emails = [share.email for share in g.shares()]
     assert test_user in shares_emails
     mostly.unshare(g, test_user)
-    shares_emails = [share.email for share in mostly.shares.get(g)]
+    shares_emails = [share.email for share in g.shares()]
     assert test_user not in shares_emails
     with pytest.raises(APIStatusError) as err:
         mostly.share(g, "superadmin@mostly.ai")

@@ -76,6 +76,9 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         :return: The generator properties as dictionary
         """
         return self.client._config(connector_id=self.id)
+
+    def shares(self):
+        return self.client._shares(resource_id=self.id)
 {%- endif %}
 {%- if class_name == "Generator" %}
     training: Annotated[Optional[Any], Field(exclude=True)] = None
@@ -108,6 +111,9 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         """
         return self.client._config(generator_id=self.id)
 
+    def shares(self):
+        return self.client._shares(resource_id=self.id)
+
     class Training:
         def __init__(self, _generator: "Generator"):
             self.generator = _generator
@@ -139,20 +145,6 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
             return self.generator.client._training_wait(
                 self.generator.id, interval=interval
             )
-
-        def generate(
-            self, config: dict[str, Any], start: bool = True, wait: bool = True
-        ):
-            """
-            Generate a synthetic dataset based on this generator
-
-            :param kwargs: The configuration parameters of the synthetic dataset to be created.
-            :return: The synthetic dataset
-            """
-            raise "Not implemented yet. Call the client.synthetic_datasets.create method instead."
-            # FIXME @michdr: how can we access the synthetic dataset client here?
-            # return self.synthetic_datasets.create(generator_id=self.generator.id, start=start, wait=wait, **kwargs)
-            pass
 
         def list_synthetic_dataset(self) -> list["SyntheticDataset"]:
             """
@@ -276,6 +268,9 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
             return list(dfs.values())[0]
         else:
             return dfs
+
+    def shares(self):
+        return self.client._shares(resource_id=self.id)
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):

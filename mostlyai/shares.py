@@ -21,7 +21,7 @@ class _MostlySharesClient(_MostlyBaseClient):
             raise ValueError(f"{resource=} is invalid")
         return resource_id
 
-    def get(self, resource: StrUUID) -> list[Share]:
+    def _list(self, resource: StrUUID) -> list[Share]:
         resource_id = self._resource_id(resource)
         response = self.request(verb=GET, path=[resource_id])
         response = [Share(**share) for share in response]
@@ -40,7 +40,17 @@ class _MostlySharesClient(_MostlyBaseClient):
         )
         self.request(verb=POST, path=[resource_id], json=config)
 
-    def _unshare(self, resource_id: str, user_email: str):
-        resource_id = self._resource_id(resource_id)
+    def _unshare(self, resource: StrUUID | ShareableResource, user_email: str):
+        resource_id = self._resource_id(resource)
         config = _as_dict(DeleteShareRequest(user_email=user_email))
         self.request(verb=REQUEST, method="DELETE", path=[resource_id], json=config)
+
+
+class _MostlySharesMixin:
+    @property
+    def shares_client(self):
+        client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
+        return _MostlySharesClient(**client_kwargs)
+
+    def _shares(self, resource_id: StrUUID) -> list[Share]:
+        return self.shares_client._list(resource_id)

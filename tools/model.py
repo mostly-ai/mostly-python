@@ -48,6 +48,9 @@ class Connector:
         """
         return self.client._config(connector_id=self.id)
 
+    def shares(self):
+        return self.client._shares(resource_id=self.id)
+
 
 class Generator:
     training: Annotated[Optional[Any], Field(exclude=True)] = None
@@ -79,6 +82,9 @@ class Generator:
         :return: The generator properties as dictionary
         """
         return self.client._config(generator_id=self.id)
+
+    def shares(self):
+        return self.client._shares(resource_id=self.id)
 
     class Training:
         def __init__(self, _generator: "Generator"):
@@ -190,6 +196,9 @@ class SyntheticDataset:
         else:
             return dfs
 
+    def shares(self):
+        return self.client._shares(resource_id=self.id)
+
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):
             self.synthetic_dataset = _synthetic_dataset
@@ -227,9 +236,3 @@ class SyntheticDataset:
             return self.synthetic_dataset.client._generation_wait(
                 self.synthetic_dataset.id, interval=interval
             )
-
-
-class Share:
-    def revoke(self, user_email: str):
-        # TODO
-        pass

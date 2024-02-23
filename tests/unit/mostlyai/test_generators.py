@@ -48,4 +48,4 @@ class TestGenerators:
         generator.delete()
         with pytest.raises(APIStatusError) as err:
             mostly.generators.get(generator_id)
-        assert "not found" in err.value.message
+        assert "does not exist" in err.value.message
