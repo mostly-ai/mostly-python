@@ -112,20 +112,6 @@ class Generator:
                 self.generator.id, interval=interval
             )
 
-        def generate(
-            self, config: dict[str, Any], start: bool = True, wait: bool = True
-        ):
-            """
-            Generate a synthetic dataset based on this generator
-
-            :param kwargs: The configuration parameters of the synthetic dataset to be created.
-            :return: The synthetic dataset
-            """
-            raise "Not implemented yet. Call the client.synthetic_datasets.create method instead."
-            # FIXME @michdr: how can we access the synthetic dataset client here?
-            # return self.synthetic_datasets.create(generator_id=self.generator.id, start=start, wait=wait, **kwargs)
-            pass
-
         def list_synthetic_dataset(self) -> list["SyntheticDataset"]:
             """
             List synthetic datasets

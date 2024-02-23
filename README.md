@@ -37,7 +37,7 @@ c = mostly.connectors.create(config)
 c = mostly.connectors.get(id)
 it = mostly.connectors.list()
 c = c.update(config)
-locations = c.locations()
+ls = c.locations()
 config = c.config()
 c.delete()
 ```
@@ -59,7 +59,7 @@ g.training.cancel()
 g.training.wait()
 ```
 
-### Synthetic Data
+### Synthetic Datasets
 
 ```python
 sd = mostly.generate(g, seed=seed)
@@ -79,4 +79,13 @@ sd.generation.wait()
 
 sd.data()
 sd.download(file, format)
+```
+
+### Sharing
+
+```python
+mostly.share(g | sd | c, email, permission_level="VIEW")
+mostly.unshare(g | sd | c, email)
+
+g.shares() -> List[Share]
 ```

@@ -223,6 +223,7 @@ class MostlyAI(_MostlyBaseClient):
                     },
                 }
                 for table in g.tables
+                if len([fk for fk in table.foreign_keys if fk.is_context]) == 0 # is subject table
             ]
 
         sd = self.synthetic_datasets.create(config)
