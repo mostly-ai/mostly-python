@@ -62,7 +62,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         for table in tables:
             if (
                 "sampleSeedData" in table["configuration"]
-                and table["configuration"]["sampleSeedData"]
+                and table["configuration"]["sampleSeedData"] is not None
             ):
                 if isinstance(table["configuration"]["sampleSeedData"], pd.DataFrame):
                     table["configuration"]["sampleSeedData"] = _convert_df_to_base64(

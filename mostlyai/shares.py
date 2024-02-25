@@ -32,12 +32,10 @@ class _MostlySharesClient(_MostlyBaseClient):
 
     def _share(
         self,
-        resource: Union[StrUUID, ShareableResource],
+        resource_id: str,
         user_email: str,
         permission_level: PermissionLevel,
-    ) -> Share:
-        resource_id = self._resource_id(resource)
-
+    ):
         config = _as_dict(
             CreateShareRequest(user_email=user_email, permission_level=permission_level)
         )

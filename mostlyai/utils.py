@@ -25,15 +25,17 @@ def _job_wait(
     progress = Progress()
     progress_bars = {
         "overall": progress.add_task(
-            description="Overall Job progress",
-            total=job.progress.max
+            description="[bold]Overall job progress[/b]",
+            completed=0,
+            total=job.progress.max,
         )
     }
     for step in job.steps:
         progress_bars |= {
             step.id: progress.add_task(
-                description=f"Step {step.model_label} {step.step_code.value}",
-                total=step.progress.max
+                description=f"Step {step.model_label or 'common'} [#808080]{step.step_code.value}[/]",
+                completed=0,
+                total=1,
             )
         }
     # loop until job has completed
@@ -46,7 +48,8 @@ def _job_wait(
         # update progress bars
         progress.update(progress_bars["overall"], total=job.progress.max, completed=job.progress.value)
         for i, step in enumerate(job.steps):
-            progress.update(progress_bars[step.id], total=step.progress.max, completed=step.progress.value)
+            if step.progress.max > 0:
+                progress.update(progress_bars[step.id], total=step.progress.max, completed=step.progress.value)
             # break if step has failed or been canceled
             if step.status == ProgressStatus.failed:
                 rich.print(f"[red]Step {step.model_label} {step.step_code.value} failed")
@@ -58,7 +61,7 @@ def _job_wait(
                 return
         # check whether we are done
         if job.progress.value >= job.progress.max:
-            time.sleep(1)  # give the entity a chance to update
+            time.sleep(1)  # give the system a moment
             progress.stop()
             return
 
