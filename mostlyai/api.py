@@ -173,7 +173,7 @@ class MostlyAI(_MostlyBaseClient):
             rich.print(f"Started generator training")
         if start and wait:
             g = g.training.wait()
-            rich.print(":tada: [bold]Your generator is ready![/]"
+            rich.print(":tada: [bold green]Your generator is ready![/] "
                        "Use it to create synthetic data. "
                        "Share it so others can do the same.")
         return g
