@@ -2,7 +2,7 @@ import io
 import re
 import zipfile
 from pathlib import Path
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator, Optional, Union
 
 import pandas as pd
 
@@ -110,8 +110,8 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     def _download(
         self,
         synthetic_dataset_id: StrUUID,
-        format: SyntheticDatasetFormat | str = SyntheticDatasetFormat.parquet,
-    ) -> (bytes, str | None):
+        format: Union[SyntheticDatasetFormat, str] = SyntheticDatasetFormat.parquet,
+    ) -> (bytes, Optional[str]):
         format = format.upper() if isinstance(format, str) else format.value
         response = self.request(
             verb=GET,

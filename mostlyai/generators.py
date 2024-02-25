@@ -1,6 +1,6 @@
 import time
 from pathlib import Path
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator, Optional, Union
 
 import pandas as pd
 
@@ -51,7 +51,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         response = self.request(verb=GET, path=[generator_id], response_type=Generator)
         return response
 
-    def create(self, config: CreateGeneratorRequest | dict[str, Any]) -> Generator:
+    def create(self, config: Union[CreateGeneratorRequest, dict[str, Any]]) -> Generator:
         config = _as_dict(config)
         # convert `data` to base64-encoded Parquet files
         if "tables" in config and config["tables"]:

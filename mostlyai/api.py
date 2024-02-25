@@ -1,10 +1,11 @@
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from uuid import UUID
 
 import pandas as pd
+import rich
 
-from mostlyai.base import POST, StrUUID, _MostlyBaseClient
+from mostlyai.base import _MostlyBaseClient
 from mostlyai.components import CreateGeneratorRequest, ShareableResource
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
@@ -133,7 +134,7 @@ class MostlyAI(_MostlyBaseClient):
 
     def train(
         self,
-        data_or_config: pd.DataFrame | str | Path | dict[str, Any],
+        data_or_config: Union[pd.DataFrame, str, Path, dict[str, Any]],
         start: bool = True,
         wait: bool = True,
     ):
@@ -164,26 +165,21 @@ class MostlyAI(_MostlyBaseClient):
             )
 
         g = self.generators.create(config)
-        print(f"generator {g.id} created")
+        rich.print(f"Generator [bold black]{g.id}[/] created")
         if start:
-            print(f"start training")
+            rich.print(f"Start training")
             g.training.start()
         if start and wait:
-            print(f"wait for training to finish")
             g = g.training.wait()
-            print(f"finished training")
+            rich.print(f"Finished training 🎉")
         return g
 
     def generate(
         self,
-        generator: Generator | str | UUID | None,
-        config: dict | None = None,
-        size: int | dict[str, int] | None = None,
-        seed: pd.DataFrame
-        | str
-        | Path
-        | dict[str, pd.DataFrame | str | Path]
-        | None = None,
+        generator: Union[Generator, str, UUID, None],
+        config: Union[dict, None] = None,
+        size: Union[int, dict[str, int], None] = None,
+        seed: Union[pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None] = None,
         start: bool = True,
         wait: bool = True,
     ):
@@ -227,25 +223,24 @@ class MostlyAI(_MostlyBaseClient):
             ]
 
         sd = self.synthetic_datasets.create(config)
-        print(f"synthetic dataset {sd.id} created")
+        rich.print(f"Synthetic dataset [bold black]{g.id}[/] created")
         if start:
-            print(f"start generation")
+            rich.print(f"[gray]Start generation")
             sd.generation.start()
         if start and wait:
-            print(f"wait for generation to finish")
             sd = sd.generation.wait()
-            print(f"finished generation")
+            rich.print(f"Finished generation 🎉")
         return sd
 
     # SHARES
 
     def share(
         self,
-        resource: StrUUID | ShareableResource,
+        resource: Union[str, UUID, ShareableResource],
         user_email: str,
         permission_level: PermissionLevel = PermissionLevel.view,
     ):
         return self.shares._share(resource, user_email, permission_level)
 
-    def unshare(self, resource: StrUUID | ShareableResource, user_email: str):
+    def unshare(self, resource: Union[str, UUID, ShareableResource], user_email: str):
         return self.shares._unshare(resource, user_email)

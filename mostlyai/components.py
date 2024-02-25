@@ -1,5 +1,4 @@
-from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 from uuid import UUID
 
 import pandas as pd
@@ -17,7 +16,7 @@ from mostlyai.model import (
     SyntheticDataset,
 )
 
-ShareableResource = Connector | Generator | SyntheticDataset
+ShareableResource = Union[Connector, Generator, SyntheticDataset]
 
 
 class BaseComponent(BaseModel):
@@ -65,24 +64,24 @@ class Column(BaseComponent):
 
 class TableItem(BaseComponent):
     name: str
-    source_connector_id: UUID | None = Field(None, alias="sourceConnectorId")
-    location: str | None = None
-    data: str | pd.DataFrame
-    model_configuration: ModelConfiguration | None = Field(
+    source_connector_id: Optional[UUID] = Field(None, alias="sourceConnectorId")
+    location: Optional[str] = None
+    data: Union[str, pd.DataFrame]
+    model_configuration: Optional[ModelConfiguration] = Field(
         None, alias="modelConfiguration"
     )
-    text_model_configuration: ModelConfiguration | None = Field(
+    text_model_configuration: Optional[ModelConfiguration] = Field(
         None, alias="textModelConfiguration"
     )
-    primary_key: str | None = Field(None, alias="primaryKey")
-    foreign_keys: list[ForeignKey] | None = Field(None, alias="foreignKeys")
-    columns: list[Column] | None = None
+    primary_key: Optional[str] = Field(None, alias="primaryKey")
+    foreign_keys: Optional[list[ForeignKey]] = Field(None, alias="foreignKeys")
+    columns: Optional[list[Column]] = None
 
 
 class CreateGeneratorRequest(BaseComponent):
     name: str
-    description: str | None = None
-    tables: list[TableItem] | None = None
+    description: Optional[str] = None
+    tables: Optional[list[TableItem]] = None
 
 
 class CreateShareRequest(BaseComponent):

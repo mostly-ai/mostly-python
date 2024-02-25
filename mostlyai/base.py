@@ -20,58 +20,32 @@ _VERB_HTTPX_FUNC_MAP = {
     DELETE: httpx.delete,
     REQUEST: httpx.request,
 }
-_EXAMPLE_BASE_URL = "https://llb2.dev.mostlylab.com"
+DEFAULT_BASE_URL = "https://llb2.dev.mostlylab.com"  # TODO: replace with the actual base URL
 T = TypeVar("T")
 StrUUID = Union[str, UUID]
 
 
 class _MostlyBaseClient:
     """
-    Base client class, which contains all the essentials to be used by sub-classes.
+    Base client class, which contains all the essentials to be used by subclasses.
     """
 
-    ENV_VAR_PREFIX = "MOSTLY_AI"
     API_SECTION = ["api", "v2"]
     SECTION = []
 
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
         self.base_url = (
-            base_url or self._load_from_env_var("BASE_URL") or _EXAMPLE_BASE_URL
+            base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL
         )
         self.api_key = (
-            api_key or self._load_from_env_var("API_KEY") or self._temp_get_token()
+            api_key or os.getenv("MOSTLY_API_KEY")
         )
-
-    def _env_var(self, name: str):
-        return f"{self.ENV_VAR_PREFIX}_{name.upper()}"
-
-    def _load_from_env_var(self, name: str) -> Optional[str]:
-        return os.getenv(self._env_var(name))
-
-    def _temp_get_token(self) -> str:
-        path = "auth/realms/mostly-generate/protocol/openid-connect/token"
-        data = {
-            "username": "superadmin@mostly.ai",
-            "password": self._load_from_env_var("PASSWORD"),
-            "client_id": "mostly-app-frontend",
-            "grant_type": "password",
-        }
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        response = self.request(
-            is_api_call=False, verb=POST, path=path, headers=headers, data=data
-        )
-
-        return response["access_token"]
 
     def headers(self):
-        # this hack will be eliminated once temp_get_token is removed
-        if hasattr(self, "api_key"):
-            return {
-                "Accept": "application/json",
-                "Authorization": f"Bearer {self.api_key}",
-            }
-        else:
-            return {}
+        return {
+            "Accept": "application/json",
+            'X-MOSTLY-API-KEY': self.api_key,  # Authorization ??
+        }
 
     def request(
         self,
@@ -120,7 +94,7 @@ class _MostlyBaseClient:
         except httpx.HTTPStatusError as exc:
             # Handle HTTP errors (not in 2XX range)
             raise APIStatusError(
-                f"HTTP error occurred: {exc.response.status_code} {exc.response.content}",
+                f"HTTP error {exc.response.status_code} {exc.response.content}",
             ) from exc
         except httpx.RequestError as exc:
             # Handle request errors (e.g., network issues)

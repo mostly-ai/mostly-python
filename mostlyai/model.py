@@ -6,9 +6,11 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import Annotated, Any, Dict, List, Optional
+from pathlib import Path
+from typing import Annotated, Any, Dict, List, Optional, Union, Literal
 from uuid import UUID
 
+import pandas as pd
 from pydantic import Field, RootModel
 
 from mostlyai.base import CustomBaseModel
@@ -817,8 +819,8 @@ class SyntheticDataset(CustomBaseModel):
 
     def download(
         self,
-        file_path: str | Path | None = None,
-        format: str | SyntheticDatasetFormat = SyntheticDatasetFormat.parquet,
+        file_path: Union[str, Path, None] = None,
+        format: Union[str, SyntheticDatasetFormat] = SyntheticDatasetFormat.parquet,
     ) -> Path:
         """
         Download synthetic dataset and save to file
@@ -837,7 +839,7 @@ class SyntheticDataset(CustomBaseModel):
 
     def data(
         self, return_type: Literal["auto", "dict"] = "auto"
-    ) -> dict[str, pd.DataFrame] | pd.DataFrame:
+    ) -> Union[dict[str, pd.DataFrame], pd.DataFrame]:
         """
         Download synthetic dataset and return as dictionary of pandas DataFrames
 
@@ -880,7 +882,7 @@ class SyntheticDataset(CustomBaseModel):
                 self.synthetic_dataset.id
             )
 
-        def wait(self, interval: float = 5) -> "SyntheticDataset":
+        def wait(self, interval: float = 1) -> "SyntheticDataset":
             """
             Poll generation progress and loop until generation has completed
 
@@ -977,7 +979,7 @@ class Generator(CustomBaseModel):
             """
             return self.generator.client._training_progress(self.generator.id)
 
-        def wait(self, interval: float = 5) -> "Generator":
+        def wait(self, interval: float = 1) -> "Generator":
             """
             Poll training progress and loop until training has completed
 

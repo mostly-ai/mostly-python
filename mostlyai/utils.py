@@ -2,13 +2,13 @@ import base64
 import io
 import time
 from pathlib import Path
-from typing import Callable
+from typing import Callable, Union
 from uuid import UUID
 
-import pandas
 import pandas as pd
+import rich
 from pydantic import BaseModel
-from tqdm import tqdm
+from rich.progress import Progress
 
 from mostlyai.model import ProgressStatus
 
@@ -19,39 +19,47 @@ def _job_wait(
 ) -> None:
     # ensure that interval is at least 1 sec
     interval = max(interval, 1)
-    # remember start time of job
-    start_time = time.time()
     # retrieve current JobProgress
     job = get_progress()
     # initialize progress bars
-    progress_bars = {"overall": tqdm(total=job.progress.max, desc="Job status")}
-    # for step in job.steps:
-    #     progress_bars |= {
-    #         step.id: tqdm(total=step.progress.max, desc=f"Step {step.model_label} {step.step_code}")
-    #     }
+    progress = Progress()
+    progress_bars = {
+        "overall": progress.add_task(
+            description="Overall Job progress",
+            total=job.progress.max
+        )
+    }
+    for step in job.steps:
+        progress_bars |= {
+            step.id: progress.add_task(
+                description=f"Step {step.model_label} {step.step_code.value}",
+                total=step.progress.max
+            )
+        }
     # loop until job has completed
+    progress.start()
     while True:
         # sleep for interval seconds
         time.sleep(interval)
         # retrieve current JobProgress
         job = get_progress()
         # update progress bars
-        progress_bars["overall"].total = job.progress.max
-        progress_bars["overall"].update(job.progress.value)
+        progress.update(progress_bars["overall"], total=job.progress.max, completed=job.progress.value)
         for i, step in enumerate(job.steps):
-            # progress_bars[step.id].total = step.progress.max
-            # progress_bars[step.id].update(step.progress.value)
+            progress.update(progress_bars[step.id], total=step.progress.max, completed=step.progress.value)
             # break if step has failed or been canceled
             if step.status == ProgressStatus.failed:
-                print(f"Step {step.model_label} {step.step_code} failed")
+                rich.print(f"[red]Step {step.model_label} {step.step_code.value} failed")
+                progress.stop()
                 return
             if step.status == ProgressStatus.canceled:
-                print(f"Step {step.model_label} {step.step_code} canceled")
+                rich.print(f"[red]Step {step.model_label} {step.step_code.value} canceled")
+                progress.stop()
                 return
         # check whether we are done
         if job.progress.value >= job.progress.max:
-            time.sleep(5)  # give the entity a chance to update
-            print(f"Job finished in {time.time() - start_time:0.1f}s")
+            time.sleep(1)  # give the entity a chance to update
+            progress.stop()
             return
 
 
@@ -90,7 +98,7 @@ def _get_table_name_index(config) -> dict[str, int]:
     return table_name_index
 
 
-def _read_table_from_path(path: str | Path) -> (str, pd.DataFrame):
+def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
     # read data from file
     fn = str(path)
     if fn.lower().endswith((".pqt", ".parquet")):

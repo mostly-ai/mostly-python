@@ -1,6 +1,5 @@
-import pathlib
 from pathlib import Path
-from typing import Annotated, Any, Literal, Optional
+from typing import Annotated, Any, Literal, Optional, Union
 
 import pandas as pd
 from pydantic import Field
@@ -108,7 +107,7 @@ class Generator:
             """
             return self.generator.client._training_progress(self.generator.id)
 
-        def wait(self, interval: float = 5) -> "Generator":
+        def wait(self, interval: float = 1) -> "Generator":
             """
             Poll training progress and loop until training has completed
 
@@ -164,8 +163,8 @@ class SyntheticDataset:
 
     def download(
         self,
-        file_path: str | Path | None = None,
-        format: str | SyntheticDatasetFormat = SyntheticDatasetFormat.parquet,
+        file_path: Union[str, Path, None] = None,
+        format: Union[str, SyntheticDatasetFormat] = SyntheticDatasetFormat.parquet,
     ) -> Path:
         """
         Download synthetic dataset and save to file
@@ -184,7 +183,7 @@ class SyntheticDataset:
 
     def data(
         self, return_type: Literal["auto", "dict"] = "auto"
-    ) -> dict[str, pd.DataFrame] | pd.DataFrame:
+    ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
         Download synthetic dataset and return as dictionary of pandas DataFrames
 
@@ -227,7 +226,7 @@ class SyntheticDataset:
                 self.synthetic_dataset.id
             )
 
-        def wait(self, interval: float = 5) -> "SyntheticDataset":
+        def wait(self, interval: float = 1) -> "SyntheticDataset":
             """
             Poll generation progress and loop until generation has completed
 

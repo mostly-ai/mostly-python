@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterator, Optional
+from typing import Any, Iterator, Optional, Union
 
 from mostlyai.base import (
     DELETE,
@@ -55,7 +55,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def create(
         self,
-        config: CreateConnectorRequest | dict[str, Any],
+        config: Union[CreateConnectorRequest, dict[str, Any]],
     ) -> Connector:
         """
         Create a connector, and optionally validate the connection before saving.
@@ -73,7 +73,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _update(
         self,
         connector_id: StrUUID,
-        config: PatchConnectorRequest | dict[str, Any],
+        config: Union[PatchConnectorRequest, dict[str, Any]],
     ) -> Connector:
         config = _as_dict(config)
         response = self.request(
