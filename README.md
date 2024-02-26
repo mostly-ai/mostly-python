@@ -4,8 +4,8 @@ A Python wrapper for the MOSTLY AI platform.
 
 | Intent                                          | Primitive                  |
 |-------------------------------------------------|----------------------------|
-| Train a Generative AI on tabular data           | `mostly.train(data)`       |
-| Empower your team with safe synthetic data      | `mostly.share(g)`          |
+| Train a Generative AI on tabular data           | `g = mostly.train(data)`   |
+| Empower your team with safe synthetic data      | `mostly.share(g, email)`   |
 | Generate unlimited synthetic data on demand     | `mostly.generate(g, size)` |
 | Prompt the generator for the data that you need | `mostly.generate(g, seed)` |
 | Connect to any data source within your org      | `mostly.connect(config)`   |
@@ -37,14 +37,15 @@ c = mostly.connectors.create(config)
 c = mostly.connectors.get(id)
 it = mostly.connectors.list()
 c = c.update(config)
-ls = c.locations()
+ls = c.locations(prefix)
 config = c.config()
 c.delete()
 ```
+
 ### Generators
 
 ```python
-g = mostly.train(data_or_config, start=True, wait=True)
+g = mostly.train(data, config, name, start=True, wait=True)
 
 g = mostly.generators.create(config)
 g = mostly.generators.get(id)

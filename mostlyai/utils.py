@@ -10,7 +10,7 @@ import rich
 from pydantic import BaseModel
 from rich.progress import Progress
 
-from mostlyai.model import ProgressStatus
+from mostlyai.model import ProgressStatus, StepCode
 
 
 def _job_wait(
@@ -31,9 +31,12 @@ def _job_wait(
         )
     }
     for step in job.steps:
+        step_code = step.step_code.value
+        if step_code == StepCode.train_model.value:
+            step_code += " :gem:"
         progress_bars |= {
             step.id: progress.add_task(
-                description=f"Step {step.model_label or 'common'} [#808080]{step.step_code.value}[/]",
+                description=f"Step {step.model_label or 'common'} [#808080]{step_code}[/]",
                 completed=0,
                 total=1,
             )
@@ -88,7 +91,7 @@ def _as_dict(pydantic_or_dict):
 def _get_subject_table_names(config) -> list[str]:
     subject_tables = []
     for table in config["tables"]:
-        ctx_fks = [fk for fk in table["foreign_keys"] if fk["is_context"]]
+        ctx_fks = [fk for fk in table.get("foreign_keys", []) if fk["is_context"]]
         if len(ctx_fks) == 0:
             subject_tables.append(table["name"])
     return subject_tables

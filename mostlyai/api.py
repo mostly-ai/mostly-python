@@ -12,7 +12,7 @@ from mostlyai.generators import _MostlyGeneratorsClient
 from mostlyai.model import Connector, Generator, PermissionLevel, SyntheticDataset
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
-from mostlyai.utils import _as_dict, _read_table_from_path
+from mostlyai.utils import _as_dict, _read_table_from_path, _get_subject_table_names
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -136,36 +136,36 @@ class MostlyAI(_MostlyBaseClient):
 
     def train(
         self,
-        data_or_config: Union[pd.DataFrame, str, Path, dict[str, Any]],
+        data: Union[pd.DataFrame, str, Path, None] = None,
+        config: Union[CreateGeneratorRequest, dict, None] = None,
+        name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
     ):
         """
         Train a generator
 
-        :param data_or_config: Either a single pandas DataFrame data, a path to a CSV or PARQUET file, or a dictionary with the configuration parameters of the generator to be created. See Generator.config for the structure of the parameters.
+        :param data: Either a single pandas DataFrame data, a path to a CSV or PARQUET file. Either data or config need to be provided.
+        :param config: The configuration parameters of the generator to be created. See Generator.config for the structure of the parameters. Either data or config need to be provided.
+        :param name: Optional. The name of the generator.
         :param start: If true, then training is started right away. Default: true.
         :param wait: If true, then the function only returns once training has finished. Default: true.
         :return: The created generator.
         """
-        if isinstance(data_or_config, (str, Path)):
-            name, df = _read_table_from_path(data_or_config)
+        if isinstance(data, (str, Path)):
+            name, df = _read_table_from_path(data)
             config = {"name": name, "tables": [{"data": df, "name": name}]}
-        elif isinstance(data_or_config, pd.DataFrame):
-            df = data_or_config
+        elif isinstance(data, pd.DataFrame):
+            df = data
             config = {
                 "name": f"DataFrame {df.shape}",
                 "tables": [{"data": df, "name": "data"}],
             }
-        elif isinstance(data_or_config, dict):
-            config = data_or_config
-        elif isinstance(data_or_config, CreateGeneratorRequest):
-            config = _as_dict(data_or_config)
-        else:
-            raise ValueError(
-                "data_or_config must be a DataFrame, a file path or a dictionary"
-            )
-
+        elif config is None:
+            raise ValueError("Either data or config must be provided")
+        config |= _as_dict(config)
+        if name is not None:
+            config |= {"name": name}
         g = self.generators.create(config)
         rich.print(f"Created generator [link={self.base_url}/d/generators/{g.id} blue underline]{g.id}[/]")
         if start:
@@ -181,9 +181,10 @@ class MostlyAI(_MostlyBaseClient):
     def generate(
         self,
         generator: Union[Generator, str, UUID, None],
-        config: Union[dict, None] = None,
         size: Union[int, dict[str, int], None] = None,
         seed: Union[pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None] = None,
+        config: Union[dict, None] = None,
+        name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
     ):
@@ -194,6 +195,7 @@ class MostlyAI(_MostlyBaseClient):
         :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
         :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
         :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or a dictionary of those. Used for seeding the subject table(s).
+        :param name: Optional. The name of the synthetic dataset.
         :param start: If true, then generation is started right away. Default: true.
         :param wait: If true, then the function only returns once generation has finished. Default: true.
         :return: The created synthetic dataset.
@@ -208,23 +210,24 @@ class MostlyAI(_MostlyBaseClient):
             raise ValueError(
                 "Either a generator or a configuration with a generatorId must be provided."
             )
+
         if "tables" not in config:
             g = self.generators.get(config["generatorId"])
+            subject_tables = _get_subject_table_names(g.config())
             config["tables"] = [
                 {
-                    "name": table.name,
+                    "name": table,
                     "configuration": {
-                        "sampleSize": size.get(table.name)
+                        "sampleSize": size.get(table)
                         if isinstance(size, dict)
                         else size,
-                        "sampleSeedData": seed.get(table.name)
+                        "sampleSeedData": seed.get(table)
                         if isinstance(seed, dict)
                         else seed,
                         "sampleFraction": None,
                     },
                 }
-                for table in g.tables
-                # if not table.foreign_keys or len([fk for fk in table.foreign_keys if fk.is_context]) == 0  # is subject table
+                for table in subject_tables
             ]
 
         sd = self.synthetic_datasets.create(config)
