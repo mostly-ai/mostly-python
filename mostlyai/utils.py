@@ -47,44 +47,49 @@ def _job_wait(
                 total=1,
             )
         }
-    # loop until job has completed
-    progress.start()
-    while True:
-        # sleep for interval seconds
-        time.sleep(interval)
-        # retrieve current JobProgress
-        job = get_progress()
-        # update progress bars
-        progress.update(
-            progress_bars["overall"],
-            total=job.progress.max,
-            completed=job.progress.value,
-        )
-        for i, step in enumerate(job.steps):
-            if step.progress.max > 0:
-                progress.update(
-                    progress_bars[step.id],
-                    total=step.progress.max,
-                    completed=step.progress.value,
-                )
-            # break if step has failed or been canceled
-            if step.status == ProgressStatus.failed:
-                rich.print(
-                    f"[red]Step {step.model_label} {step.step_code.value} failed"
-                )
+    try:
+        # loop until job has completed
+        progress.start()
+        while True:
+            # sleep for interval seconds
+            time.sleep(interval)
+            # retrieve current JobProgress
+            job = get_progress()
+            # update progress bars
+            progress.update(
+                progress_bars["overall"],
+                total=job.progress.max,
+                completed=job.progress.value,
+            )
+            for i, step in enumerate(job.steps):
+                if step.progress.max > 0:
+                    progress.update(
+                        progress_bars[step.id],
+                        total=step.progress.max,
+                        completed=step.progress.value,
+                    )
+                # break if step has failed or been canceled
+                if step.status == ProgressStatus.failed:
+                    rich.print(
+                        f"[red]Step {step.model_label} {step.step_code.value} failed"
+                    )
+                    progress.stop()
+                    return
+                if step.status == ProgressStatus.canceled:
+                    rich.print(
+                        f"[red]Step {step.model_label} {step.step_code.value} canceled"
+                    )
+                    progress.stop()
+                    return
+            # check whether we are done
+            if job.progress.value >= job.progress.max:
+                time.sleep(1)  # give the system a moment
                 progress.stop()
                 return
-            if step.status == ProgressStatus.canceled:
-                rich.print(
-                    f"[red]Step {step.model_label} {step.step_code.value} canceled"
-                )
-                progress.stop()
-                return
-        # check whether we are done
-        if job.progress.value >= job.progress.max:
-            time.sleep(1)  # give the system a moment
-            progress.stop()
-            return
+    except KeyboardInterrupt:
+        rich.print("Exiting gracefully. Job will continue in the background.")
+        progress.stop()
+        return
 
 
 def _convert_df_to_base64(df: pd.DataFrame) -> str:

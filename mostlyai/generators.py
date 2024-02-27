@@ -1,6 +1,5 @@
-import time
 from pathlib import Path
-from typing import Any, Iterator, Optional, Union
+from typing import Any, Iterator
 
 import pandas as pd
 

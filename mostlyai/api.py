@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 from typing import Any, Optional, Union
 from uuid import UUID
@@ -8,7 +9,7 @@ import rich
 from mostlyai.base import _MostlyBaseClient
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
-from mostlyai.model import Connector, Generator, PermissionLevel, SyntheticDataset
+from mostlyai.model import Connector, Generator, PermissionLevel, SyntheticDataset, ProgressStatus
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
 from mostlyai.utils import (
@@ -180,11 +181,12 @@ class MostlyAI(_MostlyBaseClient):
             rich.print(f"Started generator training")
         if start and wait:
             g = g.training.wait()
-            rich.print(
-                ":tada: [bold green]Your generator is ready![/] "
-                "Use it to create synthetic data. "
-                "Share it so others can do the same."
-            )
+            if g.training_status == ProgressStatus.done:
+                rich.print(
+                    ":tada: [bold green]Your generator is ready![/] "
+                    "Use it to create synthetic data. "
+                    "Share it so others can do the same."
+                )
         return g
 
     def generate(
@@ -253,11 +255,12 @@ class MostlyAI(_MostlyBaseClient):
             rich.print(f"Started synthetic dataset generation")
         if start and wait:
             sd = sd.generation.wait()
-            rich.print(
-                ":tada: [bold green]Your synthetic dataset is ready![/] "
-                "Use it to consume the generated data. "
-                "Share it so others can do the same."
-            )
+            if sd.generation_status == ProgressStatus.done:
+                rich.print(
+                    ":tada: [bold green]Your synthetic dataset is ready![/] "
+                    "Use it to consume the generated data. "
+                    "Share it so others can do the same."
+                )
         return sd
 
     # SHARES

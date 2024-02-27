@@ -59,7 +59,7 @@ class _MostlyBaseClient:
     def headers(self):
         return {
             "Accept": "application/json",
-            "X-MOSTLY-API-KEY": self.api_key,  # Authorization ??
+            "X-MOSTLY-API-KEY": self.api_key,
         }
 
     def request(
@@ -99,6 +99,7 @@ class _MostlyBaseClient:
         full_url = "/".join(full_path)
 
         kwargs["headers"] = self.headers() | kwargs.get("headers", {})
+        kwargs["timeout"] = kwargs.get("timeout", 60.0)
 
         try:
             if verb == REQUEST:
