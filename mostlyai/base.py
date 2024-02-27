@@ -1,5 +1,16 @@
 import os
-from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Union
+import webbrowser
+from typing import (
+    Annotated,
+    Any,
+    ClassVar,
+    Generic,
+    List,
+    Literal,
+    Optional,
+    TypeVar,
+    Union,
+)
 from uuid import UUID
 
 import httpx
@@ -183,6 +194,7 @@ class Paginator(Generic[T]):
 
 
 class CustomBaseModel(BaseModel):
+    OPEN_URL_PARTS: ClassVar[list] = None  # ["d", "object-name"]
     client: Annotated[Optional[Any], Field(exclude=True, repr=False)] = None
     extra_key_values: Annotated[Optional[dict], Field(exclude=True, repr=False)] = None
     model_config = ConfigDict(protected_namespaces=())
@@ -193,3 +205,9 @@ class CustomBaseModel(BaseModel):
         with console.capture() as capture:
             rich.print(self.dict())
         return capture.get()
+
+    def open(self):
+        if self.client is None or not self.OPEN_URL_PARTS or not hasattr(self, "id"):
+            raise APIError("Cannot open the instance")
+        url = "/".join([self.client.base_url, *self.OPEN_URL_PARTS, str(self.id)])
+        webbrowser.open_new(url)

@@ -8,6 +8,8 @@ from mostlyai.model import JobProgress, SyntheticDatasetFormat
 
 
 class Connector:
+    OPEN_URL_PARTS = ["d", "connectors"]
+
     def update(self, config) -> "Connector":
         """
         Update a connector, and optionally validate the connection before saving.
@@ -52,6 +54,7 @@ class Connector:
 
 
 class Generator:
+    OPEN_URL_PARTS = ["d", "generators"]
     training: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):
@@ -131,6 +134,7 @@ class Generator:
 
 
 class SyntheticDataset:
+    OPEN_URL_PARTS = ["d", "synthetic-datasets"]
     generation: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):

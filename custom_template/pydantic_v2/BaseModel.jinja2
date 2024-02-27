@@ -38,6 +38,8 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
 {%- endfor -%}
 {%- endfor -%}
 {%- if class_name == "Connector" %}
+    OPEN_URL_PARTS = ["d", "connectors"]
+
     def update(self, config) -> "Connector":
         """
         Update a connector, and optionally validate the connection before saving.
@@ -81,6 +83,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         return self.client._shares(resource_id=self.id)
 {%- endif %}
 {%- if class_name == "Generator" %}
+    OPEN_URL_PARTS = ["d", "generators"]
     training: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):
@@ -136,7 +139,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
             """
             return self.generator.client._training_progress(self.generator.id)
 
-        def wait(self, interval: float = 1) -> "Generator":
+        def wait(self, interval: float = 2) -> "Generator":
             """
             Poll training progress and loop until training has completed
 
@@ -205,6 +208,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
                 **kwargs,
             )
 {%- endif %}{%- if class_name == "SyntheticDataset" %}
+    OPEN_URL_PARTS = ["d", "synthetic-datasets"]
     generation: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):
@@ -300,7 +304,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
                 self.synthetic_dataset.id
             )
 
-        def wait(self, interval: float = 1) -> "SyntheticDataset":
+        def wait(self, interval: float = 2) -> "SyntheticDataset":
             """
             Poll generation progress and loop until generation has completed
 
