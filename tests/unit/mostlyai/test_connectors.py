@@ -1,6 +1,5 @@
 import pytest
 
-from mostlyai.components import PatchConnectorRequest
 from mostlyai.exceptions import APIStatusError
 from mostlyai.model import Connector
 

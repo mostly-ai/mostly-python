@@ -2,14 +2,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from mostlyai.components import CreateGeneratorRequest
 from mostlyai.exceptions import APIStatusError
 from mostlyai.model import Generator
 
 
 @pytest.fixture
 def create_generator_config():
-    return CreateGeneratorRequest(name="Test Generator")
+    return {"name": "Test Generator"}
 
 
 @pytest.fixture
