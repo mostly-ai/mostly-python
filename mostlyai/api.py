@@ -12,7 +12,7 @@ from mostlyai.generators import _MostlyGeneratorsClient
 from mostlyai.model import Connector, Generator, PermissionLevel, SyntheticDataset
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
-from mostlyai.utils import _as_dict, _read_table_from_path, _get_subject_table_names
+from mostlyai.utils import _as_dict, _get_subject_table_names, _read_table_from_path
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -131,7 +131,9 @@ class MostlyAI(_MostlyBaseClient):
         :return: The created connector.
         """
         c = self.connectors.create(config)
-        rich.print(f"Created connector [link={self.base_url}/d/connectors/{c.id} blue underline]{c.id}[/]")
+        rich.print(
+            f"Created connector [link={self.base_url}/d/connectors/{c.id} blue underline]{c.id}[/]"
+        )
         return c
 
     def train(
@@ -167,22 +169,28 @@ class MostlyAI(_MostlyBaseClient):
         if name is not None:
             config |= {"name": name}
         g = self.generators.create(config)
-        rich.print(f"Created generator [link={self.base_url}/d/generators/{g.id} blue underline]{g.id}[/]")
+        rich.print(
+            f"Created generator [link={self.base_url}/d/generators/{g.id} blue underline]{g.id}[/]"
+        )
         if start:
             g.training.start()
             rich.print(f"Started generator training")
         if start and wait:
             g = g.training.wait()
-            rich.print(":tada: [bold green]Your generator is ready![/] "
-                       "Use it to create synthetic data. "
-                       "Share it so others can do the same.")
+            rich.print(
+                ":tada: [bold green]Your generator is ready![/] "
+                "Use it to create synthetic data. "
+                "Share it so others can do the same."
+            )
         return g
 
     def generate(
         self,
         generator: Union[Generator, str, UUID, None],
         size: Union[int, dict[str, int], None] = None,
-        seed: Union[pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None] = None,
+        seed: Union[
+            pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None
+        ] = None,
         config: Union[dict, None] = None,
         name: Optional[str] = None,
         start: bool = True,
@@ -231,18 +239,22 @@ class MostlyAI(_MostlyBaseClient):
             ]
 
         sd = self.synthetic_datasets.create(config)
-        rich.print(f"Created synthetic dataset "
-                   f"[link={self.base_url}/d/synthetic-datasets/{sd.id} blue underline]{sd.id}[/] "
-                   f"with generator "
-                   f"[link={self.base_url}/d/generators/{sd.generator.id} blue underline]{sd.generator.id}[/]")
+        rich.print(
+            f"Created synthetic dataset "
+            f"[link={self.base_url}/d/synthetic-datasets/{sd.id} blue underline]{sd.id}[/] "
+            f"with generator "
+            f"[link={self.base_url}/d/generators/{sd.generator.id} blue underline]{sd.generator.id}[/]"
+        )
         if start:
             sd.generation.start()
             rich.print(f"Started synthetic dataset generation")
         if start and wait:
             sd = sd.generation.wait()
-            rich.print(":tada: [bold green]Your synthetic dataset is ready![/] "
-                       "Use it to consume the generated data. "
-                       "Share it so others can do the same.")
+            rich.print(
+                ":tada: [bold green]Your synthetic dataset is ready![/] "
+                "Use it to consume the generated data. "
+                "Share it so others can do the same."
+            )
         return sd
 
     # SHARES
@@ -260,16 +272,16 @@ class MostlyAI(_MostlyBaseClient):
         if isinstance(permission_level, PermissionLevel):
             permission_level = permission_level.value
         self.shares._share(resource_id, user_email, permission_level)
-        rich.print(f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource_id}[/]")
+        rich.print(
+            f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource_id}[/]"
+        )
 
-    def unshare(
-        self,
-        resource: Union[str, UUID, ShareableResource],
-        user_email: str
-    ):
+    def unshare(self, resource: Union[str, UUID, ShareableResource], user_email: str):
         if isinstance(resource, (Connector, Generator, SyntheticDataset)):
             resource_id = resource.id
         else:
             resource_id = str(resource)
         self.shares._unshare(resource, user_email)
-        rich.print(f"Revoked access of resource [bold cyan]{resource_id}[/] for [bold]{user_email}[/]")
+        rich.print(
+            f"Revoked access of resource [bold cyan]{resource_id}[/] for [bold]{user_email}[/]"
+        )

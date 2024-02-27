@@ -3,7 +3,9 @@ from typing import Annotated, Any, Generic, List, Literal, Optional, TypeVar, Un
 from uuid import UUID
 
 import httpx
+import rich
 from pydantic import BaseModel, ConfigDict, Field
+from rich.console import Console
 
 from mostlyai.exceptions import APIError, APIStatusError
 
@@ -20,7 +22,9 @@ _VERB_HTTPX_FUNC_MAP = {
     DELETE: httpx.delete,
     REQUEST: httpx.request,
 }
-DEFAULT_BASE_URL = "https://llb2.dev.mostlylab.com"  # TODO: replace with the actual base URL
+DEFAULT_BASE_URL = (
+    "https://llb2.dev.mostlylab.com"  # TODO: replace with the actual base URL
+)
 T = TypeVar("T")
 StrUUID = Union[str, UUID]
 
@@ -34,17 +38,17 @@ class _MostlyBaseClient:
     SECTION = []
 
     def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
-        self.base_url = (
-            base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL
-        )
-        self.api_key = (
-            api_key or os.getenv("MOSTLY_API_KEY")
-        )
+        self.base_url = base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL
+        self.api_key = api_key or os.getenv("MOSTLY_API_KEY")
+        if not self.base_url:
+            raise APIError(f"Invalid {self.base_url=}")
+        if not self.api_key:
+            raise APIError(f"Invalid {self.api_key=}")
 
     def headers(self):
         return {
             "Accept": "application/json",
-            'X-MOSTLY-API-KEY': self.api_key,  # Authorization ??
+            "X-MOSTLY-API-KEY": self.api_key,  # Authorization ??
         }
 
     def request(
@@ -182,3 +186,10 @@ class CustomBaseModel(BaseModel):
     client: Annotated[Optional[Any], Field(exclude=True, repr=False)] = None
     extra_key_values: Annotated[Optional[dict], Field(exclude=True, repr=False)] = None
     model_config = ConfigDict(protected_namespaces=())
+
+    def _repr_html_(self):
+        # Use rich.print to create a rich representation of the model
+        console = Console()
+        with console.capture() as capture:
+            rich.print(self.dict())
+        return capture.get()

@@ -49,17 +49,29 @@ def _job_wait(
         # retrieve current JobProgress
         job = get_progress()
         # update progress bars
-        progress.update(progress_bars["overall"], total=job.progress.max, completed=job.progress.value)
+        progress.update(
+            progress_bars["overall"],
+            total=job.progress.max,
+            completed=job.progress.value,
+        )
         for i, step in enumerate(job.steps):
             if step.progress.max > 0:
-                progress.update(progress_bars[step.id], total=step.progress.max, completed=step.progress.value)
+                progress.update(
+                    progress_bars[step.id],
+                    total=step.progress.max,
+                    completed=step.progress.value,
+                )
             # break if step has failed or been canceled
             if step.status == ProgressStatus.failed:
-                rich.print(f"[red]Step {step.model_label} {step.step_code.value} failed")
+                rich.print(
+                    f"[red]Step {step.model_label} {step.step_code.value} failed"
+                )
                 progress.stop()
                 return
             if step.status == ProgressStatus.canceled:
-                rich.print(f"[red]Step {step.model_label} {step.step_code.value} canceled")
+                rich.print(
+                    f"[red]Step {step.model_label} {step.step_code.value} canceled"
+                )
                 progress.stop()
                 return
         # check whether we are done

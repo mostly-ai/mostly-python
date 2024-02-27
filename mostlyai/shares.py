@@ -7,7 +7,13 @@ from mostlyai.components import (
     DeleteShareRequest,
     ShareableResource,
 )
-from mostlyai.model import PermissionLevel, Share, Connector, Generator, SyntheticDataset
+from mostlyai.model import (
+    Connector,
+    Generator,
+    PermissionLevel,
+    Share,
+    SyntheticDataset,
+)
 from mostlyai.utils import _as_dict
 
 
@@ -15,7 +21,9 @@ class _MostlySharesClient(_MostlyBaseClient):
     SECTION = ["shares"]
 
     @staticmethod
-    def _resource_id(resource: Union[str, UUID, Connector, Generator, SyntheticDataset]):
+    def _resource_id(
+        resource: Union[str, UUID, Connector, Generator, SyntheticDataset],
+    ):
         if isinstance(resource, (str, UUID)):
             resource_id = str(resource)
         elif isinstance(resource, (Connector, Generator, SyntheticDataset)):
