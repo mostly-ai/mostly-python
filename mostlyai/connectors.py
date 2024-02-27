@@ -1,4 +1,4 @@
-from typing import Any, Iterator, Optional, Union
+from typing import Any, Iterator, Optional
 
 from mostlyai.base import (
     DELETE,
@@ -9,10 +9,8 @@ from mostlyai.base import (
     StrUUID,
     _MostlyBaseClient,
 )
-from mostlyai.components import CreateConnectorRequest, PatchConnectorRequest
-from mostlyai.model import Connector, ConnectorAccessType, ConnectorType
+from mostlyai.model import Connector
 from mostlyai.shares import _MostlySharesMixin
-from mostlyai.utils import _as_dict
 
 
 class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
@@ -55,14 +53,13 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def create(
         self,
-        config: Union[CreateConnectorRequest, dict[str, Any]],
+        config: dict[str, Any],
     ) -> Connector:
         """
         Create a connector, and optionally validate the connection before saving.
 
         See `mostly.connect` for more details.
         """
-        config = _as_dict(config)
         response = self.request(
             verb=POST, path=[], json=config, response_type=Connector
         )
@@ -73,9 +70,8 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _update(
         self,
         connector_id: StrUUID,
-        config: Union[PatchConnectorRequest, dict[str, Any]],
+        config: dict[str, Any],
     ) -> Connector:
-        config = _as_dict(config)
         response = self.request(
             verb=PATCH,
             path=[connector_id],

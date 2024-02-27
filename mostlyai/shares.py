@@ -2,11 +2,6 @@ from typing import Union
 from uuid import UUID
 
 from mostlyai.base import DELETE, GET, POST, REQUEST, StrUUID, _MostlyBaseClient
-from mostlyai.components import (
-    CreateShareRequest,
-    DeleteShareRequest,
-    ShareableResource,
-)
 from mostlyai.model import (
     Connector,
     Generator,
@@ -14,7 +9,7 @@ from mostlyai.model import (
     Share,
     SyntheticDataset,
 )
-from mostlyai.utils import _as_dict
+from mostlyai.utils import ShareableResource
 
 
 class _MostlySharesClient(_MostlyBaseClient):
@@ -44,14 +39,12 @@ class _MostlySharesClient(_MostlyBaseClient):
         user_email: str,
         permission_level: PermissionLevel,
     ):
-        config = _as_dict(
-            CreateShareRequest(user_email=user_email, permission_level=permission_level)
-        )
+        config = {"userEmail": user_email, "permissionLevel": permission_level}
         self.request(verb=POST, path=[resource_id], json=config)
 
     def _unshare(self, resource: Union[StrUUID, ShareableResource], user_email: str):
         resource_id = self._resource_id(resource)
-        config = _as_dict(DeleteShareRequest(user_email=user_email))
+        config = {"userEmail": user_email}
         self.request(verb=REQUEST, method="DELETE", path=[resource_id], json=config)
 
 

@@ -6,13 +6,16 @@ import pandas as pd
 import rich
 
 from mostlyai.base import _MostlyBaseClient
-from mostlyai.components import CreateGeneratorRequest, ShareableResource
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
 from mostlyai.model import Connector, Generator, PermissionLevel, SyntheticDataset
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
-from mostlyai.utils import _as_dict, _get_subject_table_names, _read_table_from_path
+from mostlyai.utils import (
+    ShareableResource,
+    _get_subject_table_names,
+    _read_table_from_path,
+)
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -139,7 +142,7 @@ class MostlyAI(_MostlyBaseClient):
     def train(
         self,
         data: Union[pd.DataFrame, str, Path, None] = None,
-        config: Union[CreateGeneratorRequest, dict, None] = None,
+        config: Union[dict, None] = None,
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
@@ -165,7 +168,7 @@ class MostlyAI(_MostlyBaseClient):
             }
         elif config is None:
             raise ValueError("Either data or config must be provided")
-        config |= _as_dict(config)
+        # config |= _as_dict(config)
         if name is not None:
             config |= {"name": name}
         g = self.generators.create(config)
