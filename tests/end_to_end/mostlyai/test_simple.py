@@ -1,10 +1,7 @@
-from time import sleep
-
 import numpy as np
 import pandas as pd
 import pytest
 
-from mostlyai.components import CreateGeneratorRequest, ForeignKey, TableItem
 from mostlyai.exceptions import APIStatusError
 
 
@@ -49,23 +46,25 @@ def test_simple_flat(mostly):
 
 def test_subject_linked(mostly, subject_and_linked_df):
     subject_df, linked_df = subject_and_linked_df
-    create_generator = CreateGeneratorRequest(
-        name="subject_linked",
-        tables=[
-            TableItem(name="subject", data=subject_df, primary_key="id"),
-            TableItem(
-                name="linked",
-                data=linked_df,
-                primary_key="id",
-                foreign_keys=[
-                    ForeignKey(
-                        column="subject_id", referenced_table="subject", is_context=True
-                    )
+    create_generator = {
+        "name": "subject_linked",
+        "tables": [
+            {"name": "subject", "data": subject_df, "primaryKey": "id"},
+            {
+                "name": "linked",
+                "data": linked_df,
+                "primaryKey": "id",
+                "foreignKeys": [
+                    {
+                        "column": "subject_id",
+                        "referencedTable": "subject",
+                        "isContext": True,
+                    }
                 ],
-            ),
+            },
         ],
-    )
-    g = mostly.train(create_generator)
+    }
+    g = mostly.train(config=create_generator)
     sd = mostly.generate(g)
     syn = sd.data()
     assert sorted(syn.keys()) == sorted(["subject", "linked"])

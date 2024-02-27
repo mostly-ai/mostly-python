@@ -1,6 +1,5 @@
 import pytest
 
-from mostlyai.components import CreateConnectorRequest, PatchConnectorRequest
 from mostlyai.exceptions import APIStatusError
 from mostlyai.model import Connector
 
@@ -34,10 +33,10 @@ class TestConnectors:
     def test_create_update_delete(self, mostly, new_connector):
         fetched_connector = mostly.connectors.create(new_connector)
         assert isinstance(fetched_connector, Connector)
-        updated_connector = PatchConnectorRequest(
-            name=fetched_connector.name.replace("New", "Updated"),
-            test_connection=False,
-        )
+        updated_connector = {
+            "name": fetched_connector.name.replace("New", "Updated"),
+            "testConnection": False,
+        }
         response = fetched_connector.update(updated_connector)
         assert "Updated" in response.name
         fetched_connector.delete()

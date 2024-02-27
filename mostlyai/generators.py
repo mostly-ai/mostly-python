@@ -13,15 +13,9 @@ from mostlyai.base import (
     StrUUID,
     _MostlyBaseClient,
 )
-from mostlyai.components import CreateGeneratorRequest
 from mostlyai.model import Generator, JobProgress
 from mostlyai.shares import _MostlySharesMixin
-from mostlyai.utils import (
-    _as_dict,
-    _convert_df_to_base64,
-    _job_wait,
-    _read_table_from_path,
-)
+from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_path
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
@@ -51,8 +45,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         response = self.request(verb=GET, path=[generator_id], response_type=Generator)
         return response
 
-    def create(self, config: CreateGeneratorRequest) -> Generator:
-        config = _as_dict(config)
+    def create(self, config: dict) -> Generator:
         # convert `data` to base64-encoded Parquet files
         if "tables" in config and config["tables"]:
             for table in config["tables"]:

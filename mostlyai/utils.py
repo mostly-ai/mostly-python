@@ -10,7 +10,13 @@ import rich
 from pydantic import BaseModel
 from rich.progress import Progress
 
-from mostlyai.model import ProgressStatus, StepCode
+from mostlyai.model import (
+    Connector,
+    Generator,
+    ProgressStatus,
+    StepCode,
+    SyntheticDataset,
+)
 
 
 def _job_wait(
@@ -125,3 +131,6 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
         df = pd.read_csv(fn)
     name = Path(fn).stem
     return name, df
+
+
+ShareableResource = Union[Connector, Generator, SyntheticDataset]

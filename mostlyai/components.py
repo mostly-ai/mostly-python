@@ -5,18 +5,13 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field
 
 from mostlyai.model import (
-    Connector,
     ConnectorAccessType,
     ConnectorTestConnection,
     ConnectorType,
-    Generator,
     ModelConfiguration,
     ModelEncodingType,
     PermissionLevel,
-    SyntheticDataset,
 )
-
-ShareableResource = Union[Connector, Generator, SyntheticDataset]
 
 
 class BaseComponent(BaseModel):
