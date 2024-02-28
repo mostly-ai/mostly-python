@@ -41,6 +41,7 @@ class TestConnectors:
         assert "Updated" in response.name
         fetched_connector.delete()
 
+    @pytest.mark.skip("Grant connector view permission to user first")
     def test_get_and_locations(self, mostly, connector_id):
         connector = mostly.connectors.get(connector_id)
         assert isinstance(connector, Connector)

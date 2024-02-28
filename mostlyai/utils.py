@@ -135,7 +135,7 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
     else:
         df = pd.read_csv(fn)
     if fn.endswith((".gz", ".gzip", ".bz2")):
-        fn = fn.rsplit('.', 1)[0]
+        fn = fn.rsplit(".", 1)[0]
     name = Path(fn).stem
     return name, df
 

@@ -9,7 +9,13 @@ import rich
 from mostlyai.base import _MostlyBaseClient
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
-from mostlyai.model import Connector, Generator, PermissionLevel, SyntheticDataset, ProgressStatus
+from mostlyai.model import (
+    Connector,
+    Generator,
+    PermissionLevel,
+    ProgressStatus,
+    SyntheticDataset,
+)
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
 from mostlyai.utils import (
