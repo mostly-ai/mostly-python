@@ -38,7 +38,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
 {%- endfor -%}
 {%- endfor -%}
 {%- if class_name == "Connector" %}
-    OPEN_URL_PARTS = ["d", "connectors"]
+    OPEN_URL_PARTS: ClassVar[list] = ["d", "connectors"]
 
     def update(self, config) -> "Connector":
         """
@@ -83,7 +83,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         return self.client._shares(resource_id=self.id)
 {%- endif %}
 {%- if class_name == "Generator" %}
-    OPEN_URL_PARTS = ["d", "generators"]
+    OPEN_URL_PARTS: ClassVar[list] = ["d", "generators"]
     training: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):
@@ -208,7 +208,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
                 **kwargs,
             )
 {%- endif %}{%- if class_name == "SyntheticDataset" %}
-    OPEN_URL_PARTS = ["d", "synthetic-datasets"]
+    OPEN_URL_PARTS: ClassVar[list] = ["d", "synthetic-datasets"]
     generation: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):

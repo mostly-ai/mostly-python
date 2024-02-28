@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Annotated, Any, Literal, Optional, Union
+from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 
 import pandas as pd
 from pydantic import Field
@@ -8,7 +8,7 @@ from mostlyai.model import JobProgress, SyntheticDatasetFormat
 
 
 class Connector:
-    OPEN_URL_PARTS = ["d", "connectors"]
+    OPEN_URL_PARTS: ClassVar[list] = ["d", "connectors"]
 
     def update(self, config) -> "Connector":
         """
@@ -54,7 +54,7 @@ class Connector:
 
 
 class Generator:
-    OPEN_URL_PARTS = ["d", "generators"]
+    OPEN_URL_PARTS: ClassVar[list] = ["d", "generators"]
     training: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):
@@ -134,7 +134,7 @@ class Generator:
 
 
 class SyntheticDataset:
-    OPEN_URL_PARTS = ["d", "synthetic-datasets"]
+    OPEN_URL_PARTS: ClassVar[list] = ["d", "synthetic-datasets"]
     generation: Annotated[Optional[Any], Field(exclude=True)] = None
 
     def __init__(self, *args, **kwargs):

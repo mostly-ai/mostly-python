@@ -18,7 +18,8 @@ gen-public-model: ## build pydantic models for public api
 	python tools/extend_model.py
 	@echo "Generating Pydantic models from $(PUBLIC_API_FULL_URL)"
 	datamodel-codegen --url $(PUBLIC_API_FULL_URL) $(COMMON_OPTIONS)
-	black $(PUBLIC_API_OUTPUT_PATH) && isort $(PUBLIC_API_OUTPUT_PATH)
+	python tools/postproc_model.py
+	black $(PUBLIC_API_OUTPUT_PATH) && isort $(PUBLIC_API_OUTPUT_PATH) && ruff --fix $(PUBLIC_API_OUTPUT_PATH)
 
 # Common options for both targets
 COMMON_OPTIONS = \

@@ -1,4 +1,3 @@
-import time
 from pathlib import Path
 from typing import Any, Optional, Union
 from uuid import UUID
@@ -193,7 +192,7 @@ class MostlyAI(_MostlyBaseClient):
         )
         if start:
             g.training.start()
-            rich.print(f"Started generator training")
+            rich.print("Started generator training")
         if start and wait:
             g = g.training.wait()
             if g.training_status == ProgressStatus.done:
@@ -267,7 +266,7 @@ class MostlyAI(_MostlyBaseClient):
         )
         if start:
             sd.generation.start()
-            rich.print(f"Started synthetic dataset generation")
+            rich.print("Started synthetic dataset generation")
         if start and wait:
             sd = sd.generation.wait()
             if sd.generation_status == ProgressStatus.done:

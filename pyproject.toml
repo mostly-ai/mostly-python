@@ -28,6 +28,7 @@ datamodel-code-generator = { version = "^0.22.0", extras = ["http"] }
 
 [tool.poetry.group.dev.dependencies]
 vcrpy = "^5.1.0"
+ruff = "^0.2.2"
 
 [tool.mypy]
 python_version = "3.9"
