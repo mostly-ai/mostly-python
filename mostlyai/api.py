@@ -33,9 +33,18 @@ class MostlyAI(_MostlyBaseClient):
     :param api_key: The API key for authenticating. If not provided, it would rely on env vars.
     """
 
-    def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
-        super().__init__(base_url=base_url, api_key=api_key)
-        client_kwargs = {"base_url": self.base_url, "api_key": self.api_key}
+    def __init__(
+        self,
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
+        timeout: float = 60.0,
+    ):
+        super().__init__(base_url=base_url, api_key=api_key, timeout=timeout)
+        client_kwargs = {
+            "base_url": self.base_url,
+            "api_key": self.api_key,
+            "timeout": self.timeout,
+        }
         self.connectors = _MostlyConnectorsClient(**client_kwargs)
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)

@@ -20,19 +20,11 @@ from rich.console import Console
 
 from mostlyai.exceptions import APIError, APIStatusError
 
-GET = "get"
-POST = "post"
-PATCH = "patch"
-DELETE = "delete"
-REQUEST = "request"  # raw request
-HttpVerb = Literal[GET, POST, PATCH, DELETE, REQUEST]
-_VERB_HTTPX_FUNC_MAP = {
-    GET: httpx.get,
-    POST: httpx.post,
-    PATCH: httpx.patch,
-    DELETE: httpx.delete,
-    REQUEST: httpx.request,
-}
+GET = "GET"
+POST = "POST"
+PATCH = "PATCH"
+DELETE = "DELETE"
+HttpVerb = Literal[GET, POST, PATCH, DELETE]
 DEFAULT_BASE_URL = (
     "https://llb2.dev.mostlylab.com"  # TODO: replace with the actual base URL
 )
@@ -48,9 +40,15 @@ class _MostlyBaseClient:
     API_SECTION = ["api", "v2"]
     SECTION = []
 
-    def __init__(self, base_url: Optional[str] = None, api_key: Optional[str] = None):
+    def __init__(
+        self,
+        base_url: Optional[str] = None,
+        api_key: Optional[str] = None,
+        timeout: float = 60.0,
+    ):
         self.base_url = base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL
         self.api_key = api_key or os.getenv("MOSTLY_API_KEY")
+        self.timeout = timeout
         if not self.base_url:
             raise APIError(f"Invalid {self.base_url=}")
         if not self.api_key:
@@ -89,23 +87,16 @@ class _MostlyBaseClient:
         :param kwargs: httpx's request function's kwargs
         :return: response in a designated type with optional extras
         """
-        req_func = _VERB_HTTPX_FUNC_MAP.get(verb)
-        if not req_func:
-            raise
-
         path_list = [path] if isinstance(path, str) else [str(p) for p in path]
         prefix = self.API_SECTION + self.SECTION if is_api_call else []
         full_path = [self.base_url] + prefix + path_list
         full_url = "/".join(full_path)
 
         kwargs["headers"] = self.headers() | kwargs.get("headers", {})
-        kwargs["timeout"] = kwargs.get("timeout", 60.0)
 
         try:
-            if verb == REQUEST:
-                response = req_func(kwargs.pop("method"), full_url, **kwargs)
-            else:
-                response = req_func(full_url, **kwargs)
+            with httpx.Client(timeout=self.timeout) as client:
+                response = client.request(method=verb, url=full_url, **kwargs)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
             # Handle HTTP errors (not in 2XX range)
