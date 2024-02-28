@@ -1,7 +1,7 @@
 from typing import Union
 from uuid import UUID
 
-from mostlyai.base import DELETE, GET, POST, REQUEST, StrUUID, _MostlyBaseClient
+from mostlyai.base import DELETE, GET, POST, StrUUID, _MostlyBaseClient
 from mostlyai.model import (
     Connector,
     Generator,
@@ -45,7 +45,7 @@ class _MostlySharesClient(_MostlyBaseClient):
     def _unshare(self, resource: Union[StrUUID, ShareableResource], user_email: str):
         resource_id = self._resource_id(resource)
         config = {"userEmail": user_email}
-        self.request(verb=REQUEST, method="DELETE", path=[resource_id], json=config)
+        self.request(verb=DELETE, path=[resource_id], json=config)
 
 
 class _MostlySharesMixin:
