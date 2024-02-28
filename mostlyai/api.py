@@ -183,7 +183,6 @@ class MostlyAI(_MostlyBaseClient):
             }
         elif config is None:
             raise ValueError("Either data or config must be provided")
-        # config |= _as_dict(config)
         if name is not None:
             config |= {"name": name}
         g = self.generators.create(config)
@@ -255,6 +254,9 @@ class MostlyAI(_MostlyBaseClient):
                 }
                 for table in subject_tables
             ]
+
+        if name is not None:
+            config |= {"name": name}
 
         sd = self.synthetic_datasets.create(config)
         rich.print(

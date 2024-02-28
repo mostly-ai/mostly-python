@@ -21,7 +21,7 @@ from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_pa
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     SECTION = ["synthetic-datasets"]
 
-    def list(self, offset: int = 0, limit: int = 50) -> Iterator[SyntheticDataset]:
+    def list(self, offset: int = 0, limit: int = 50, filter_status: Optional[list[str]] = None) -> Iterator[SyntheticDataset]:
         """
         List synthetic datasets.
 
@@ -29,6 +29,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
 
         :param offset: Offset the entities in the response. Optional. Default: 0
         :param limit: Limit the number of entities in the response. Optional. Default: 50
+        :param filter_status: Filter by generation status. Optional. Default: None
         :return: Iterator over synthetic datasets.
         """
         with Paginator(self, SyntheticDataset, offset=offset, limit=limit) as paginator:

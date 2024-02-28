@@ -167,14 +167,14 @@ class SyntheticDataset:
 
     def download(
         self,
+        format: SyntheticDatasetFormat = "PARQUET",
         file_path: Union[str, Path, None] = None,
-        format: Union[str, SyntheticDatasetFormat] = SyntheticDatasetFormat.parquet,
     ) -> Path:
         """
         Download synthetic dataset and save to file
 
-        :param file_path: The file path to save the synthetic dataset
         :param format: The format of the synthetic dataset
+        :param file_path: The file path to save the synthetic dataset
         """
         bytes, filename = self.client._download(
             synthetic_dataset_id=self.id, format=format

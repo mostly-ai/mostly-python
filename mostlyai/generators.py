@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Optional
 
 import pandas as pd
 
@@ -11,7 +11,7 @@ from mostlyai.base import (
     Paginator,
     _MostlyBaseClient,
 )
-from mostlyai.model import Generator, JobProgress
+from mostlyai.model import Generator, JobProgress, ProgressStatus
 from mostlyai.shares import _MostlySharesMixin
 from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_path
 
@@ -19,7 +19,7 @@ from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_pa
 class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
     SECTION = ["generators"]
 
-    def list(self, offset: int = 0, limit: int = 50) -> Iterator[Generator]:
+    def list(self, offset: int = 0, limit: int = 50, filter_status: Optional[list[str]] = None) -> Iterator[Generator]:
         """
         List generators.
 
@@ -27,9 +27,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
         :param offset: Offset the entities in the response. Optional. Default: 0
         :param limit: Limit the number of entities in the response. Optional. Default: 50
+        :param filter_status: Filter by training status. Optional. Default: None
         :return: Iterator over generators.
         """
-        with Paginator(self, Generator, offset=offset, limit=limit) as paginator:
+        with Paginator(self, Generator, offset=offset, limit=limit, filter_status=filter_status) as paginator:
             for item in paginator:
                 yield item
 
