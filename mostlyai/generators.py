@@ -9,7 +9,6 @@ from mostlyai.base import (
     PATCH,
     POST,
     Paginator,
-    StrUUID,
     _MostlyBaseClient,
 )
 from mostlyai.model import Generator, JobProgress
@@ -34,7 +33,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             for item in paginator:
                 yield item
 
-    def get(self, generator_id: StrUUID) -> Generator:
+    def get(self, generator_id: str) -> Generator:
         """
         Retrieve generator
 
@@ -65,7 +64,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return generator
 
-    def _update(self, generator_id: StrUUID, config: dict[str, Any]) -> Generator:
+    def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
         response = self.request(
             verb=PATCH,
             path=[generator_id],
@@ -74,29 +73,29 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return response
 
-    def _delete(self, generator_id: StrUUID) -> None:
+    def _delete(self, generator_id: str) -> None:
         response = self.request(verb=DELETE, path=[generator_id])
         return response
 
-    def _config(self, generator_id: StrUUID) -> Generator:
+    def _config(self, generator_id: str) -> Generator:
         response = self.request(verb=GET, path=[generator_id, "config"])
         return response
 
-    def _training_start(self, generator_id: StrUUID) -> None:
+    def _training_start(self, generator_id: str) -> None:
         response = self.request(verb=POST, path=[generator_id, "training", "start"])
         return response
 
-    def _training_cancel(self, generator_id: StrUUID) -> None:
+    def _training_cancel(self, generator_id: str) -> None:
         response = self.request(verb=POST, path=[generator_id, "training", "cancel"])
         return response
 
-    def _training_progress(self, generator_id: StrUUID) -> JobProgress:
+    def _training_progress(self, generator_id: str) -> JobProgress:
         response = self.request(
             verb=GET, path=[generator_id, "training"], response_type=JobProgress
         )
         return response
 
-    def _training_wait(self, generator_id: StrUUID, interval: float) -> Generator:
+    def _training_wait(self, generator_id: str, interval: float) -> Generator:
         _job_wait(lambda: self._training_progress(generator_id), interval)
         generator = self.get(generator_id)
         return generator

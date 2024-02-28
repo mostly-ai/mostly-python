@@ -25,11 +25,8 @@ POST = "POST"
 PATCH = "PATCH"
 DELETE = "DELETE"
 HttpVerb = Literal[GET, POST, PATCH, DELETE]
-DEFAULT_BASE_URL = (
-    "https://llb2.dev.mostlylab.com"  # TODO: replace with the actual base URL
-)
+DEFAULT_BASE_URL = "https://app.mostly.ai"
 T = TypeVar("T")
-StrUUID = Union[str, UUID]
 
 
 class _MostlyBaseClient:
@@ -46,7 +43,7 @@ class _MostlyBaseClient:
         api_key: Optional[str] = None,
         timeout: float = 60.0,
     ):
-        self.base_url = base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL
+        self.base_url = (base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
         self.api_key = api_key or os.getenv("MOSTLY_API_KEY")
         self.timeout = timeout
         if not self.base_url:
@@ -99,9 +96,13 @@ class _MostlyBaseClient:
                 response = client.request(method=verb, url=full_url, **kwargs)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
+            try:
+                error_msg = exc.response.json()['message']
+            except Exception:
+                error_msg = exc.response.content
             # Handle HTTP errors (not in 2XX range)
             raise APIStatusError(
-                f"HTTP error {exc.response.status_code} {exc.response.content}",
+                f"HTTP {exc.response.status_code}: {error_msg}",
             ) from exc
         except httpx.RequestError as exc:
             # Handle request errors (e.g., network issues)

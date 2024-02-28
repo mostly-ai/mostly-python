@@ -12,7 +12,6 @@ from mostlyai.base import (
     PATCH,
     POST,
     Paginator,
-    StrUUID,
     _MostlyBaseClient,
 )
 from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat
@@ -36,7 +35,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
             for item in paginator:
                 yield item
 
-    def get(self, synthetic_dataset_id: StrUUID) -> SyntheticDataset:
+    def get(self, synthetic_dataset_id: str) -> SyntheticDataset:
         """
         Retrieve synthetic dataset
 
@@ -89,7 +88,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         return synthetic_dataset
 
     def _update(
-        self, synthetic_dataset_id: StrUUID, config: dict[str, Any]
+        self, synthetic_dataset_id: str, config: dict[str, Any]
     ) -> SyntheticDataset:
         response = self.request(
             verb=PATCH,
@@ -99,17 +98,17 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         )
         return response
 
-    def _delete(self, synthetic_dataset_id: StrUUID) -> None:
+    def _delete(self, synthetic_dataset_id: str) -> None:
         response = self.request(verb=DELETE, path=[synthetic_dataset_id])
         return response
 
-    def _config(self, synthetic_dataset_id: StrUUID) -> SyntheticDataset:
+    def _config(self, synthetic_dataset_id: str) -> SyntheticDataset:
         response = self.request(verb=GET, path=[synthetic_dataset_id, "config"])
         return response
 
     def _download(
         self,
-        synthetic_dataset_id: StrUUID,
+        synthetic_dataset_id: str,
         format: Union[SyntheticDatasetFormat, str] = SyntheticDatasetFormat.parquet,
     ) -> (bytes, Optional[str]):
         format = format.upper() if isinstance(format, str) else format.value
@@ -132,7 +131,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
             filename = None
         return bytes, filename
 
-    def _data(self, synthetic_dataset_id: StrUUID) -> dict[str, pd.DataFrame]:
+    def _data(self, synthetic_dataset_id: str) -> dict[str, pd.DataFrame]:
         # download pqt
         pqt_zip_bytes, filename = self._download(
             synthetic_dataset_id, SyntheticDatasetFormat.parquet
@@ -153,19 +152,19 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
                 dfs[table].name = table
         return dfs
 
-    def _generation_start(self, synthetic_dataset_id: StrUUID) -> None:
+    def _generation_start(self, synthetic_dataset_id: str) -> None:
         response = self.request(
             verb=POST, path=[synthetic_dataset_id, "generation", "start"]
         )
         return response
 
-    def _generation_cancel(self, synthetic_dataset_id: StrUUID) -> None:
+    def _generation_cancel(self, synthetic_dataset_id: str) -> None:
         response = self.request(
             verb=POST, path=[synthetic_dataset_id, "generation", "cancel"]
         )
         return response
 
-    def _generation_progress(self, synthetic_dataset_id: StrUUID) -> JobProgress:
+    def _generation_progress(self, synthetic_dataset_id: str) -> JobProgress:
         response = self.request(
             verb=GET,
             path=[synthetic_dataset_id, "generation"],
@@ -174,7 +173,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         return response
 
     def _generation_wait(
-        self, synthetic_dataset_id: StrUUID, interval: float
+        self, synthetic_dataset_id: str, interval: float
     ) -> SyntheticDataset:
         _job_wait(lambda: self._generation_progress(synthetic_dataset_id), interval)
         synthetic_dataset = self.get(synthetic_dataset_id)

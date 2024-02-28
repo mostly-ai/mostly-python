@@ -6,7 +6,6 @@ from mostlyai.base import (
     PATCH,
     POST,
     Paginator,
-    StrUUID,
     _MostlyBaseClient,
 )
 from mostlyai.model import Connector
@@ -41,7 +40,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
             for item in paginator:
                 yield item
 
-    def get(self, connector_id: StrUUID) -> Connector:
+    def get(self, connector_id: str) -> Connector:
         """
         Retrieve connector
 
@@ -69,7 +68,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def _update(
         self,
-        connector_id: StrUUID,
+        connector_id: str,
         config: dict[str, Any],
     ) -> Connector:
         response = self.request(
@@ -80,10 +79,10 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return response
 
-    def _delete(self, connector_id: StrUUID) -> None:
+    def _delete(self, connector_id: str) -> None:
         self.request(verb=DELETE, path=[connector_id])
 
-    def _config(self, connector_id: StrUUID):
+    def _config(self, connector_id: str):
         response = self.request(verb=GET, path=[connector_id, "config"])
         return response
 

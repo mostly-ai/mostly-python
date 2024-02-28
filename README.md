@@ -39,6 +39,8 @@ it = mostly.connectors.list()
 c = c.update(config)
 ls = c.locations(prefix)
 config = c.config()
+c.open()
+c.reload()
 c.delete()
 ```
 
@@ -52,6 +54,8 @@ g = mostly.generators.get(id)
 it = mostly.generators.list()
 g = g.update(config)
 config = g.config()
+g.open()
+g.reload()
 g.delete()
 
 g.training.start()
@@ -71,7 +75,10 @@ sd = mostly.synthetic_datasets.create(g, config)
 sd = mostly.synthetic_datasets.get(id)
 it = mostly.synthetic_datasets.list()
 config = sd.config()
+sd.open()
+sd.reload()
 sd.delete()
+
 
 sd.generation.start()
 sd.generation.progress()
