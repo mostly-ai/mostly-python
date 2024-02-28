@@ -3,7 +3,7 @@ GH_TOKEN ?= YourSecureToken
 PUBLIC_OPENAPI_FILE ?= /path/to/metadata/openapi.yaml
 
 # Internal Variables
-PUBLIC_OPENAPI_YAML_URL = https://raw.githubusercontent.com/mostly-ai/mostly-app-v2/llb2/mstar/public-api/public-api.yaml?token=
+PUBLIC_OPENAPI_YAML_URL = https://raw.githubusercontent.com/mostly-ai/mostly-app-v2/dev/public-api/public-api.yaml?token=
 PUBLIC_API_OUTPUT_PATH = mostlyai/model.py
 PUBLIC_API_FULL_URL = $(PUBLIC_OPENAPI_YAML_URL)$(GH_TOKEN)
 
@@ -33,6 +33,7 @@ COMMON_OPTIONS = \
 	--collapse-root-models \
 	--use-one-literal-as-default \
 	--enum-field-as-literal one \
+	--use-subclass-enum \
 	--output-model-type pydantic_v2.BaseModel \
 	--base-class mostlyai.base.CustomBaseModel \
 	--custom-template-dir custom_template
