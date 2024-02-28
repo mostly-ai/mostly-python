@@ -1,4 +1,6 @@
 import os
+import sys
+import warnings
 import webbrowser
 from typing import (
     Annotated,
@@ -24,7 +26,10 @@ POST = "POST"
 PATCH = "PATCH"
 DELETE = "DELETE"
 HttpVerb = Literal[GET, POST, PATCH, DELETE]
+
 DEFAULT_BASE_URL = "https://app.mostly.ai"
+MAX_REQUEST_SIZE = 250_000_000
+
 T = TypeVar("T")
 
 
@@ -91,6 +96,11 @@ class _MostlyBaseClient:
         full_url = "/".join(full_path)
 
         kwargs["headers"] = self.headers() | kwargs.get("headers", {})
+
+        if (request_size := _get_total_size(kwargs)) > MAX_REQUEST_SIZE:
+            warnings.warn(
+                f"The overall {request_size=} exceeds {MAX_REQUEST_SIZE}.", UserWarning
+            )
 
         try:
             with httpx.Client(timeout=self.timeout) as client:
@@ -222,3 +232,33 @@ class CustomBaseModel(BaseModel):
 def _snake_to_camel(snake_str: str) -> str:
     components = snake_str.split("_")
     return components[0] + "".join(x.title() for x in components[1:])
+
+
+def _get_total_size(obj, seen=None):
+    """Recursively finds size of objects in bytes."""
+    size = sys.getsizeof(obj)
+    if seen is None:
+        seen = set()
+
+    obj_id = id(obj)
+    if obj_id in seen:
+        return 0
+
+    # Mark as seen *before* entering recursion to gracefully handle self-referential objects
+    seen.add(obj_id)
+
+    if isinstance(obj, dict):
+        size += sum(
+            [
+                _get_total_size(v, seen) + _get_total_size(k, seen)
+                for k, v in obj.items()
+            ]
+        )
+
+    elif hasattr(obj, "__dict__"):
+        size += _get_total_size(obj.__dict__, seen)
+
+    elif hasattr(obj, "__iter__") and not isinstance(obj, (str, bytes, bytearray)):
+        size += sum([_get_total_size(i, seen) for i in obj])
+
+    return size
