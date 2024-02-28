@@ -295,20 +295,11 @@ class RareCategoryReplacementMethod(Enum):
 
 
 class ModelConfiguration(CustomBaseModel):
-    sample_fraction: Annotated[
-        Optional[float],
-        Field(
-            alias="sampleFraction",
-            description="The fraction of samples to consider for training.\nIf not provided, then all available samples will be taken.\nCannot be used with maxSampleSize.\n",
-            ge=0.01,
-            le=1.0,
-        ),
-    ] = 1.0
     max_sample_size: Annotated[
         Optional[int],
         Field(
             alias="maxSampleSize",
-            description="The maximum number of samples to consider for training.\nIf not provided, then all available samples will be taken. \nCannot be used with sampleFraction.\n",
+            description="The maximum number of samples to consider for training.\nIf not provided, then all available samples will be taken.",
             ge=100,
             le=1000000000,
         ),
@@ -559,23 +550,15 @@ class SyntheticTableConfiguration(CustomBaseModel):
         Optional[int],
         Field(
             alias="sampleSize",
-            description="Number of generated samples. Only applicable for subject tables.\nCannot be used with sampleFraction or sampleSeed.\n",
+            description="Number of generated samples. Only applicable for subject tables.",
             ge=1,
-        ),
-    ] = None
-    sample_fraction: Annotated[
-        Optional[float],
-        Field(
-            alias="sampleFraction",
-            description="Fraction of source table total rows. Only applicable for subject tables.\nCannot be used with sampleSize or sampleSeed.\n",
-            ge=0.01,
         ),
     ] = None
     sample_seed_connector_id: Annotated[
         Optional[str],
         Field(
             alias="sampleSeedConnectorId",
-            description="The connector id of the seed data for conditional generation. \nOnly applicable for subject tables.\nCannot be used with sampleSize or sampleFraction.\n",
+            description="The connector id of the seed data for conditional generation. \nOnly applicable for subject tables.\nCannot be used with sampleSize.\n",
         ),
     ] = None
     sample_seed_data: Annotated[

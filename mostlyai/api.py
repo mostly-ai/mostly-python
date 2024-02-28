@@ -250,8 +250,7 @@ class MostlyAI(_MostlyBaseClient):
                         else size,
                         "sampleSeedData": seed.get(table)
                         if isinstance(seed, dict)
-                        else seed,
-                        "sampleFraction": None,
+                        else seed
                     },
                 }
                 for table in subject_tables
