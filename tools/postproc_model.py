@@ -12,8 +12,11 @@ def postprocess_model_file(file_path):
     import_typing_updated = False
 
     for line in lines:
+        # Remove filename comment
+        if "#   filename:" in line:
+            pass
         # Skip the import line for UUID
-        if "import UUID" in line:
+        elif "import UUID" in line:
             new_lines.append("import pandas as pd\nfrom pathlib import Path")
         elif "from typing" in line and not import_typing_updated:
             # Append ', ClassVar' to the line if it doesn't already contain ClassVar

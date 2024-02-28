@@ -177,7 +177,7 @@ class SyntheticDataset:
         :param file_path: The file path to save the synthetic dataset
         """
         bytes, filename = self.client._download(
-            synthetic_dataset_id=self.id, format=format
+            synthetic_dataset_id=self.id, ds_format=format
         )
         file_path = Path(file_path or ".")
         if file_path.is_dir():

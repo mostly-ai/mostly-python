@@ -15,6 +15,8 @@ from mostlyai.utils import ShareableResource
 class _MostlySharesClient(_MostlyBaseClient):
     SECTION = ["shares"]
 
+    # PRIVATE METHODS #
+
     @staticmethod
     def _resource_id(
         resource: Union[str, UUID, Connector, Generator, SyntheticDataset],

@@ -3,11 +3,9 @@ import io
 import time
 from pathlib import Path
 from typing import Callable, Union
-from uuid import UUID
 
 import pandas as pd
 import rich
-from pydantic import BaseModel
 from rich.progress import Progress
 
 from mostlyai.model import (
@@ -69,15 +67,9 @@ def _job_wait(
                         completed=step.progress.value,
                     )
                 # break if step has failed or been canceled
-                if step.status == ProgressStatus.failed:
+                if step.status in (ProgressStatus.failed, ProgressStatus.canceled):
                     rich.print(
-                        f"[red]Step {step.model_label} {step.step_code.value} failed"
-                    )
-                    progress.stop()
-                    return
-                if step.status == ProgressStatus.canceled:
-                    rich.print(
-                        f"[red]Step {step.model_label} {step.step_code.value} canceled"
+                        f"[red]Step {step.model_label} {step.step_code.value} {step.status.lower()}"
                     )
                     progress.stop()
                     return
@@ -100,15 +92,6 @@ def _convert_df_to_base64(df: pd.DataFrame) -> str:
     binary_data = buffer.read()
     base64_encoded_str = base64.b64encode(binary_data).decode()
     return base64_encoded_str
-
-
-def _as_dict(pydantic_or_dict):
-    if isinstance(pydantic_or_dict, BaseModel):
-        pydantic_or_dict = pydantic_or_dict.model_dump(by_alias=True)
-    pydantic_or_dict = {
-        k: str(v) if isinstance(v, UUID) else v for k, v in pydantic_or_dict.items()
-    }
-    return pydantic_or_dict
 
 
 def _get_subject_table_names(config) -> list[str]:

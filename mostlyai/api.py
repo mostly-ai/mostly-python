@@ -1,6 +1,5 @@
 from pathlib import Path
 from typing import Any, Optional, Union
-from uuid import UUID
 
 import pandas as pd
 import rich
@@ -30,6 +29,7 @@ class MostlyAI(_MostlyBaseClient):
 
     :param base_url: The base URL. If not provided, a default value is used.
     :param api_key: The API key for authenticating. If not provided, it would rely on env vars.
+    :param timeout: Timeout for HTTPS requests in seconds.
     """
 
     def __init__(
@@ -165,8 +165,8 @@ class MostlyAI(_MostlyBaseClient):
         """
         Train a generator
 
-        :param data: Either a single pandas DataFrame data, a path to a CSV or PARQUET file. Either data or config need to be provided.
-        :param config: The configuration parameters of the generator to be created. See Generator.config for the structure of the parameters. Either data or config need to be provided.
+        :param data: Either a single pandas DataFrame data, a path to a CSV or PARQUET file. Note: Either 'data' or 'config' must be provided.
+        :param config: The configuration parameters of the generator to be created. See Generator.config for the structure of the parameters. Note: Either 'data' or 'config' must be provided.
         :param name: Optional. The name of the generator.
         :param start: If true, then training is started right away. Default: true.
         :param wait: If true, then the function only returns once training has finished. Default: true.
@@ -204,7 +204,7 @@ class MostlyAI(_MostlyBaseClient):
 
     def generate(
         self,
-        generator: Union[Generator, str, UUID, None],
+        generator: Union[Generator, str, None],
         size: Union[int, dict[str, int], None] = None,
         seed: Union[
             pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None
@@ -282,10 +282,19 @@ class MostlyAI(_MostlyBaseClient):
 
     def share(
         self,
-        resource: Union[str, UUID, ShareableResource],
+        resource: Union[str, ShareableResource],
         user_email: str,
         permission_level: Union[str, PermissionLevel] = PermissionLevel.view,
     ):
+        """
+        Share a specified resource with a user by granting a specific permission level.
+
+        :param resource: The resource to be shared. This can either be the resource ID as a string or an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
+        :param user_email: The email address of the user with whom the resource is to be shared.
+        :param permission_level: The level of permission to be granted. This can be a string or an instance of PermissionLevel. Default is PermissionLevel.view, which grants 'view' access.
+
+        :return: None. The function outputs a confirmation message with the details of the sharing action.
+        """
         if isinstance(resource, (Connector, Generator, SyntheticDataset)):
             resource_id = resource.id
         else:
@@ -297,7 +306,15 @@ class MostlyAI(_MostlyBaseClient):
             f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource_id}[/]"
         )
 
-    def unshare(self, resource: Union[str, UUID, ShareableResource], user_email: str):
+    def unshare(self, resource: Union[str, ShareableResource], user_email: str):
+        """
+        Unshare a specified resource from a user.
+
+        :param resource: The resource from which access is being unshared. This can be the resource ID as a string or an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
+        :param user_email: The email address of the user whose access to the resource is to be unshared.
+
+        :return: None. The function outputs a confirmation message with the details of the revocation action.
+        """
         if isinstance(resource, (Connector, Generator, SyntheticDataset)):
             resource_id = resource.id
         else:

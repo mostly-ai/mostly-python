@@ -1,17 +1,10 @@
 from pathlib import Path
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator, Optional, Union
 
 import pandas as pd
 
-from mostlyai.base import (
-    DELETE,
-    GET,
-    PATCH,
-    POST,
-    Paginator,
-    _MostlyBaseClient,
-)
-from mostlyai.model import Generator, JobProgress, ProgressStatus
+from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.model import Generator, JobProgress
 from mostlyai.shares import _MostlySharesMixin
 from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_path
 
@@ -19,7 +12,14 @@ from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_pa
 class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
     SECTION = ["generators"]
 
-    def list(self, offset: int = 0, limit: int = 50, filter_status: Optional[list[str]] = None) -> Iterator[Generator]:
+    # PUBLIC METHODS #
+
+    def list(
+        self,
+        offset: int = 0,
+        limit: int = 50,
+        status: Optional[Union[str, list[str]]] = None,
+    ) -> Iterator[Generator]:
         """
         List generators.
 
@@ -27,10 +27,13 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
         :param offset: Offset the entities in the response. Optional. Default: 0
         :param limit: Limit the number of entities in the response. Optional. Default: 50
-        :param filter_status: Filter by training status. Optional. Default: None
+        :param status: Filter by training status. Optional. Default: None
         :return: Iterator over generators.
         """
-        with Paginator(self, Generator, offset=offset, limit=limit, filter_status=filter_status) as paginator:
+        status = ",".join(status) if isinstance(status, list) else status
+        with Paginator(
+            self, Generator, offset=offset, limit=limit, status=status
+        ) as paginator:
             for item in paginator:
                 yield item
 
@@ -64,6 +67,8 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             verb=POST, path=[], json=config, response_type=Generator
         )
         return generator
+
+    # PRIVATE METHODS #
 
     def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
         response = self.request(

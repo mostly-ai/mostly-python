@@ -1,13 +1,6 @@
 from typing import Any, Iterator, Optional
 
-from mostlyai.base import (
-    DELETE,
-    GET,
-    PATCH,
-    POST,
-    Paginator,
-    _MostlyBaseClient,
-)
+from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import Connector
 from mostlyai.shares import _MostlySharesMixin
 
@@ -15,7 +8,7 @@ from mostlyai.shares import _MostlySharesMixin
 class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     SECTION = ["connectors"]
 
-    ## PUBLIC METHODS ##
+    # PUBLIC METHODS #
 
     def list(
         self,
@@ -42,7 +35,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def get(self, connector_id: str) -> Connector:
         """
-        Retrieve connector
+        Retrieve a connector.
 
         :param connector_id: The unique identifier of a connector
         :return: The retrieved connector
@@ -64,7 +57,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return response
 
-    ## PRIVATE METHODS ##
+    # PRIVATE METHODS #
 
     def _update(
         self,

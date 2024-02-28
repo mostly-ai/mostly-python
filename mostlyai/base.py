@@ -11,7 +11,6 @@ from typing import (
     TypeVar,
     Union,
 )
-from uuid import UUID
 
 import httpx
 import rich
@@ -43,7 +42,9 @@ class _MostlyBaseClient:
         api_key: Optional[str] = None,
         timeout: float = 60.0,
     ):
-        self.base_url = (base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL).rstrip("/")
+        self.base_url = (
+            base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL
+        ).rstrip("/")
         self.api_key = api_key or os.getenv("MOSTLY_API_KEY")
         self.timeout = timeout
         if not self.base_url:
@@ -97,7 +98,7 @@ class _MostlyBaseClient:
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
             try:
-                error_msg = exc.response.json()['message']
+                error_msg = exc.response.json()["message"]
             except Exception:
                 error_msg = exc.response.content
             # Handle HTTP errors (not in 2XX range)
@@ -143,7 +144,7 @@ class Paginator(Generic[T]):
         self.object_class = object_class
         self.offset = kwargs.pop("offset", 0)
         self.limit = kwargs.pop("limit", 50)
-        self.kwargs = kwargs
+        self.params = {_snake_to_camel(k): v for k, v in kwargs.items()}
         self.current_items = []
         self.current_index = 0
         self.is_last_page = False
@@ -174,7 +175,7 @@ class Paginator(Generic[T]):
             self.current_items = []
 
         params = {"offset": self.offset, "limit": self.limit}
-        params.update(self.kwargs)
+        params.update(self.params)
 
         response = self.request_context.request(verb=GET, path=[], params=params)
 
@@ -200,7 +201,24 @@ class CustomBaseModel(BaseModel):
         return capture.get()
 
     def open(self):
+        """
+        Opens the instance in a web browser.
+        """
         if self.client is None or not self.OPEN_URL_PARTS or not hasattr(self, "id"):
             raise APIError("Cannot open the instance")
         url = "/".join([self.client.base_url, *self.OPEN_URL_PARTS, str(self.id)])
         webbrowser.open_new(url)
+
+    def reload(self):
+        """
+        Reload the instance to reflect its current state.
+        """
+        if hasattr(self.client, "get"):
+            reloaded = self.client.get(self.id)
+            for key, value in reloaded.model_dump().items():
+                setattr(self, key, value)
+
+
+def _snake_to_camel(snake_str: str) -> str:
+    components = snake_str.split("_")
+    return components[0] + "".join(x.title() for x in components[1:])

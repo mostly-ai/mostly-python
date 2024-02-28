@@ -6,14 +6,7 @@ from typing import Any, Iterator, Optional, Union
 
 import pandas as pd
 
-from mostlyai.base import (
-    DELETE,
-    GET,
-    PATCH,
-    POST,
-    Paginator,
-    _MostlyBaseClient,
-)
+from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat
 from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_path
 
@@ -21,7 +14,14 @@ from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_pa
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     SECTION = ["synthetic-datasets"]
 
-    def list(self, offset: int = 0, limit: int = 50, filter_status: Optional[list[str]] = None) -> Iterator[SyntheticDataset]:
+    # PUBLIC METHODS #
+
+    def list(
+        self,
+        offset: int = 0,
+        limit: int = 50,
+        status: Optional[Union[str, list[str]]] = None,
+    ) -> Iterator[SyntheticDataset]:
         """
         List synthetic datasets.
 
@@ -29,10 +29,13 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
 
         :param offset: Offset the entities in the response. Optional. Default: 0
         :param limit: Limit the number of entities in the response. Optional. Default: 50
-        :param filter_status: Filter by generation status. Optional. Default: None
+        :param status: Filter by generation status. Optional. Default: None
         :return: Iterator over synthetic datasets.
         """
-        with Paginator(self, SyntheticDataset, offset=offset, limit=limit) as paginator:
+        status = ",".join(status) if isinstance(status, list) else status
+        with Paginator(
+            self, SyntheticDataset, offset=offset, limit=limit, status=status
+        ) as paginator:
             for item in paginator:
                 yield item
 
@@ -88,6 +91,8 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         )
         return synthetic_dataset
 
+    # PRIVATE METHODS #
+
     def _update(
         self, synthetic_dataset_id: str, config: dict[str, Any]
     ) -> SyntheticDataset:
@@ -110,27 +115,27 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     def _download(
         self,
         synthetic_dataset_id: str,
-        format: Union[SyntheticDatasetFormat, str] = SyntheticDatasetFormat.parquet,
+        ds_format: SyntheticDatasetFormat = SyntheticDatasetFormat.parquet,
     ) -> (bytes, Optional[str]):
-        format = format.upper() if isinstance(format, str) else format.value
+        ds_format = ds_format.upper() if isinstance(ds_format, str) else ds_format.value
         response = self.request(
             verb=GET,
             path=[synthetic_dataset_id, "download"],
-            params={"format": format},
+            params={"format": ds_format},
             headers={
                 "Content-Type": "application/zip",
                 "Accept": "application/json, text/plain, */*",
             },
             raw_response=True,
         )
-        bytes = response.content
+        content_bytes = response.content
         # Check if 'Content-Disposition' header is present
         if "Content-Disposition" in response.headers:
             content_disposition = response.headers["Content-Disposition"]
             filename = re.findall("filename=(.+)", content_disposition)[0]
         else:
             filename = None
-        return bytes, filename
+        return content_bytes, filename
 
     def _data(self, synthetic_dataset_id: str) -> dict[str, pd.DataFrame]:
         # download pqt
