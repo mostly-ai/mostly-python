@@ -116,7 +116,7 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
     if fn.lower().endswith((".pqt", ".parquet")):
         df = pd.read_parquet(fn)
     else:
-        df = pd.read_csv(fn)
+        df = pd.read_csv(fn, low_memory=False)
     if fn.endswith((".gz", ".gzip", ".bz2")):
         fn = fn.rsplit(".", 1)[0]
     name = Path(fn).stem
