@@ -1,20 +1,47 @@
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "mostlyai"
-version = "0.0.2"
-description = "The official Python library for the mostlyai API"
-authors = [
-    {name = "MostlyAI", email = "office@mostly.ai"}
-]
-license = {file="LICENSE"}
+version = "0.1.0"
+description = "The official Python library for the MOSTLY AI API"
+authors = ["MOSTLY AI <office@mostly.ai>"]
+license = "Proprietary"
 readme = "README.md"
-requires-python = ">=3.6"
+packages = [
+    { include = "mostlyai" }
+]
 
-[project.urls]
-Home = "https://github.com/mostly-ai/mostly-python"
+[tool.poetry.dependencies]
+python = "^3.9"
+pydantic = "^2.4.2"
+httpx = "^0.25.1"
+pandas = ">=1.5.3,<2.0.0 || ^2.0.0"
+pyarrow = "^14.0.2"
+rich = "^13.7.0"
 
-[tool.setuptools]
-packages = ["mostlyai"]
+[tool.poetry.dev-dependencies]
+pytest = "^7.0.0"
+mypy = "^0.931"
+pylint = "^2.12.2"
+isort = "^5.10.1"
+black = "^22.1.0"
+pre-commit = "^2.17.0"
+datamodel-code-generator = { version = "^0.22.0", extras = ["http"] }
+
+[tool.poetry.group.dev.dependencies]
+vcrpy = "^5.1.0"
+ruff = "^0.2.2"
+respx = "^0.20.2"
+
+[tool.mypy]
+python_version = "3.9"
+follow_imports = "silent"
+ignore_missing_imports = true
+warn_unused_to_dicts = true
+warn_redundant_casts = true
+warn_unreachable = true
+
+[tool.isort]
+profile = "black"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
