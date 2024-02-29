@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "mostly-python-client"
+name = "mostlyai"
 version = "0.1.0"
-description = "Mostly Python Client"
+description = "The official Python library for the MOSTLY AI API"
 authors = ["MOSTLY AI <office@mostly.ai>"]
 license = "Proprietary"
 readme = "README.md"
