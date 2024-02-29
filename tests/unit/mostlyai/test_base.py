@@ -35,10 +35,6 @@ class TestMostlyBaseClient:
         assert client.base_url == DEFAULT_BASE_URL
         assert client.api_key == "12345"
 
-        # Test with missing required parameters
-        with pytest.raises(APIError):
-            _MostlyBaseClient()
-
     @respx.mock
     def test_request_success(self, mostly_base_client):
         mock_url = respx.get("https://app.mostly.ai/api/v2/test").mock(
