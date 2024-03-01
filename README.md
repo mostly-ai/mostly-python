@@ -92,8 +92,10 @@ sd.download(file, format)
 ### Sharing
 
 ```python
-mostly.share(g | sd | c, email, permission_level="VIEW")
+mostly.share(g | sd | c, email)
 mostly.unshare(g | sd | c, email)
 
-g.shares() -> List[Share]
+g.shares()
+sd.shares()
+c.shares()
 ```
