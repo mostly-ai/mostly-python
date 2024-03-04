@@ -6,7 +6,13 @@ from typing import Callable, Union
 
 import pandas as pd
 import rich
-from rich.progress import Progress
+from rich.progress import (
+    BarColumn,
+    Progress,
+    TaskProgressColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
 from mostlyai.model import (
     Connector,
@@ -26,7 +32,12 @@ def _job_wait(
     # retrieve current JobProgress
     job = get_progress()
     # initialize progress bars
-    progress = Progress()
+    progress = Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        TimeElapsedColumn(),
+    )
     progress_bars = {
         "overall": progress.add_task(
             description="[bold]Overall job progress[/b]",
