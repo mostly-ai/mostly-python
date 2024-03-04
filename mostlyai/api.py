@@ -302,7 +302,9 @@ class MostlyAI(_MostlyBaseClient):
         if isinstance(permission_level, PermissionLevel):
             permission_level = permission_level.value
         if permission_level == "ADMIN":
-            raise ValueError("ADMIN permission level is not supported. Transfer ownership via the UI.")
+            raise ValueError(
+                "ADMIN permission level is not supported. Transfer ownership via the UI."
+            )
         self.shares._share(resource_id, user_email, permission_level)
         rich.print(
             f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource_id}[/]"
