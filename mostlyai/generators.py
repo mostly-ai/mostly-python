@@ -51,7 +51,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         # convert `data` to base64-encoded Parquet files
         if "tables" in config and config["tables"]:
             for table in config["tables"]:
-                if "data" in table:
+                if "data" in table and table["data"] is not None:
                     if isinstance(table["data"], (str, Path)):
                         name, df = _read_table_from_path(table["data"])
                         table["data"] = _convert_df_to_base64(df)
