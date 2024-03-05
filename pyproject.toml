@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mostlyai"
-version = "0.1.0"
+version = "0.1.1"
 description = "The official Python library for the MOSTLY AI API"
 authors = ["MOSTLY AI <office@mostly.ai>"]
 license = "Proprietary"
