@@ -1,6 +1,6 @@
 # MOSTLY AI - GenAI for Tabular Data
 
-A Python wrapper for the MOSTLY AI platform.
+A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 
 | Intent                                          | Primitive                  |
 |-------------------------------------------------|----------------------------|
