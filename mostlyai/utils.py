@@ -6,7 +6,13 @@ from typing import Callable, Union
 
 import pandas as pd
 import rich
-from rich.progress import Progress
+from rich.progress import (
+    BarColumn,
+    Progress,
+    TaskProgressColumn,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
 from mostlyai.model import (
     Connector,
@@ -26,10 +32,16 @@ def _job_wait(
     # retrieve current JobProgress
     job = get_progress()
     # initialize progress bars
-    progress = Progress()
+    progress = Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        TimeElapsedColumn(),
+    )
     progress_bars = {
         "overall": progress.add_task(
             description="[bold]Overall job progress[/b]",
+            start=job.start_date is not None,
             completed=0,
             total=job.progress.max,
         )
@@ -41,8 +53,9 @@ def _job_wait(
         progress_bars |= {
             step.id: progress.add_task(
                 description=f"Step {step.model_label or 'common'} [#808080]{step_code}[/]",
+                start=step.start_date is not None,
                 completed=0,
-                total=1,
+                total=step.progress.max,
             )
         }
     try:
@@ -53,19 +66,31 @@ def _job_wait(
             time.sleep(interval)
             # retrieve current JobProgress
             job = get_progress()
+            current_task_id = progress_bars["overall"]
+            current_task = progress.tasks[current_task_id]
+            if not current_task.started and job.start_date is not None:
+                progress.start_task(current_task_id)
             # update progress bars
             progress.update(
-                progress_bars["overall"],
+                current_task_id,
                 total=job.progress.max,
                 completed=job.progress.value,
             )
+            if current_task.started and job.end_date is not None:
+                progress.stop_task(current_task_id)
             for i, step in enumerate(job.steps):
+                current_task_id = progress_bars[step.id]
+                current_task = progress.tasks[current_task_id]
+                if not current_task.started and step.start_date is not None:
+                    progress.start_task(current_task_id)
                 if step.progress.max > 0:
                     progress.update(
-                        progress_bars[step.id],
+                        current_task_id,
                         total=step.progress.max,
                         completed=step.progress.value,
                     )
+                if current_task.started and step.end_date is not None:
+                    progress.stop_task(current_task_id)
                 # break if step has failed or been canceled
                 if step.status in (ProgressStatus.failed, ProgressStatus.canceled):
                     rich.print(
