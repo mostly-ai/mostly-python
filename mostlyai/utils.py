@@ -13,6 +13,7 @@ from rich.progress import (
     TextColumn,
     TimeElapsedColumn,
 )
+from rich.style import Style
 
 from mostlyai.model import (
     Connector,
@@ -34,7 +35,12 @@ def _job_wait(
     # initialize progress bars
     progress = Progress(
         TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
+        BarColumn(
+            style=Style(color="rgb(245,245,245)"),
+            complete_style=Style(color="rgb(66,77,179)"),
+            finished_style=Style(color="rgb(36,219,149)"),
+            pulse_style=Style(color="rgb(245,245,245)"),
+        ),
         TaskProgressColumn(),
         TimeElapsedColumn(),
     )
