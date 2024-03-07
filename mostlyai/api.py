@@ -204,7 +204,7 @@ class MostlyAI(_MostlyBaseClient):
 
     def generate(
         self,
-        generator: Union[Generator, str, None],
+        generator: Union[Generator, str, None] = None,
         size: Union[int, dict[str, int], None] = None,
         seed: Union[
             pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None

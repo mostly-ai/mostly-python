@@ -34,7 +34,7 @@ def _job_wait(
     # initialize progress bars
     progress = Progress(
         TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
+        BarColumn(pulse_style="bar.back"),
         TaskProgressColumn(),
         TimeElapsedColumn(),
     )
