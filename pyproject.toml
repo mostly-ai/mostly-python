@@ -1,7 +1,8 @@
 [tool.poetry]
 name = "mostlyai"
-version = "0.1.1"
-description = "The official Python library for the MOSTLY AI API"
+version = "0.2.0"
+description = "The official Python client for the MOSTLY AI platform."
+homepage = "https://app.mostly.ai/"
 authors = ["MOSTLY AI <office@mostly.ai>"]
 license = "Proprietary"
 readme = "README.md"
@@ -30,6 +31,7 @@ datamodel-code-generator = { version = "^0.22.0", extras = ["http"] }
 vcrpy = "^5.1.0"
 ruff = "^0.2.2"
 respx = "^0.20.2"
+twine = "^5.0.0"
 
 [tool.mypy]
 python_version = "3.9"
