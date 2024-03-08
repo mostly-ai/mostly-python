@@ -32,6 +32,7 @@ vcrpy = "^5.1.0"
 ruff = "^0.2.2"
 respx = "^0.20.2"
 twine = "^5.0.0"
+commitizen = "^3.18.0"
 
 [tool.mypy]
 python_version = "3.9"
