@@ -172,6 +172,8 @@ class MostlyAI(_MostlyBaseClient):
         :param wait: If true, then the function only returns once training has finished. Default: true.
         :return: The created generator.
         """
+        if data is not None and config is not None:
+            raise ValueError("Either data or config must be provided, but not both")
         if isinstance(data, (str, Path)):
             name, df = _read_table_from_path(data)
             config = {"name": name, "tables": [{"data": df, "name": name}]}
