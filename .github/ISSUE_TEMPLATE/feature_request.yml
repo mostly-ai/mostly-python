@@ -1,0 +1,32 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+title: "[FEATURE]: "
+labels: [enhancement]
+assignees: ''
+body:
+  - type: markdown
+    id: intro
+    attributes:
+      value: "Thanks for suggesting a feature! Please share the details below."
+  - type: input
+    id: feature_summary
+    attributes:
+      label: Feature Summary
+      description: A clear and concise summary of the feature.
+    validations:
+      required: true
+  - type: textarea
+    id: problem_solution
+    attributes:
+      label: Problem and Solution
+      description: Explain the problem your feature aims to solve and how it does so.
+  - type: textarea
+    id: potential_alternatives
+    attributes:
+      label: Potential Alternatives
+      description: Any alternative solutions or features you've considered.
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the feature request.
