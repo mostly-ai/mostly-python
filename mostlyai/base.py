@@ -52,10 +52,9 @@ class _MostlyBaseClient:
         ).rstrip("/")
         self.api_key = api_key or os.getenv("MOSTLY_API_KEY")
         self.timeout = timeout
-        if not self.base_url:
-            raise APIError(f"Invalid {self.base_url=}")
         if not self.api_key:
-            raise APIError(f"Invalid {self.api_key=}")
+            raise APIError("The API key must be either set by passing api_key to the client or by specifying a "
+                           "MOSTLY_API_KEY environment variable")
 
     def headers(self):
         return {

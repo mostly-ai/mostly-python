@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mostlyai"
-version = "0.2.0"
+version = "0.2.1"
 description = "The official Python client for the MOSTLY AI platform."
 homepage = "https://app.mostly.ai/"
 authors = ["MOSTLY AI <office@mostly.ai>"]
@@ -52,8 +52,6 @@ version_scheme = "pep440"
 version_provider = "poetry"
 update_changelog_on_bump = true
 major_version_zero = true
-changelog_incremental = true
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
