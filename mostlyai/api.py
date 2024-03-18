@@ -284,48 +284,40 @@ class MostlyAI(_MostlyBaseClient):
 
     def share(
         self,
-        resource: Union[str, ShareableResource],
+        resource: ShareableResource,
         user_email: str,
         permission_level: Union[str, PermissionLevel] = PermissionLevel.view,
     ):
         """
         Share a specified resource with a user by granting a specific permission level.
 
-        :param resource: The resource to be shared. This can either be the resource ID as a string or an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
+        :param resource: The resource to be shared. This must be an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
         :param user_email: The email address of the user with whom the resource is to be shared.
         :param permission_level: The level of permission to be granted. This can be a string or an instance of PermissionLevel. Default is PermissionLevel.view, which grants 'view' access.
 
         :return: None. The function outputs a confirmation message with the details of the sharing action.
         """
-        if isinstance(resource, (Connector, Generator, SyntheticDataset)):
-            resource_id = resource.id
-        else:
-            resource_id = str(resource)
         if isinstance(permission_level, PermissionLevel):
             permission_level = permission_level.value
         if permission_level == "ADMIN":
             raise ValueError(
                 "ADMIN permission level is not supported. Transfer ownership via the UI."
             )
-        self.shares._share(resource_id, user_email, permission_level)
+        self.shares._share(resource, user_email, permission_level)
         rich.print(
-            f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource_id}[/]"
+            f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource.id}[/]"
         )
 
-    def unshare(self, resource: Union[str, ShareableResource], user_email: str):
+    def unshare(self, resource: ShareableResource, user_email: str):
         """
         Unshare a specified resource from a user.
 
-        :param resource: The resource from which access is being unshared. This can be the resource ID as a string or an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
+        :param resource: The resource from which access is being unshared. This must be an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
         :param user_email: The email address of the user whose access to the resource is to be unshared.
 
         :return: None. The function outputs a confirmation message with the details of the revocation action.
         """
-        if isinstance(resource, (Connector, Generator, SyntheticDataset)):
-            resource_id = resource.id
-        else:
-            resource_id = str(resource)
         self.shares._unshare(resource, user_email)
         rich.print(
-            f"Revoked access of resource [bold cyan]{resource_id}[/] for [bold]{user_email}[/]"
+            f"Revoked access of resource [bold cyan]{resource.id}[/] for [bold]{user_email}[/]"
         )
