@@ -53,8 +53,10 @@ class _MostlyBaseClient:
         self.api_key = api_key or os.getenv("MOSTLY_API_KEY")
         self.timeout = timeout
         if not self.api_key:
-            raise APIError("The API key must be either set by passing api_key to the client or by specifying a "
-                           "MOSTLY_API_KEY environment variable")
+            raise APIError(
+                "The API key must be either set by passing api_key to the client or by specifying a "
+                "MOSTLY_API_KEY environment variable"
+            )
 
     def headers(self):
         return {
