@@ -4,11 +4,12 @@ from typing import Any, Optional, Union
 import pandas as pd
 import rich
 
-from mostlyai.base import _MostlyBaseClient
+from mostlyai.base import GET, _MostlyBaseClient
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
 from mostlyai.model import (
     Connector,
+    CurrentUser,
     Generator,
     PermissionLevel,
     ProgressStatus,
@@ -321,3 +322,11 @@ class MostlyAI(_MostlyBaseClient):
         rich.print(
             f"Revoked access of resource [bold cyan]{resource.id}[/] for [bold]{user_email}[/]"
         )
+
+    def me(self) -> CurrentUser:
+        """
+        Retrieve current user info.
+
+        :return: info about the current user.
+        """
+        return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
