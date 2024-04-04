@@ -46,12 +46,14 @@ class _MostlyBaseClient:
         base_url: Optional[str] = None,
         api_key: Optional[str] = None,
         timeout: float = 60.0,
+        ssl_verify: bool = True,
     ):
         self.base_url = (
             base_url or os.getenv("MOSTLY_BASE_URL") or DEFAULT_BASE_URL
         ).rstrip("/")
         self.api_key = api_key or os.getenv("MOSTLY_API_KEY")
         self.timeout = timeout
+        self.ssl_verify = ssl_verify
         if not self.api_key:
             raise APIError(
                 "The API key must be either set by passing api_key to the client or by specifying a "
@@ -104,7 +106,7 @@ class _MostlyBaseClient:
             )
 
         try:
-            with httpx.Client(timeout=self.timeout) as client:
+            with httpx.Client(timeout=self.timeout, verify=self.ssl_verify) as client:
                 response = client.request(method=verb, url=full_url, **kwargs)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:

@@ -2,7 +2,8 @@
 
 ### Feat
 
-- **api**: add an api call for GET /users/me
+- **api**: allow setting ssl verify
+- **api**: add an api call for GET /users/me (#10)
 
 ## 0.3.0 (2024-03-19)
 
