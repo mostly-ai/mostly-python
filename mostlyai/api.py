@@ -31,6 +31,7 @@ class MostlyAI(_MostlyBaseClient):
     :param base_url: The base URL. If not provided, a default value is used.
     :param api_key: The API key for authenticating. If not provided, it would rely on env vars.
     :param timeout: Timeout for HTTPS requests in seconds.
+    :param ssl_verify: Whether to verify SSL certificates.
     """
 
     def __init__(
@@ -38,12 +39,16 @@ class MostlyAI(_MostlyBaseClient):
         base_url: Optional[str] = None,
         api_key: Optional[str] = None,
         timeout: float = 60.0,
+        ssl_verify: bool = True,
     ):
-        super().__init__(base_url=base_url, api_key=api_key, timeout=timeout)
+        super().__init__(
+            base_url=base_url, api_key=api_key, timeout=timeout, ssl_verify=ssl_verify
+        )
         client_kwargs = {
             "base_url": self.base_url,
             "api_key": self.api_key,
             "timeout": self.timeout,
+            "ssl_verify": self.ssl_verify,
         }
         self.connectors = _MostlyConnectorsClient(**client_kwargs)
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
