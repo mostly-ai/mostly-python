@@ -13,7 +13,6 @@ from mostlyai.model import (
     Generator,
     PermissionLevel,
     ProgressStatus,
-    SyntheticDataset,
 )
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
@@ -94,6 +93,18 @@ class MostlyAI(_MostlyBaseClient):
             - secrets
                 - accessToken: keyFile
             - location: schema.table
+        - HIVE
+            - config
+                - host: string
+                - port: integer, default: 10000
+                - username: string, optional
+                - kerberos_enabled: boolean, default: false
+                - kerberos_principal: string, optional
+                - kerberos_krb5_conf: string, optional
+            - secrets
+                - password: string, optional
+                - kerberos_keytab: base64-encoded string, optional
+            - location: database.table
         - MARIADB
             - config
                 - host: string
@@ -252,12 +263,12 @@ class MostlyAI(_MostlyBaseClient):
                 {
                     "name": table,
                     "configuration": {
-                        "sampleSize": size.get(table)
-                        if isinstance(size, dict)
-                        else size,
-                        "sampleSeedData": seed.get(table)
-                        if isinstance(seed, dict)
-                        else seed,
+                        "sampleSize": (
+                            size.get(table) if isinstance(size, dict) else size
+                        ),
+                        "sampleSeedData": (
+                            seed.get(table) if isinstance(seed, dict) else seed
+                        ),
                     },
                 }
                 for table in subject_tables
@@ -331,7 +342,6 @@ class MostlyAI(_MostlyBaseClient):
     def me(self) -> CurrentUser:
         """
         Retrieve current user info.
-
         :return: info about the current user.
         """
         return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
