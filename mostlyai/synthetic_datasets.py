@@ -21,6 +21,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         offset: int = 0,
         limit: int = 50,
         status: Optional[Union[str, list[str]]] = None,
+        search_term: Optional[str] = None,
     ) -> Iterator[SyntheticDataset]:
         """
         List synthetic datasets.
@@ -30,11 +31,17 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         :param offset: Offset the entities in the response. Optional. Default: 0
         :param limit: Limit the number of entities in the response. Optional. Default: 50
         :param status: Filter by generation status. Optional. Default: None
+        :param search_term: Filter by string in name or description. Optional
         :return: Iterator over synthetic datasets.
         """
         status = ",".join(status) if isinstance(status, list) else status
         with Paginator(
-            self, SyntheticDataset, offset=offset, limit=limit, status=status
+            self,
+            SyntheticDataset,
+            offset=offset,
+            limit=limit,
+            status=status,
+            search_term=search_term,
         ) as paginator:
             for item in paginator:
                 yield item

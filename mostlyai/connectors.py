@@ -15,6 +15,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         offset: int = 0,
         limit: int = 50,
         access_type: Optional[str] = None,
+        search_term: Optional[str] = None,
     ) -> Iterator[Connector]:
         """
         List connectors.
@@ -25,10 +26,16 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         :param offset: Offset the entities in the response. Optional. Default: 0
         :param limit: Limit the number of entities in the response. Optional. Default: 50
         :param access_type: Filter by access type. Possible values: "SOURCE", "DESTINATION"
+        :param search_term: Filter by string in name. Optional
         :return: Iterator over connectors.
         """
         with Paginator(
-            self, Connector, offset=offset, limit=limit, access_type=access_type
+            self,
+            Connector,
+            offset=offset,
+            limit=limit,
+            access_type=access_type,
+            search_term=search_term,
         ) as paginator:
             for item in paginator:
                 yield item

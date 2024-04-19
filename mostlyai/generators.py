@@ -19,6 +19,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         offset: int = 0,
         limit: int = 50,
         status: Optional[Union[str, list[str]]] = None,
+        search_term: Optional[str] = None,
     ) -> Iterator[Generator]:
         """
         List generators.
@@ -28,11 +29,17 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         :param offset: Offset the entities in the response. Optional. Default: 0
         :param limit: Limit the number of entities in the response. Optional. Default: 50
         :param status: Filter by training status. Optional. Default: None
+        :param search_term: Filter by string in name or description. Optional
         :return: Iterator over generators.
         """
         status = ",".join(status) if isinstance(status, list) else status
         with Paginator(
-            self, Generator, offset=offset, limit=limit, status=status
+            self,
+            Generator,
+            offset=offset,
+            limit=limit,
+            status=status,
+            search_term=search_term,
         ) as paginator:
             for item in paginator:
                 yield item
