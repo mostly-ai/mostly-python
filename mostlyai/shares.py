@@ -1,6 +1,3 @@
-from typing import Union
-from uuid import UUID
-
 from mostlyai.base import DELETE, GET, POST, _MostlyBaseClient
 from mostlyai.model import (
     Connector,
