@@ -33,6 +33,9 @@ ruff = "^0.2.2"
 respx = "^0.20.2"
 twine = "^5.0.0"
 commitizen = "^3.18.0"
+mkdocs = "^1.5.3"
+mkdocstrings = "^0.24.1"
+mkdocs-material = "^9.5.13"
 
 [tool.mypy]
 python_version = "3.9"

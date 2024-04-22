@@ -1,0 +1,96 @@
+site_name: "mostly-python"
+site_url: "https://mostly-ai.github.io/python-client/"
+repo_url: "https://github.com/mostly-ai/mostly-python"
+repo_name: "mostly-ai/mostly-python"
+site_dir: "site"
+watch: [mkdocs.yml, README.md, CHANGELOG.md]
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  
+theme:
+  name: material
+  logo: logo.png
+  palette: 
+
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+        
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.select
+    - content.code.copy
+    - content.code.annotate
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - toc.follow
+  
+  icon:
+    repo: fontawesome/brands/github
+nav:
+  - Home:
+    - Index: index.md
+    - Readme: home/readme.md
+    - What's New: home/changelog.md
+    - Legal: home/license.md
+  - Usage:
+      - Examples: usage/examples.md
+  - API Reference:
+    - API: api_reference/api.md
+    - Model: api_reference/model.md
+    - Exceptions: api_reference/exceptions.md
+    
+markdown_extensions:
+  - pymdownx.blocks.admonition
+  - pymdownx.blocks.details
+  - pymdownx.magiclink
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: [!relative $config_dir]
+      check_paths: true
+  - toc:
+      permalink: "¤"
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [mostlyai]
+          options:
+            docstring_style: sphinx
+            show_bases: false
+            show_symbol_type_heading: true
+            show_docstring_examples: true
+            filters: ["!^_"]
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            show_symbol_type_toc: true
+            show_root_toc_entry: false
+          rendering: 
+            show_source: true
+            show_if_no_docstring: false
