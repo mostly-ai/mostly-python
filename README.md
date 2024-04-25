@@ -91,6 +91,13 @@ sd.data()
 sd.download(file, format)
 ```
 
+### Synthetic Probes
+```python
+sp = mostly.probe(g, seed=seed)
+sp = mostly.probe(g, size=size)
+sp = mostly.probe(g, config=config)
+```
+
 ### Sharing
 
 ```python

@@ -2,7 +2,7 @@ import base64
 import io
 import time
 from pathlib import Path
-from typing import Callable, Union
+from typing import Callable, Union, Optional
 
 import pandas as pd
 import rich
@@ -134,11 +134,65 @@ def _get_subject_table_names(config) -> list[str]:
     return subject_tables
 
 
-def _get_table_name_index(config) -> dict[str, int]:
-    table_name_index = {}
-    for i, table in enumerate(config["tables"]):
-        table_name_index[table["name"]] = i
-    return table_name_index
+def _harmonize_sd_config(
+    generator: Union[Generator, str, None] = None,
+    size: Union[int, dict[str, int], None] = None,
+    seed: Union[
+        pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None
+    ] = None,
+    config: Union[dict, None] = None,
+    name: Optional[str] = None,
+) -> dict:
+    config = config or {}
+
+    # insert generatorId into config
+    if isinstance(generator, Generator):
+        config["generatorId"] = str(generator.id)
+    elif generator is not None:
+        config["generatorId"] = str(generator)
+    elif "generatorId" not in config:
+        raise ValueError(
+            "Either a generator or a configuration with a generatorId must be provided."
+        )
+
+    # insert name into config
+    if name is not None:
+        config |= {"name": name}
+
+    # infer tables if not provided
+    if "tables" not in config:
+        subject_tables = _get_subject_table_names(generator.config())
+        config["tables"] = [
+            {
+                "name": table,
+                "configuration": {
+                    "sampleSize": (size.get(table) if isinstance(size, dict) else size),
+                    "sampleSeedData": (
+                        seed.get(table) if isinstance(seed, dict) else seed
+                    ),
+                },
+            }
+            for table in subject_tables
+        ]
+
+    # convert `sample_seed_data` to base64-encoded Parquet files
+    tables = config["tables"] if "tables" in config else []
+    for table in tables:
+        if (
+            "sampleSeedData" in table["configuration"]
+            and table["configuration"]["sampleSeedData"] is not None
+        ):
+            if isinstance(table["configuration"]["sampleSeedData"], pd.DataFrame):
+                table["configuration"]["sampleSeedData"] = _convert_df_to_base64(
+                    table["configuration"]["sampleSeedData"]
+                )
+            elif isinstance(table["configuration"]["sampleSeedData"], (Path, str)):
+                _, df = _read_table_from_path(table["configuration"]["sampleSeedData"])
+                table["configuration"]["sampleSeedData"] = _convert_df_to_base64(df)
+                del df
+            else:
+                raise ValueError("sampleSeedData must be a DataFrame or a file path")
+    return config
 
 
 def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):

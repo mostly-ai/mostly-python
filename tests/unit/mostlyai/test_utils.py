@@ -19,7 +19,6 @@ from mostlyai.model import (
 from mostlyai.utils import (
     _convert_df_to_base64,
     _get_subject_table_names,
-    _get_table_name_index,
     _job_wait,
     _read_table_from_path,
 )
@@ -52,18 +51,6 @@ def test_get_subject_table_names():
     }
     subject_tables = _get_subject_table_names(config)
     assert subject_tables == ["table2", "table3"]
-
-
-def test_get_table_name_index():
-    config = {
-        "tables": [
-            {"name": "table1"},
-            {"name": "table2"},
-            {"name": "table3"},
-        ]
-    }
-    table_name_index = _get_table_name_index(config)
-    assert table_name_index == {"table1": 0, "table2": 1, "table3": 2}
 
 
 def test_read_table_from_path():
