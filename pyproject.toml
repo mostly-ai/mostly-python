@@ -9,8 +9,6 @@ readme = "README.md"
 packages = [
     { include = "mostlyai" }
 ]
-
-[tool.poetry.exclude]
 exclude = ["tools/", "tools/**/*"]
 
 [tool.poetry.dependencies]
