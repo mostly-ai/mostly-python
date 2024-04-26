@@ -35,4 +35,4 @@ COMMON_OPTIONS = \
 	--use-subclass-enum \
 	--output-model-type pydantic_v2.BaseModel \
 	--base-class mostlyai.base.CustomBaseModel \
-	--custom-template-dir custom_template
+	--custom-template-dir tools/custom_template
