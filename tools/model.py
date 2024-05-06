@@ -41,6 +41,15 @@ class Connector:
         """
         return self.client._locations(connector_id=self.id, prefix=prefix)
 
+    def schema(self, location: str) -> list[dict[str, Any]]:
+        """
+        Retrieve the schema (column names, original data types and default model encoding types) of the table at a connector location.
+
+        :param location: The location of the table
+        :return: The retrieved schema
+        """
+        return self.client._schema(connector_id=self.id, location=location)
+
     def config(self) -> dict[str, Any]:
         """
         Retrieve writeable generator properties

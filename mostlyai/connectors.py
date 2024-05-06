@@ -91,3 +91,9 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
             verb=GET, path=[connector_id, "locations"], params={"prefix": prefix}
         )
         return response
+
+    def _schema(self, connector_id: str, location: str) -> list[dict[str, Any]]:
+        response = self.request(
+            verb=POST, path=[connector_id, "schema"], params={"location": location}
+        )
+        return response
