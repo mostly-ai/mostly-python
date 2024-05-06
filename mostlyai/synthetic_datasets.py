@@ -172,7 +172,9 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
 class _MostlySyntheticProbesClient(_MostlyBaseClient):
     SECTION = ["synthetic-probes"]
 
-    def create(self, config: dict[str, Any]) -> dict:
+    def create(
+        self, config: dict[str, Any]
+    ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
         Create synthetic probe
 
@@ -181,9 +183,12 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
         :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
         """
-        synthetic_probe = self.request(
+        dicts = self.request(
             verb=POST,
             path=[],
             json=dict(config),
         )
-        return synthetic_probe
+        return {
+            dct["name"]: pd.DataFrame(dct["rows"])
+            for dct in dicts
+        }

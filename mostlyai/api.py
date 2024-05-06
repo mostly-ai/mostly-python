@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Literal
 
 import pandas as pd
 import rich
@@ -13,6 +13,7 @@ from mostlyai.model import (
     Generator,
     PermissionLevel,
     ProgressStatus,
+    SyntheticDataset,
 )
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import (
@@ -182,7 +183,7 @@ class MostlyAI(_MostlyBaseClient):
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
-    ):
+    ) -> Generator:
         """
         Train a generator
 
@@ -236,7 +237,7 @@ class MostlyAI(_MostlyBaseClient):
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
-    ):
+    ) -> SyntheticDataset:
         """
         Generate synthetic data
 
@@ -278,7 +279,8 @@ class MostlyAI(_MostlyBaseClient):
             pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None
         ] = None,
         config: Union[dict, None] = None,
-    ) -> dict:
+        return_type: Literal["auto", "dict"] = "auto"
+    ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
         Probe a generator
 
@@ -289,8 +291,11 @@ class MostlyAI(_MostlyBaseClient):
         :return: The created synthetic probe.
         """
         config = _harmonize_sd_config(generator, size, seed, config)
-        sp = self.synthetic_probes.create(config)
-        return sp
+        dfs = self.synthetic_probes.create(config)
+        if return_type == "auto" and len(dfs) == 1:
+            return list(dfs.values())[0]
+        else:
+            return dfs
 
     # SHARES
 
