@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mostly-ai.github.io/python-client/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/python-client/api_reference/api/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/python-client/api_reference/exceptions/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/python-client/api_reference/model/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/python-client/home/changelog/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/python-client/home/license/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/python-client/home/readme/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/python-client/usage/examples/</loc>
-         <lastmod>2024-04-22</lastmod>
+         <lastmod>2024-05-07</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
