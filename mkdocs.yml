@@ -52,8 +52,6 @@ nav:
     - Readme: home/readme.md
     - What's New: home/changelog.md
     - Legal: home/license.md
-  - Usage:
-      - Examples: usage/examples.md
   - API Reference:
     - API: api_reference/api.md
     - Model: api_reference/model.md
