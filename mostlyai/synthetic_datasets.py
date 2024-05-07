@@ -188,7 +188,4 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
             path=[],
             json=dict(config),
         )
-        return {
-            dct["name"]: pd.DataFrame(dct["rows"])
-            for dct in dicts
-        }
+        return {dct["name"]: pd.DataFrame(dct["rows"]) for dct in dicts}

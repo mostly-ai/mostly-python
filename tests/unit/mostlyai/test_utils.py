@@ -17,7 +17,7 @@ from mostlyai.model import (
     StepCode,
 )
 from mostlyai.utils import (
-    _convert_df_to_base64,
+    _convert_to_base64,
     _get_subject_table_names,
     _job_wait,
     _read_table_from_path,
@@ -26,9 +26,9 @@ from mostlyai.utils import (
 UTILS_MODULE = "mostlyai.utils"
 
 
-def test_convert_df_to_base64():
+def test_convert_to_base64():
     df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
-    base64_str = _convert_df_to_base64(df)
+    base64_str = _convert_to_base64(df)
 
     assert isinstance(base64_str, str)
 

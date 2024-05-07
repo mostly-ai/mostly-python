@@ -24,6 +24,7 @@ from mostlyai.utils import (
     ShareableResource,
     _read_table_from_path,
     _harmonize_sd_config,
+    Seed,
 )
 
 
@@ -275,11 +276,9 @@ class MostlyAI(_MostlyBaseClient):
         self,
         generator: Union[Generator, str, None] = None,
         size: Union[int, dict[str, int], None] = None,
-        seed: Union[
-            pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None
-        ] = None,
+        seed: Union[Seed, dict[str, Seed], None] = None,
         config: Union[dict, None] = None,
-        return_type: Literal["auto", "dict"] = "auto"
+        return_type: Literal["auto", "dict"] = "auto",
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
         Probe a generator
@@ -287,7 +286,7 @@ class MostlyAI(_MostlyBaseClient):
         :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
         :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
         :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
-        :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or a dictionary of those. Used for seeding the subject table(s).
+        :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).
         :return: The created synthetic probe.
         """
         config = _harmonize_sd_config(generator, size, seed, config)
