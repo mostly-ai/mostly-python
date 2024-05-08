@@ -137,12 +137,12 @@ def _convert_records_to_base64(dct: dict) -> str:
     return base64_encoded_str
 
 
-def _get_subject_table_names(config) -> list[str]:
+def _get_subject_table_names(generator: Generator) -> list[str]:
     subject_tables = []
-    for table in config["tables"]:
-        ctx_fks = [fk for fk in table.get("foreignKeys") or [] if fk["isContext"]]
+    for table in generator.tables:
+        ctx_fks = [fk for fk in table.foreign_keys or [] if fk.is_context]
         if len(ctx_fks) == 0:
-            subject_tables.append(table["name"])
+            subject_tables.append(table.name)
     return subject_tables
 
 
@@ -157,7 +157,7 @@ def _harmonize_sd_config(
     name: Optional[str] = None,
 ) -> dict:
     config = config or {}
-    subject_tables = _get_subject_table_names(generator.config())
+    subject_tables = _get_subject_table_names(generator)
 
     # insert generatorId into config
     if isinstance(generator, Generator):
@@ -186,29 +186,29 @@ def _harmonize_sd_config(
     # infer tables if not provided
     if "tables" not in config:
         config["tables"] = []
-        for table in generator.config()["tables"]:
+        for table in generator.tables:
             configuration = {
                 "sampleSize": None,
                 "sampleSeedData": None,
                 "sampleSeedDict": None,
             }
-            if table["name"] in subject_tables:
-                configuration["sampleSize"] = size.get(table["name"])
+            if table.name in subject_tables:
+                configuration["sampleSize"] = size.get(table.name)
                 configuration["sampleSeedData"] = (
                     (
-                        seed.get(table["name"])
-                        if not isinstance(seed.get(table["name"]), list)
+                        seed.get(table.name)
+                        if not isinstance(seed.get(table.name), list)
                         else None
                     )
                 )
                 configuration["sampleSeedDict"] = (
                     (
-                        seed.get(table["name"])
-                        if isinstance(seed.get(table["name"]), list)
+                        seed.get(table.name)
+                        if isinstance(seed.get(table.name), list)
                         else None
                     )
                 )
-            config["tables"].append({"name": table["name"], "configuration": configuration})
+            config["tables"].append({"name": table.name, "configuration": configuration})
 
     # convert `sample_seed_data` to base64-encoded Parquet files
     # convert `sample_seed_dict` to base64-encoded dictionaries

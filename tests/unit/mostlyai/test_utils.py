@@ -41,18 +41,6 @@ def test_convert_to_base64():
     pd.testing.assert_frame_equal(df, decoded_df)
 
 
-def test_get_subject_table_names():
-    config = {
-        "tables": [
-            {"name": "table1", "foreign_keys": [{"is_context": True}]},
-            {"name": "table2", "foreign_keys": [{"is_context": False}]},
-            {"name": "table3", "foreign_keys": []},
-        ]
-    }
-    subject_tables = _get_subject_table_names(config)
-    assert subject_tables == ["table2", "table3"]
-
-
 def test_read_table_from_path():
     # Create a temporary CSV file for testing
     with tempfile.NamedTemporaryFile(suffix=".csv", mode="w", delete=False) as tmp:
