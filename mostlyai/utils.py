@@ -115,7 +115,10 @@ def _job_wait(
         return
 
 
-def _convert_to_base64(df: Union[pd.DataFrame, list[dict, Any]], format: Literal["parquet", "jsonl"] = "parquet") -> str:
+def _convert_to_base64(
+    df: Union[pd.DataFrame, list[dict[str, Any]]],
+    format: Literal["parquet", "jsonl"] = "parquet",
+) -> str:
     # Save the DataFrame to a buffer in Parquet / JSONL format
     if not isinstance(df, pd.DataFrame):
         df = pd.DataFrame(df)
@@ -123,17 +126,10 @@ def _convert_to_base64(df: Union[pd.DataFrame, list[dict, Any]], format: Literal
     if format == "parquet":
         df.to_parquet(buffer, index=False)
     else:  # format == "jsonl"
-        df.to_json(buffer, orient="records", date_format='iso', lines=True, index=False)
+        df.to_json(buffer, orient="records", date_format="iso", lines=True, index=False)
     buffer.seek(0)
     binary_data = buffer.read()
     base64_encoded_str = base64.b64encode(binary_data).decode()
-    return base64_encoded_str
-
-
-def _convert_records_to_base64(dct: dict) -> str:
-    # Save the dictionary to a buffer in Parquet format
-    df = pd.DataFrame(dct)
-    base64_encoded_str = base64.b64encode(dct).decode()
     return base64_encoded_str
 
 
@@ -146,7 +142,7 @@ def _get_subject_table_names(generator: Generator) -> list[str]:
     return subject_tables
 
 
-Seed = Union[int, pd.DataFrame, str, Path, list[dict[str, Any]]]
+Seed = Union[pd.DataFrame, str, Path, list[dict[str, Any]]]
 
 
 def _harmonize_sd_config(
@@ -195,20 +191,18 @@ def _harmonize_sd_config(
             if table.name in subject_tables:
                 configuration["sampleSize"] = size.get(table.name)
                 configuration["sampleSeedData"] = (
-                    (
-                        seed.get(table.name)
-                        if not isinstance(seed.get(table.name), list)
-                        else None
-                    )
+                    seed.get(table.name)
+                    if not isinstance(seed.get(table.name), list)
+                    else None
                 )
                 configuration["sampleSeedDict"] = (
-                    (
-                        seed.get(table.name)
-                        if isinstance(seed.get(table.name), list)
-                        else None
-                    )
+                    seed.get(table.name)
+                    if isinstance(seed.get(table.name), list)
+                    else None
                 )
-            config["tables"].append({"name": table.name, "configuration": configuration})
+            config["tables"].append(
+                {"name": table.name, "configuration": configuration}
+            )
 
     # convert `sample_seed_data` to base64-encoded Parquet files
     # convert `sample_seed_dict` to base64-encoded dictionaries
