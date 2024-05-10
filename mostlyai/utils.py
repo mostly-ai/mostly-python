@@ -166,12 +166,12 @@ def _harmonize_sd_config(
         )
 
     # normalize size
-    size = size or {}
+    size = size if size is not None else {}
     if not isinstance(size, dict):
         size = {table: size for table in subject_tables}
 
     # normalize seed
-    seed = seed or {}
+    seed = seed if seed is not None else {}
     if not isinstance(seed, dict):
         seed = {table: seed for table in subject_tables}
 
