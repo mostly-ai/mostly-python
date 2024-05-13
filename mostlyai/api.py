@@ -68,12 +68,12 @@ class MostlyAI(_MostlyBaseClient):
             ```yaml
             type: AZURE_STORAGE
             config:
-                accountName: string
-                clientId: string (required for auth via service principal)
-                tenantId: string (required for auth via service principal)
+              accountName: string
+              clientId: string (required for auth via service principal)
+              tenantId: string (required for auth via service principal)
             secrets:
-                accountKey: string (required for regular auth)
-                clientSecret: string (required for auth via service principal)
+              accountKey: string (required for regular auth)
+              clientSecret: string (required for auth via service principal)
             ```
             - \t
             ```yaml
