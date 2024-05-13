@@ -1,4 +1,4 @@
-from typing import Any, Iterator, Optional
+from typing import Any, Iterator, Optional, List, Dict
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import Connector
@@ -89,5 +89,11 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _locations(self, connector_id: str, prefix: str = "") -> list:
         response = self.request(
             verb=GET, path=[connector_id, "locations"], params={"prefix": prefix}
+        )
+        return response
+
+    def _schema(self, connector_id: str, location: str) -> List[Dict[str, Any]]:
+        response = self.request(
+            verb=GET, path=[connector_id, "schema"], params={"location": location}
         )
         return response
