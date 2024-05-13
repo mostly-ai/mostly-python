@@ -60,108 +60,140 @@ class MostlyAI(_MostlyBaseClient):
 
         If validation fails, a 400 status with an error message will be returned.
 
-        The structures of the config, secrets and ssl parameters depend on the connector type.
-        Cloud storage:
-        - AZURE_STORAGE
-            - config
-                - accountName: string
-            - secrets
-                - accountKey: string
-            - location: container/path
-        - GOOGLE_CLOUD_STORAGE
-            - config
-            - secrets
-                - keyFile: string
-            - location: bucket/path
-        - S3_STORAGE
-            - config
-                - accessKey: string
-            - secrets
-                - secretKey: string
-            - location: bucket/path
-        Database:
-        - BIGQUERY
-            - config
-            - secrets
-                - keyFile: string
-            - location: dataset.table
-        - DATABRICKS
-            - config
-                - host: string
-                - httpPath: string
-                - catalog: string
-            - secrets
-                - accessToken: keyFile
-            - location: schema.table
-        - HIVE
-            - config
-                - host: string
-                - port: integer, default: 10000
-                - username: string, optional
-                - kerberos_enabled: boolean, default: false
-                - kerberos_principal: string, optional
-                - kerberos_krb5_conf: string, optional
-            - secrets
-                - password: string, optional
-                - kerberos_keytab: base64-encoded string, optional
-            - location: database.table
-        - MARIADB
-            - config
-                - host: string
-                - port: integer, default: 3306
-                - username: string
-            - secrets
-                - password: string
-            - location: database.table
-        - MSSQL
-            - config
-                - host: string
-                - port: integer, default: 1433
-                - username: string
-                - database: string
-            - secrets
-                - password: string
-            - location: schema.table
-        - MYSQL
-            - config
-                - host: string
-                - port: integer, default: 3306
-                - username: string
-            - secrets
-                - password: string
-            - location: database.table
-        - ORACLE
-            - config
-                - host: string
-                - port: integer, default: 1521
-                - username: string
-                - connectionType: enum {SID, SERVICE_NAME}, default: SID
-                - database: string, default: ORCL
-            - secrets
-                - password: string
-            - location: schema.table
-        - POSTGRES
-            - config
-                - host: string
-                - port: integer, default: 5432
-                - username: string
-                - database: string
-            - secrets
-                - password: string
-            - ssl
-                - rootCertificate: string
-                - sslCertificate: string
-                - sslCertificateKey: string
-            - location: schema.table
-        - SNOWFLAKE
-            - config
-                - account: string
-                - username: string
-                - warehouse: string, default: COMPUTE_WH
-                - database: string
-            - secrets
-                - password: string
-            - location: schema.table
+        `config` is a dictionary with the keys `type`, `config`, `secrets`, and `ssl`.
+        The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
+
+        - Cloud storage:
+            - \t
+            ```yaml
+            type: AZURE_STORAGE
+            config:
+                accountName: string
+                clientId: string (required for auth via service principal)
+                tenantId: string (required for auth via service principal)
+            secrets:
+                accountKey: string (required for regular auth)
+                clientSecret: string (required for auth via service principal)
+            ```
+            - \t
+            ```yaml
+            type: GOOGLE_CLOUD_STORAGE
+            config:
+            secrets:
+              keyFile: string
+            ```
+            - \t
+            ```yaml
+            type: S3_STORAGE
+            config:
+              accessKey: string
+            secrets:
+              secretKey: string
+            ```
+        - Database:
+            - \t
+                ```yaml
+                type: BIGQUERY
+                config:
+                secrets:
+                  keyFile: string
+                ```
+            - \t
+                ```yaml
+                type: DATABRICKS
+                config:
+                  host: string
+                  httpPath: string
+                  catalog: string
+                  clientId: string (required for auth via service principal)
+                  tenantId: string (required for auth via service principal)
+                secrets:
+                  accessToken: string (required for regular auth)
+                  clientSecret: string (required for auth via service principal)
+                ```
+            - \t
+                ```yaml
+                type: HIVE
+                config:
+                  host: string
+                  port: integer, default: 10000
+                  username: string (required for regular auth)
+                  kerberos_enabled: boolean, default: false
+                  kerberos_principal: string (required if kerberos_enabled)
+                  kerberos_krb5_conf: string (required if kerberos_enabled)
+                secrets:
+                  password: string (required for regular auth)
+                  kerberos_keytab: base64-encoded string (required if kerberos_enabled)
+                ```
+            - \t
+                ```yaml
+                type: MARIADB
+                config:
+                  host: string
+                  port: integer, default: 3306
+                  username: string
+                secrets:
+                  password: string
+                ```
+            - \t
+                ```yaml
+                type: MSSQL
+                config:
+                  host: string
+                  port: integer, default: 1433
+                  username: string
+                  database: string
+                secrets:
+                 password: string
+                ```
+            - \t
+                ```yaml
+                type: MYSQL
+                config:
+                  host: string
+                  port: integer, default: 3306
+                  username: string
+                secrets:
+                  password: string
+                ```
+            - \t
+                ```yaml
+                type: ORACLE
+                config:
+                  host: string
+                  port: integer, default: 1521
+                  username: string
+                  connectionType: enum {SID, SERVICE_NAME}, default: SID
+                  database: string, default: ORCL
+                secrets:
+                  password: string
+                ```
+            - \t
+                ```yaml
+                type: POSTGRES
+                config:
+                  host: string
+                  port: integer, default: 5432
+                  username: string
+                  database: string
+                secrets:
+                  password: string
+                ssl:
+                  rootCertificate: string
+                  sslCertificate: string
+                  sslCertificateKey: string
+                ```
+            - \t
+                ```yaml
+                type: SNOWFLAKE
+                config:
+                  account: string
+                  username: string
+                  warehouse: string, default: COMPUTE_WH
+                  database: string
+                secrets:
+                  password: string
+                ```
 
         :return: The created connector.
         """

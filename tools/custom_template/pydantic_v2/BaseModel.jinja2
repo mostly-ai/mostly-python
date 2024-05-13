@@ -66,6 +66,22 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         For storage connectors, this returns list of folders and files at root, respectively at `prefix` level.
         For DB connectors, this returns list of schemas (or databases for DBs without schema), respectively list of tables if `prefix` is provided.
 
+        The formats of the locations are:
+
+        - Cloud storage:
+            - `AZURE_STORAGE`: `container/path`
+            - `GOOGLE_CLOUD_STORAGE`: `bucket/path`
+            - `S3_STORAGE`: `bucket/path`
+        - Database:
+            - `BIGQUERY`: `dataset.table`
+            - `DATABRICKS`: `schema.table`
+            - `HIVE`: `database.table`
+            - `MARIADB`: `database.table`
+            - `MSSQL`: `schema.table`
+            - `MYSQL`: `database.table`
+            - `ORACLE`: `schema.table`
+            - `POSTGRES`: `schema.table`
+            - `SNOWFLAKE`: `schema.table`
         :param prefix: The prefix to filter the results by.
         :return: A list of locations (schemas, databases, directories, etc.) on the given level.
         """
@@ -74,6 +90,8 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
     def schema(self, location: str) -> list[dict[str, Any]]:
         """
         Retrieve the schema (column names, original data types and default model encoding types) of the table at a connector location.
+
+        Please refer to `locations()` for the format of the location.
 
         :param location: The location of the table
         :return: The retrieved schema
