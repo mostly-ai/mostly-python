@@ -9,16 +9,16 @@ validation:
   omitted_files: warn
   absolute_links: warn
   unrecognized_links: warn
-  
+
 theme:
   name: material
   logo: logo.png
-  palette: 
+  palette:
 
     # Palette toggle for light mode
     - scheme: default
       toggle:
-        icon: material/brightness-7 
+        icon: material/brightness-7
         name: Switch to dark mode
 
     # Palette toggle for dark mode
@@ -26,7 +26,7 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-        
+
   features:
     - navigation.instant
     - navigation.instant.prefetch
@@ -43,7 +43,7 @@ theme:
     - navigation.indexes
     - navigation.sections
     - toc.follow
-  
+
   icon:
     repo: fontawesome/brands/github
 nav:
@@ -56,7 +56,7 @@ nav:
     - API: api_reference/api.md
     - Model: api_reference/model.md
     - Exceptions: api_reference/exceptions.md
-    
+
 markdown_extensions:
   - pymdownx.blocks.admonition
   - pymdownx.blocks.details
@@ -89,6 +89,6 @@ plugins:
             signature_crossrefs: true
             show_symbol_type_toc: true
             show_root_toc_entry: false
-          rendering: 
+          rendering:
             show_source: true
             show_if_no_docstring: false

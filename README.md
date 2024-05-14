@@ -22,7 +22,7 @@ pip install mostlyai
 ## Basic Usage
 ```python
 from mostlyai import MostlyAI
-mostly = MostlyAI(api_key='your_api_key') 
+mostly = MostlyAI(api_key='your_api_key')
 g = mostly.train(data)      # train a generator on your data
 sd = mostly.generate(g)     # generate a synthetic dataset
 syn = sd.data()             # consume synthetic as pd.DataFrame
