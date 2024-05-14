@@ -1,1 +1,3 @@
-from .api import MostlyAI
+from mostlyai.api import MostlyAI
+
+__all__ = ["MostlyAI"]
