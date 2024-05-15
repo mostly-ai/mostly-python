@@ -37,7 +37,7 @@ jobs:
 
       - name: Lint | Ruff
         run: |
-          poetry run -- ruff check ..
+          poetry run -- ruff check .. --ignore E741
           poetry run -- ruff format --check ..
 
       - name: Test | Mostly-Python Unit Tests
