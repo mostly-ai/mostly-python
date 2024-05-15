@@ -10,6 +10,8 @@ env:
 # * Note that this is a public repository and as such it must not be using
 # *   any private runners.
 # * As such, we are also not using any reusable workflows, just a plain old single-workflow file.
+# * Also, please make sure not to use this workflow in private repositories (in case of a copy-paste).
+# * A similar one but with the internal standards applied is available in mostly-core repository.
 
 jobs:
   run-lint-check:
