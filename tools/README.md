@@ -34,7 +34,8 @@ The important part is to keep the commit messages (on the public repo) follow th
 - There is a pre-commit hook, that could be used (for that, run locally: `pre-commit install --hook-type commit-msg --hook-type pre-push`)
 - Otherwise, if comfortable, follow the commits guidelines independent of the helpers above
 
-With that, changelog update is as easy as running `cz ch`. Bumping based on git log is done with `cz bump`. And so on.
+With that, changelog update is as easy as running `cz ch --incremental`. To avoid a full rewrite of the changelog, `--incremental` is used.
+Bumping based on git log is done with `cz bump`. And so on.
 
 # Publishing to PyPI
 
@@ -53,6 +54,10 @@ Run `poetry build`, which will create `sdist` and `wheel` files in `dist` direct
 For testing purposes, we could use [TestPyPi](https://test.pypi.org/).
 Run `twine upload --repository testpypi dist/*`. Unless the credentials are saved in env vars or in `$HOME/.pypirc`, those will be promted.
 For credentials use `__token__` as the `username` and the token itself as the `password`. To avoid entering them each time, add the following to `$HOME/.pypirc`:
+
+## Update [documentation site](https://mostly-ai.github.io/mostly-python/)
+
+This is done by running `mkdocs gh-deploy`. After a short while it shall be available.
 
 ```
 [testpypi]
