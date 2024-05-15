@@ -1,0 +1,22 @@
+name: Mostly-Python Lint
+
+on:
+  workflow_call:
+
+jobs:
+  lint-check:
+    runs-on: mostly-priv-runner-set
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Setup | Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Lint | Ruff
+        run: |
+          ruff check .
+          ruff format --check .

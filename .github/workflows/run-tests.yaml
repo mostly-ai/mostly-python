@@ -1,0 +1,33 @@
+name: Mostly-Python Tests
+
+on:
+  workflow_call:
+
+jobs:
+  run-unit-tests:
+    runs-on: mostly-priv-runner-set
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: "Mostly-Python Unit Tests"
+            path: "tests/unit"
+            condition: "true"
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Setup | Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+      - name: Setup | Poetry dependencies
+        run: |
+          poetry config virtualenvs.in-project true
+          poetry install --no-interaction --no-ansi --no-root
+
+      - name: Test | ${{ matrix.name }}
+        run: |
+          echo "Running ${{ matrix.name }}"
+          poetry run -- pytest -vv ${{ matrix.path }}

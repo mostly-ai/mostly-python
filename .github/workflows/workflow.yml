@@ -1,0 +1,14 @@
+name: Mostly-Python Complete Workflow
+
+on:
+  push:
+
+env:
+  PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
+  FORCE_COLOR: "1"
+
+jobs:
+  call-lint:
+    uses: ./.github/workflows/lint-check.yaml
+  call-tests:
+    uses: ./.github/workflows/run-tests.yaml
