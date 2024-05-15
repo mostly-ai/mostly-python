@@ -14,7 +14,7 @@ env:
 # * A similar one but with the internal standards applied is available in mostly-core repository.
 
 jobs:
-  run-lint-check:
+  run-lint-and-test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
