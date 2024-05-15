@@ -5,7 +5,12 @@ on:
 
 jobs:
   lint-check:
-    runs-on: mostly-priv-runner-set
+    runs-on: mostly-development-eks-set
+    container:
+      image: harbor.m-dev.mostlylab.com/ci/gh-sub-runner:python
+      credentials:
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_PASSWORD }}
     permissions:
       contents: read
       packages: write
@@ -16,7 +21,11 @@ jobs:
           fetch-depth: 0
           submodules: 'true'
 
+      - name: Setup | Poetry Dependency Install
+        run: |
+          poetry install --no-interaction --no-ansi --only dev
+
       - name: Lint | Ruff
         run: |
-          ruff check .
-          ruff format --check .
+          poetry run -- ruff check ..
+          poetry run -- ruff format --check ..

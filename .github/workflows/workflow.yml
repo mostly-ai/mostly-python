@@ -10,5 +10,7 @@ env:
 jobs:
   call-lint:
     uses: ./.github/workflows/lint-check.yaml
+    secrets: inherit
   call-tests:
     uses: ./.github/workflows/run-tests.yaml
+    secrets: inherit
