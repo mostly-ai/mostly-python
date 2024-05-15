@@ -7,10 +7,37 @@ env:
   PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
   FORCE_COLOR: "1"
 
+# * Note that this is a public repository and as such it must not be using
+# *   any private runners.
+# * As such, we are also not using any reusable workflows, just a plain old single-workflow file.
+
 jobs:
-  call-lint:
-    uses: ./.github/workflows/lint-check.yaml
-    secrets: inherit
-  call-tests:
-    uses: ./.github/workflows/run-tests.yaml
-    secrets: inherit
+  run-lint-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Setup | Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          installer-parallel: true
+
+      - name: Setup | Poetry Dependency Install
+        run: |
+          poetry install --no-interaction --no-ansi
+
+      - name: Lint | Ruff
+        run: |
+          poetry run -- ruff check ..
+          poetry run -- ruff format --check ..
+
+      - name: Test | Mostly-Python Unit Tests
+        run: |
+          poetry run -- pytest -vv tests/unit
