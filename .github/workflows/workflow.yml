@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
           submodules: 'true'
 
-      - name: Install Poetry
+      - name: Setup | Install Poetry
         uses: snok/install-poetry@v1
         with:
           installer-parallel: true
