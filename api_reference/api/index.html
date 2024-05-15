@@ -1494,7 +1494,39 @@
 <span class="normal">344</span>
 <span class="normal">345</span>
 <span class="normal">346</span>
-<span class="normal">347</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MostlyAI</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MostlyAI</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Client for interacting with the Mostly AI Public API.</span>
 
@@ -1531,108 +1563,140 @@
 
 <span class="sd">        If validation fails, a 400 status with an error message will be returned.</span>
 
-<span class="sd">        The structures of the config, secrets and ssl parameters depend on the connector type.</span>
-<span class="sd">        Cloud storage:</span>
-<span class="sd">        - AZURE_STORAGE</span>
-<span class="sd">            - config</span>
-<span class="sd">                - accountName: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - accountKey: string</span>
-<span class="sd">            - location: container/path</span>
-<span class="sd">        - GOOGLE_CLOUD_STORAGE</span>
-<span class="sd">            - config</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - keyFile: string</span>
-<span class="sd">            - location: bucket/path</span>
-<span class="sd">        - S3_STORAGE</span>
-<span class="sd">            - config</span>
-<span class="sd">                - accessKey: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - secretKey: string</span>
-<span class="sd">            - location: bucket/path</span>
-<span class="sd">        Database:</span>
-<span class="sd">        - BIGQUERY</span>
-<span class="sd">            - config</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - keyFile: string</span>
-<span class="sd">            - location: dataset.table</span>
-<span class="sd">        - DATABRICKS</span>
-<span class="sd">            - config</span>
-<span class="sd">                - host: string</span>
-<span class="sd">                - httpPath: string</span>
-<span class="sd">                - catalog: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - accessToken: keyFile</span>
-<span class="sd">            - location: schema.table</span>
-<span class="sd">        - HIVE</span>
-<span class="sd">            - config</span>
-<span class="sd">                - host: string</span>
-<span class="sd">                - port: integer, default: 10000</span>
-<span class="sd">                - username: string, optional</span>
-<span class="sd">                - kerberos_enabled: boolean, default: false</span>
-<span class="sd">                - kerberos_principal: string, optional</span>
-<span class="sd">                - kerberos_krb5_conf: string, optional</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - password: string, optional</span>
-<span class="sd">                - kerberos_keytab: base64-encoded string, optional</span>
-<span class="sd">            - location: database.table</span>
-<span class="sd">        - MARIADB</span>
-<span class="sd">            - config</span>
-<span class="sd">                - host: string</span>
-<span class="sd">                - port: integer, default: 3306</span>
-<span class="sd">                - username: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - password: string</span>
-<span class="sd">            - location: database.table</span>
-<span class="sd">        - MSSQL</span>
-<span class="sd">            - config</span>
-<span class="sd">                - host: string</span>
-<span class="sd">                - port: integer, default: 1433</span>
-<span class="sd">                - username: string</span>
-<span class="sd">                - database: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - password: string</span>
-<span class="sd">            - location: schema.table</span>
-<span class="sd">        - MYSQL</span>
-<span class="sd">            - config</span>
-<span class="sd">                - host: string</span>
-<span class="sd">                - port: integer, default: 3306</span>
-<span class="sd">                - username: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - password: string</span>
-<span class="sd">            - location: database.table</span>
-<span class="sd">        - ORACLE</span>
-<span class="sd">            - config</span>
-<span class="sd">                - host: string</span>
-<span class="sd">                - port: integer, default: 1521</span>
-<span class="sd">                - username: string</span>
-<span class="sd">                - connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
-<span class="sd">                - database: string, default: ORCL</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - password: string</span>
-<span class="sd">            - location: schema.table</span>
-<span class="sd">        - POSTGRES</span>
-<span class="sd">            - config</span>
-<span class="sd">                - host: string</span>
-<span class="sd">                - port: integer, default: 5432</span>
-<span class="sd">                - username: string</span>
-<span class="sd">                - database: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - password: string</span>
-<span class="sd">            - ssl</span>
-<span class="sd">                - rootCertificate: string</span>
-<span class="sd">                - sslCertificate: string</span>
-<span class="sd">                - sslCertificateKey: string</span>
-<span class="sd">            - location: schema.table</span>
-<span class="sd">        - SNOWFLAKE</span>
-<span class="sd">            - config</span>
-<span class="sd">                - account: string</span>
-<span class="sd">                - username: string</span>
-<span class="sd">                - warehouse: string, default: COMPUTE_WH</span>
-<span class="sd">                - database: string</span>
-<span class="sd">            - secrets</span>
-<span class="sd">                - password: string</span>
-<span class="sd">            - location: schema.table</span>
+<span class="sd">        `config` is a dictionary with the keys `type`, `config`, `secrets`, and `ssl`.</span>
+<span class="sd">        The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:</span>
+
+<span class="sd">        - Cloud storage:</span>
+<span class="sd">            - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: AZURE_STORAGE</span>
+<span class="sd">            config:</span>
+<span class="sd">              accountName: string</span>
+<span class="sd">              clientId: string (required for auth via service principal)</span>
+<span class="sd">              tenantId: string (required for auth via service principal)</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              accountKey: string (required for regular auth)</span>
+<span class="sd">              clientSecret: string (required for auth via service principal)</span>
+<span class="sd">            ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: GOOGLE_CLOUD_STORAGE</span>
+<span class="sd">            config:</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              keyFile: string</span>
+<span class="sd">            ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: S3_STORAGE</span>
+<span class="sd">            config:</span>
+<span class="sd">              accessKey: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              secretKey: string</span>
+<span class="sd">            ```</span>
+<span class="sd">        - Database:</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: BIGQUERY</span>
+<span class="sd">                config:</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  keyFile: string</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: DATABRICKS</span>
+<span class="sd">                config:</span>
+<span class="sd">                  host: string</span>
+<span class="sd">                  httpPath: string</span>
+<span class="sd">                  catalog: string</span>
+<span class="sd">                  clientId: string (required for auth via service principal)</span>
+<span class="sd">                  tenantId: string (required for auth via service principal)</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  accessToken: string (required for regular auth)</span>
+<span class="sd">                  clientSecret: string (required for auth via service principal)</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: HIVE</span>
+<span class="sd">                config:</span>
+<span class="sd">                  host: string</span>
+<span class="sd">                  port: integer, default: 10000</span>
+<span class="sd">                  username: string (required for regular auth)</span>
+<span class="sd">                  kerberos_enabled: boolean, default: false</span>
+<span class="sd">                  kerberos_principal: string (required if kerberos_enabled)</span>
+<span class="sd">                  kerberos_krb5_conf: string (required if kerberos_enabled)</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  password: string (required for regular auth)</span>
+<span class="sd">                  kerberos_keytab: base64-encoded string (required if kerberos_enabled)</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: MARIADB</span>
+<span class="sd">                config:</span>
+<span class="sd">                  host: string</span>
+<span class="sd">                  port: integer, default: 3306</span>
+<span class="sd">                  username: string</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  password: string</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: MSSQL</span>
+<span class="sd">                config:</span>
+<span class="sd">                  host: string</span>
+<span class="sd">                  port: integer, default: 1433</span>
+<span class="sd">                  username: string</span>
+<span class="sd">                  database: string</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                 password: string</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: MYSQL</span>
+<span class="sd">                config:</span>
+<span class="sd">                  host: string</span>
+<span class="sd">                  port: integer, default: 3306</span>
+<span class="sd">                  username: string</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  password: string</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: ORACLE</span>
+<span class="sd">                config:</span>
+<span class="sd">                  host: string</span>
+<span class="sd">                  port: integer, default: 1521</span>
+<span class="sd">                  username: string</span>
+<span class="sd">                  connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
+<span class="sd">                  database: string, default: ORCL</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  password: string</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: POSTGRES</span>
+<span class="sd">                config:</span>
+<span class="sd">                  host: string</span>
+<span class="sd">                  port: integer, default: 5432</span>
+<span class="sd">                  username: string</span>
+<span class="sd">                  database: string</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  password: string</span>
+<span class="sd">                ssl:</span>
+<span class="sd">                  rootCertificate: string</span>
+<span class="sd">                  sslCertificate: string</span>
+<span class="sd">                  sslCertificateKey: string</span>
+<span class="sd">                ```</span>
+<span class="sd">            - \t</span>
+<span class="sd">                ```yaml</span>
+<span class="sd">                type: SNOWFLAKE</span>
+<span class="sd">                config:</span>
+<span class="sd">                  account: string</span>
+<span class="sd">                  username: string</span>
+<span class="sd">                  warehouse: string, default: COMPUTE_WH</span>
+<span class="sd">                  database: string</span>
+<span class="sd">                secrets:</span>
+<span class="sd">                  password: string</span>
+<span class="sd">                ```</span>
 
 <span class="sd">        :return: The created connector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1848,108 +1912,139 @@
   
       <p>Create a connector, and optionally validate the connection before saving.</p>
 <p>If validation fails, a 400 status with an error message will be returned.</p>
-<p>The structures of the config, secrets and ssl parameters depend on the connector type.
-Cloud storage:
-- AZURE_STORAGE
-    - config
-        - accountName: string
-    - secrets
-        - accountKey: string
-    - location: container/path
-- GOOGLE_CLOUD_STORAGE
-    - config
-    - secrets
-        - keyFile: string
-    - location: bucket/path
-- S3_STORAGE
-    - config
-        - accessKey: string
-    - secrets
-        - secretKey: string
-    - location: bucket/path
-Database:
-- BIGQUERY
-    - config
-    - secrets
-        - keyFile: string
-    - location: dataset.table
-- DATABRICKS
-    - config
-        - host: string
-        - httpPath: string
-        - catalog: string
-    - secrets
-        - accessToken: keyFile
-    - location: schema.table
-- HIVE
-    - config
-        - host: string
-        - port: integer, default: 10000
-        - username: string, optional
-        - kerberos_enabled: boolean, default: false
-        - kerberos_principal: string, optional
-        - kerberos_krb5_conf: string, optional
-    - secrets
-        - password: string, optional
-        - kerberos_keytab: base64-encoded string, optional
-    - location: database.table
-- MARIADB
-    - config
-        - host: string
-        - port: integer, default: 3306
-        - username: string
-    - secrets
-        - password: string
-    - location: database.table
-- MSSQL
-    - config
-        - host: string
-        - port: integer, default: 1433
-        - username: string
-        - database: string
-    - secrets
-        - password: string
-    - location: schema.table
-- MYSQL
-    - config
-        - host: string
-        - port: integer, default: 3306
-        - username: string
-    - secrets
-        - password: string
-    - location: database.table
-- ORACLE
-    - config
-        - host: string
-        - port: integer, default: 1521
-        - username: string
-        - connectionType: enum {SID, SERVICE_NAME}, default: SID
-        - database: string, default: ORCL
-    - secrets
-        - password: string
-    - location: schema.table
-- POSTGRES
-    - config
-        - host: string
-        - port: integer, default: 5432
-        - username: string
-        - database: string
-    - secrets
-        - password: string
-    - ssl
-        - rootCertificate: string
-        - sslCertificate: string
-        - sslCertificateKey: string
-    - location: schema.table
-- SNOWFLAKE
-    - config
-        - account: string
-        - username: string
-        - warehouse: string, default: COMPUTE_WH
-        - database: string
-    - secrets
-        - password: string
-    - location: schema.table</p>
+<p><code>config</code> is a dictionary with the keys <code>type</code>, <code>config</code>, <code>secrets</code>, and <code>ssl</code>.
+The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</code> parameters depend on the connector <code>type</code>:</p>
+<ul>
+<li>Cloud storage:<ul>
+<li><div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AZURE_STORAGE</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">accountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">clientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="w">  </span><span class="nt">tenantId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">accountKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">  </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+</code></pre></div></li>
+<li><div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GOOGLE_CLOUD_STORAGE</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">keyFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div></li>
+<li><div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">S3_STORAGE</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">accessKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div></li>
+</ul>
+</li>
+<li>Database:<ul>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BIGQUERY</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">keyFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABRICKS</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">httpPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">catalog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">clientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="w">  </span><span class="nt">tenantId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">accessToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">  </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HIVE</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">  </span><span class="nt">kerberos_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">kerberos_principal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required if kerberos_enabled)</span>
+<span class="w">  </span><span class="nt">kerberos_krb5_conf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required if kerberos_enabled)</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">  </span><span class="nt">kerberos_keytab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base64-encoded string (required if kerberos_enabled)</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MARIADB</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MSSQL</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1433</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w"> </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MYSQL</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ORACLE</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1521</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">connectionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enum {SID, SERVICE_NAME}, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SID</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ORCL</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">ssl</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">rootCertificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">sslCertificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">sslCertificateKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div>
+</li>
+<li>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNOWFLAKE</span>
+<span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">warehouse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COMPUTE_WH</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">secrets</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
 
 
 
@@ -2092,114 +2187,178 @@ Database:
 <span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
-<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Connector</span><span class="p">:</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Connector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a connector, and optionally validate the connection before saving.</span>
 
 <span class="sd">    If validation fails, a 400 status with an error message will be returned.</span>
 
-<span class="sd">    The structures of the config, secrets and ssl parameters depend on the connector type.</span>
-<span class="sd">    Cloud storage:</span>
-<span class="sd">    - AZURE_STORAGE</span>
-<span class="sd">        - config</span>
-<span class="sd">            - accountName: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - accountKey: string</span>
-<span class="sd">        - location: container/path</span>
-<span class="sd">    - GOOGLE_CLOUD_STORAGE</span>
-<span class="sd">        - config</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - keyFile: string</span>
-<span class="sd">        - location: bucket/path</span>
-<span class="sd">    - S3_STORAGE</span>
-<span class="sd">        - config</span>
-<span class="sd">            - accessKey: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - secretKey: string</span>
-<span class="sd">        - location: bucket/path</span>
-<span class="sd">    Database:</span>
-<span class="sd">    - BIGQUERY</span>
-<span class="sd">        - config</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - keyFile: string</span>
-<span class="sd">        - location: dataset.table</span>
-<span class="sd">    - DATABRICKS</span>
-<span class="sd">        - config</span>
-<span class="sd">            - host: string</span>
-<span class="sd">            - httpPath: string</span>
-<span class="sd">            - catalog: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - accessToken: keyFile</span>
-<span class="sd">        - location: schema.table</span>
-<span class="sd">    - HIVE</span>
-<span class="sd">        - config</span>
-<span class="sd">            - host: string</span>
-<span class="sd">            - port: integer, default: 10000</span>
-<span class="sd">            - username: string, optional</span>
-<span class="sd">            - kerberos_enabled: boolean, default: false</span>
-<span class="sd">            - kerberos_principal: string, optional</span>
-<span class="sd">            - kerberos_krb5_conf: string, optional</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - password: string, optional</span>
-<span class="sd">            - kerberos_keytab: base64-encoded string, optional</span>
-<span class="sd">        - location: database.table</span>
-<span class="sd">    - MARIADB</span>
-<span class="sd">        - config</span>
-<span class="sd">            - host: string</span>
-<span class="sd">            - port: integer, default: 3306</span>
-<span class="sd">            - username: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - password: string</span>
-<span class="sd">        - location: database.table</span>
-<span class="sd">    - MSSQL</span>
-<span class="sd">        - config</span>
-<span class="sd">            - host: string</span>
-<span class="sd">            - port: integer, default: 1433</span>
-<span class="sd">            - username: string</span>
-<span class="sd">            - database: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - password: string</span>
-<span class="sd">        - location: schema.table</span>
-<span class="sd">    - MYSQL</span>
-<span class="sd">        - config</span>
-<span class="sd">            - host: string</span>
-<span class="sd">            - port: integer, default: 3306</span>
-<span class="sd">            - username: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - password: string</span>
-<span class="sd">        - location: database.table</span>
-<span class="sd">    - ORACLE</span>
-<span class="sd">        - config</span>
-<span class="sd">            - host: string</span>
-<span class="sd">            - port: integer, default: 1521</span>
-<span class="sd">            - username: string</span>
-<span class="sd">            - connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
-<span class="sd">            - database: string, default: ORCL</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - password: string</span>
-<span class="sd">        - location: schema.table</span>
-<span class="sd">    - POSTGRES</span>
-<span class="sd">        - config</span>
-<span class="sd">            - host: string</span>
-<span class="sd">            - port: integer, default: 5432</span>
-<span class="sd">            - username: string</span>
-<span class="sd">            - database: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - password: string</span>
-<span class="sd">        - ssl</span>
-<span class="sd">            - rootCertificate: string</span>
-<span class="sd">            - sslCertificate: string</span>
-<span class="sd">            - sslCertificateKey: string</span>
-<span class="sd">        - location: schema.table</span>
-<span class="sd">    - SNOWFLAKE</span>
-<span class="sd">        - config</span>
-<span class="sd">            - account: string</span>
-<span class="sd">            - username: string</span>
-<span class="sd">            - warehouse: string, default: COMPUTE_WH</span>
-<span class="sd">            - database: string</span>
-<span class="sd">        - secrets</span>
-<span class="sd">            - password: string</span>
-<span class="sd">        - location: schema.table</span>
+<span class="sd">    `config` is a dictionary with the keys `type`, `config`, `secrets`, and `ssl`.</span>
+<span class="sd">    The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:</span>
+
+<span class="sd">    - Cloud storage:</span>
+<span class="sd">        - \t</span>
+<span class="sd">        ```yaml</span>
+<span class="sd">        type: AZURE_STORAGE</span>
+<span class="sd">        config:</span>
+<span class="sd">          accountName: string</span>
+<span class="sd">          clientId: string (required for auth via service principal)</span>
+<span class="sd">          tenantId: string (required for auth via service principal)</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          accountKey: string (required for regular auth)</span>
+<span class="sd">          clientSecret: string (required for auth via service principal)</span>
+<span class="sd">        ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">        ```yaml</span>
+<span class="sd">        type: GOOGLE_CLOUD_STORAGE</span>
+<span class="sd">        config:</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          keyFile: string</span>
+<span class="sd">        ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">        ```yaml</span>
+<span class="sd">        type: S3_STORAGE</span>
+<span class="sd">        config:</span>
+<span class="sd">          accessKey: string</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          secretKey: string</span>
+<span class="sd">        ```</span>
+<span class="sd">    - Database:</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: BIGQUERY</span>
+<span class="sd">            config:</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              keyFile: string</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: DATABRICKS</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              httpPath: string</span>
+<span class="sd">              catalog: string</span>
+<span class="sd">              clientId: string (required for auth via service principal)</span>
+<span class="sd">              tenantId: string (required for auth via service principal)</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              accessToken: string (required for regular auth)</span>
+<span class="sd">              clientSecret: string (required for auth via service principal)</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: HIVE</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 10000</span>
+<span class="sd">              username: string (required for regular auth)</span>
+<span class="sd">              kerberos_enabled: boolean, default: false</span>
+<span class="sd">              kerberos_principal: string (required if kerberos_enabled)</span>
+<span class="sd">              kerberos_krb5_conf: string (required if kerberos_enabled)</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string (required for regular auth)</span>
+<span class="sd">              kerberos_keytab: base64-encoded string (required if kerberos_enabled)</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: MARIADB</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 3306</span>
+<span class="sd">              username: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: MSSQL</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 1433</span>
+<span class="sd">              username: string</span>
+<span class="sd">              database: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">             password: string</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: MYSQL</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 3306</span>
+<span class="sd">              username: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: ORACLE</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 1521</span>
+<span class="sd">              username: string</span>
+<span class="sd">              connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
+<span class="sd">              database: string, default: ORCL</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: POSTGRES</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 5432</span>
+<span class="sd">              username: string</span>
+<span class="sd">              database: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+<span class="sd">            ssl:</span>
+<span class="sd">              rootCertificate: string</span>
+<span class="sd">              sslCertificate: string</span>
+<span class="sd">              sslCertificateKey: string</span>
+<span class="sd">            ```</span>
+<span class="sd">        - \t</span>
+<span class="sd">            ```yaml</span>
+<span class="sd">            type: SNOWFLAKE</span>
+<span class="sd">            config:</span>
+<span class="sd">              account: string</span>
+<span class="sd">              username: string</span>
+<span class="sd">              warehouse: string, default: COMPUTE_WH</span>
+<span class="sd">              database: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+<span class="sd">            ```</span>
 
 <span class="sd">    :return: The created connector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2348,39 +2507,7 @@ Database:
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
@@ -2396,7 +2523,39 @@ Database:
 <span class="normal">219</span>
 <span class="normal">220</span>
 <span class="normal">221</span>
-<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2621,39 +2780,7 @@ Database:
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
 <span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
@@ -2695,7 +2822,39 @@ Database:
 <span class="normal">295</span>
 <span class="normal">296</span>
 <span class="normal">297</span>
-<span class="normal">298</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Generator</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2882,31 +3041,31 @@ Database:
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
-<span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">share</span><span class="p">(</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">share</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">resource</span><span class="p">:</span> <span class="n">ShareableResource</span><span class="p">,</span>
     <span class="n">user_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3023,19 +3182,19 @@ Database:
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span>
-<span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span>
-<span class="normal">335</span>
-<span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unshare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">ShareableResource</span><span class="p">,</span> <span class="n">user_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unshare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">ShareableResource</span><span class="p">,</span> <span class="n">user_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unshare a specified resource from a user.</span>
 
@@ -3097,12 +3256,12 @@ Database:
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
-<span class="normal">347</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">me</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CurrentUser</span><span class="p">:</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">me</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CurrentUser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve current user info.</span>
 <span class="sd">    :return: info about the current user.</span>
@@ -3252,7 +3411,13 @@ Database:
 <span class="normal">90</span>
 <span class="normal">91</span>
 <span class="normal">92</span>
-<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlyConnectorsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">,</span> <span class="n">_MostlySharesMixin</span><span class="p">):</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span>
+<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlyConnectorsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">,</span> <span class="n">_MostlySharesMixin</span><span class="p">):</span>
     <span class="n">SECTION</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;connectors&quot;</span><span class="p">]</span>
 
     <span class="c1"># PUBLIC METHODS #</span>
@@ -3336,6 +3501,12 @@ Database:
     <span class="k">def</span> <span class="nf">_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
             <span class="n">verb</span><span class="o">=</span><span class="n">GET</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="p">[</span><span class="n">connector_id</span><span class="p">,</span> <span class="s2">&quot;locations&quot;</span><span class="p">],</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;prefix&quot;</span><span class="p">:</span> <span class="n">prefix</span><span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span>
+
+    <span class="k">def</span> <span class="nf">_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connector_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+            <span class="n">verb</span><span class="o">=</span><span class="n">GET</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="p">[</span><span class="n">connector_id</span><span class="p">,</span> <span class="s2">&quot;schema&quot;</span><span class="p">],</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">}</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span>
 </code></pre></div></td></tr></table></div>
