@@ -64,9 +64,8 @@ class MostlyAI(_MostlyBaseClient):
         The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
         - Cloud storage:
-            - \t
-            ```yaml
-            type: AZURE_STORAGE
+          ```yaml
+          - type: AZURE_STORAGE
             config:
               accountName: string
               clientId: string (required for auth via service principal)
@@ -74,126 +73,106 @@ class MostlyAI(_MostlyBaseClient):
             secrets:
               accountKey: string (required for regular auth)
               clientSecret: string (required for auth via service principal)
-            ```
-            - \t
-            ```yaml
-            type: GOOGLE_CLOUD_STORAGE
+
+          - type: GOOGLE_CLOUD_STORAGE
             config:
             secrets:
               keyFile: string
-            ```
-            - \t
-            ```yaml
-            type: S3_STORAGE
+
+          - type: S3_STORAGE
             config:
               accessKey: string
+              endpointUrl: string (only needed for S3-compatible storage services other than AWS)
             secrets:
               secretKey: string
-            ```
+          ```
         - Database:
-            - \t
-                ```yaml
-                type: BIGQUERY
-                config:
-                secrets:
-                  keyFile: string
-                ```
-            - \t
-                ```yaml
-                type: DATABRICKS
-                config:
-                  host: string
-                  httpPath: string
-                  catalog: string
-                  clientId: string (required for auth via service principal)
-                  tenantId: string (required for auth via service principal)
-                secrets:
-                  accessToken: string (required for regular auth)
-                  clientSecret: string (required for auth via service principal)
-                ```
-            - \t
-                ```yaml
-                type: HIVE
-                config:
-                  host: string
-                  port: integer, default: 10000
-                  username: string (required for regular auth)
-                  kerberos_enabled: boolean, default: false
-                  kerberos_principal: string (required if kerberos_enabled)
-                  kerberos_krb5_conf: string (required if kerberos_enabled)
-                secrets:
-                  password: string (required for regular auth)
-                  kerberos_keytab: base64-encoded string (required if kerberos_enabled)
-                ```
-            - \t
-                ```yaml
-                type: MARIADB
-                config:
-                  host: string
-                  port: integer, default: 3306
-                  username: string
-                secrets:
-                  password: string
-                ```
-            - \t
-                ```yaml
-                type: MSSQL
-                config:
-                  host: string
-                  port: integer, default: 1433
-                  username: string
-                  database: string
-                secrets:
-                 password: string
-                ```
-            - \t
-                ```yaml
-                type: MYSQL
-                config:
-                  host: string
-                  port: integer, default: 3306
-                  username: string
-                secrets:
-                  password: string
-                ```
-            - \t
-                ```yaml
-                type: ORACLE
-                config:
-                  host: string
-                  port: integer, default: 1521
-                  username: string
-                  connectionType: enum {SID, SERVICE_NAME}, default: SID
-                  database: string, default: ORCL
-                secrets:
-                  password: string
-                ```
-            - \t
-                ```yaml
-                type: POSTGRES
-                config:
-                  host: string
-                  port: integer, default: 5432
-                  username: string
-                  database: string
-                secrets:
-                  password: string
-                ssl:
-                  rootCertificate: string
-                  sslCertificate: string
-                  sslCertificateKey: string
-                ```
-            - \t
-                ```yaml
-                type: SNOWFLAKE
-                config:
-                  account: string
-                  username: string
-                  warehouse: string, default: COMPUTE_WH
-                  database: string
-                secrets:
-                  password: string
-                ```
+          ```yaml
+          - type: BIGQUERY
+            config:
+            secrets:
+              keyFile: string
+
+          - type: DATABRICKS
+            config:
+              host: string
+              httpPath: string
+              catalog: string
+              clientId: string (required for auth via service principal)
+              tenantId: string (required for auth via service principal)
+            secrets:
+              accessToken: string (required for regular auth)
+              clientSecret: string (required for auth via service principal)
+
+          - type: HIVE
+            config:
+              host: string
+              port: integer, default: 10000
+              username: string (required for regular auth)
+              kerberos_enabled: boolean, default: false
+              kerberos_principal: string (required if kerberos_enabled)
+              kerberos_krb5_conf: string (required if kerberos_enabled)
+            secrets:
+              password: string (required for regular auth)
+              kerberos_keytab: base64-encoded string (required if kerberos_enabled)
+
+          - type: MARIADB
+            config:
+              host: string
+              port: integer, default: 3306
+              username: string
+            secrets:
+              password: string
+
+          - type: MSSQL
+            config:
+              host: string
+              port: integer, default: 1433
+              username: string
+              database: string
+            secrets:
+             password: string
+
+          - type: MYSQL
+            config:
+              host: string
+              port: integer, default: 3306
+              username: string
+            secrets:
+              password: string
+
+          - type: ORACLE
+            config:
+              host: string
+              port: integer, default: 1521
+              username: string
+              connectionType: enum {SID, SERVICE_NAME}, default: SID
+              database: string, default: ORCL
+            secrets:
+              password: string
+
+          - type: POSTGRES
+            config:
+              host: string
+              port: integer, default: 5432
+              username: string
+              database: string
+            secrets:
+              password: string
+            ssl:
+              rootCertificate: string
+              sslCertificate: string
+              sslCertificateKey: string
+
+          - type: SNOWFLAKE
+            config:
+              account: string
+              username: string
+              warehouse: string, default: COMPUTE_WH
+              database: string
+            secrets:
+              password: string
+          ```
 
         :return: The created connector.
         """
