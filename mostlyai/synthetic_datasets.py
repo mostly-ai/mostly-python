@@ -1,14 +1,13 @@
 import io
 import re
 import zipfile
-from pathlib import Path
 from typing import Any, Iterator, Optional, Union
 
 import pandas as pd
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat
-from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_path
+from mostlyai.utils import _job_wait
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
@@ -67,29 +66,6 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
         """
-        # convert `sample_seed_data` to base64-encoded Parquet files
-        tables = config["tables"] if "tables" in config else []
-        for table in tables:
-            if (
-                "sampleSeedData" in table["configuration"]
-                and table["configuration"]["sampleSeedData"] is not None
-            ):
-                if isinstance(table["configuration"]["sampleSeedData"], pd.DataFrame):
-                    table["configuration"]["sampleSeedData"] = _convert_df_to_base64(
-                        table["configuration"]["sampleSeedData"]
-                    )
-                elif isinstance(table["configuration"]["sampleSeedData"], (Path, str)):
-                    _, df = _read_table_from_path(
-                        table["configuration"]["sampleSeedData"]
-                    )
-                    table["configuration"]["sampleSeedData"] = _convert_df_to_base64(df)
-                    del df
-                else:
-                    raise ValueError(
-                        "sampleSeedData must be a DataFrame or a file path"
-                    )
-        # convert generator_id to str
-        config["generatorId"] = str(config["generatorId"])
         synthetic_dataset = self.request(
             verb=POST,
             path=[],
@@ -191,3 +167,25 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         _job_wait(lambda: self._generation_progress(synthetic_dataset_id), interval)
         synthetic_dataset = self.get(synthetic_dataset_id)
         return synthetic_dataset
+
+
+class _MostlySyntheticProbesClient(_MostlyBaseClient):
+    SECTION = ["synthetic-probes"]
+
+    def create(
+        self, config: dict[str, Any]
+    ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
+        """
+        Create synthetic probe
+
+        See SyntheticDataset.config for the structure of the parameters.
+
+        :param config: The configuration parameters of the synthetic dataset to be created.
+        :return: The created synthetic dataset.
+        """
+        dicts = self.request(
+            verb=POST,
+            path=[],
+            json=dict(config),
+        )
+        return {dct["name"]: pd.DataFrame(dct["rows"]) for dct in dicts}

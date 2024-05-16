@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, Literal
 
 import pandas as pd
 import rich
@@ -13,13 +13,18 @@ from mostlyai.model import (
     Generator,
     PermissionLevel,
     ProgressStatus,
+    SyntheticDataset,
 )
 from mostlyai.shares import _MostlySharesClient
-from mostlyai.synthetic_datasets import _MostlySyntheticDatasetsClient
+from mostlyai.synthetic_datasets import (
+    _MostlySyntheticDatasetsClient,
+    _MostlySyntheticProbesClient,
+)
 from mostlyai.utils import (
     ShareableResource,
-    _get_subject_table_names,
     _read_table_from_path,
+    _harmonize_sd_config,
+    Seed,
 )
 
 
@@ -52,6 +57,7 @@ class MostlyAI(_MostlyBaseClient):
         self.connectors = _MostlyConnectorsClient(**client_kwargs)
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
+        self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
         self.shares = _MostlySharesClient(**client_kwargs)
 
     def connect(self, config: dict[str, Any]) -> Connector:
@@ -210,7 +216,7 @@ class MostlyAI(_MostlyBaseClient):
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
-    ):
+    ) -> Generator:
         """
         Train a generator
 
@@ -257,16 +263,14 @@ class MostlyAI(_MostlyBaseClient):
         self,
         generator: Union[Generator, str, None] = None,
         size: Union[int, dict[str, int], None] = None,
-        seed: Union[
-            pd.DataFrame, str, Path, dict[str, Union[pd.DataFrame, str, Path]], None
-        ] = None,
+        seed: Union[Seed, dict[str, Seed], None] = None,
         config: Union[dict, None] = None,
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
-    ):
+    ) -> SyntheticDataset:
         """
-        Train a generator
+        Generate synthetic data
 
         :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
         :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
@@ -277,38 +281,7 @@ class MostlyAI(_MostlyBaseClient):
         :param wait: If true, then the function only returns once generation has finished. Default: true.
         :return: The created synthetic dataset.
         """
-        if config is None:
-            config = {}
-        if isinstance(generator, Generator):
-            config["generatorId"] = str(generator.id)
-        elif generator is not None:
-            config["generatorId"] = str(generator)
-        elif "generatorId" not in config:
-            raise ValueError(
-                "Either a generator or a configuration with a generatorId must be provided."
-            )
-
-        if "tables" not in config:
-            g = self.generators.get(config["generatorId"])
-            subject_tables = _get_subject_table_names(g.config())
-            config["tables"] = [
-                {
-                    "name": table,
-                    "configuration": {
-                        "sampleSize": (
-                            size.get(table) if isinstance(size, dict) else size
-                        ),
-                        "sampleSeedData": (
-                            seed.get(table) if isinstance(seed, dict) else seed
-                        ),
-                    },
-                }
-                for table in subject_tables
-            ]
-
-        if name is not None:
-            config |= {"name": name}
-
+        config = _harmonize_sd_config(generator, size, seed, config, name)
         sd = self.synthetic_datasets.create(config)
         rich.print(
             f"Created synthetic dataset "
@@ -328,6 +301,30 @@ class MostlyAI(_MostlyBaseClient):
                     "Share it so others can do the same."
                 )
         return sd
+
+    def probe(
+        self,
+        generator: Union[Generator, str, None] = None,
+        size: Union[int, dict[str, int], None] = None,
+        seed: Union[Seed, dict[str, Seed], None] = None,
+        config: Union[dict, None] = None,
+        return_type: Literal["auto", "dict"] = "auto",
+    ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
+        """
+        Probe a generator
+
+        :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
+        :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
+        :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
+        :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).
+        :return: The created synthetic probe.
+        """
+        config = _harmonize_sd_config(generator, size, seed, config)
+        dfs = self.synthetic_probes.create(config)
+        if return_type == "auto" and len(dfs) == 1:
+            return list(dfs.values())[0]
+        else:
+            return dfs
 
     # SHARES
 

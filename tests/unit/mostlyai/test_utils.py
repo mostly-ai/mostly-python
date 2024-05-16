@@ -18,9 +18,7 @@ from mostlyai.model import (
     StepCode,
 )
 from mostlyai.utils import (
-    _convert_df_to_base64,
-    _get_subject_table_names,
-    _get_table_name_index,
+    _convert_to_base64,
     _job_wait,
     _read_table_from_path,
 )
@@ -28,9 +26,9 @@ from mostlyai.utils import (
 UTILS_MODULE = "mostlyai.utils"
 
 
-def test_convert_df_to_base64():
+def test_convert_to_base64():
     df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
-    base64_str = _convert_df_to_base64(df)
+    base64_str = _convert_to_base64(df)
 
     assert isinstance(base64_str, str)
 
@@ -41,30 +39,6 @@ def test_convert_df_to_base64():
 
     # Compare the original DataFrame with the decoded one
     pd.testing.assert_frame_equal(df, decoded_df)
-
-
-def test_get_subject_table_names():
-    config = {
-        "tables": [
-            {"name": "table1", "foreign_keys": [{"is_context": True}]},
-            {"name": "table2", "foreign_keys": [{"is_context": False}]},
-            {"name": "table3", "foreign_keys": []},
-        ]
-    }
-    subject_tables = _get_subject_table_names(config)
-    assert subject_tables == ["table2", "table3"]
-
-
-def test_get_table_name_index():
-    config = {
-        "tables": [
-            {"name": "table1"},
-            {"name": "table2"},
-            {"name": "table3"},
-        ]
-    }
-    table_name_index = _get_table_name_index(config)
-    assert table_name_index == {"table1": 0, "table2": 1, "table3": 2}
 
 
 def test_read_table_from_path():
