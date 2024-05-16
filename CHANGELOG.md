@@ -1,3 +1,10 @@
+## 0.3.5 (2024-05-13)
+
+### Feat
+
+- **api**: support endpoint for fetching table schema (#28)
+- **api**: support of value ranges and AUTO encoding type (#23)
+
 ## 0.3.4 (2024-04-26)
 
 ### Feat

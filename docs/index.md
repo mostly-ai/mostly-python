@@ -19,9 +19,6 @@ This documentation is your guide to using the MOSTLY AI Python wrapper, providin
 - [What's New](home/changelog.md): Stay up-to-date with the latest updates and enhancements.
 - [Legal Information](home/license.md): Review the legal terms and conditions of using our platform.
 
-### Usage
-- [Examples](usage/examples.md): Explore practical examples and use cases.
-
 ### API Reference
 - [API](api_reference/api.md): The gateway to our API.
 - [Model](api_reference/model.md): Insights into the pydantic models used by our python wrapper.
