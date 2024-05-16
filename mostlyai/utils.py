@@ -2,7 +2,7 @@ import base64
 import io
 import time
 from pathlib import Path
-from typing import Callable, Union
+from typing import Callable, Union, Optional, Any, Literal
 
 import pandas as pd
 import rich
@@ -115,30 +115,122 @@ def _job_wait(
         return
 
 
-def _convert_df_to_base64(df: pd.DataFrame) -> str:
-    # Save the DataFrame to a buffer in Parquet format
+def _convert_to_base64(
+    df: Union[pd.DataFrame, list[dict[str, Any]]],
+    format: Literal["parquet", "jsonl"] = "parquet",
+) -> str:
+    # Save the DataFrame to a buffer in Parquet / JSONL format
+    if not isinstance(df, pd.DataFrame):
+        df = pd.DataFrame(df)
     buffer = io.BytesIO()
-    df.to_parquet(buffer, index=False)
+    if format == "parquet":
+        df.to_parquet(buffer, index=False)
+    else:  # format == "jsonl"
+        df.to_json(buffer, orient="records", date_format="iso", lines=True, index=False)
     buffer.seek(0)
     binary_data = buffer.read()
     base64_encoded_str = base64.b64encode(binary_data).decode()
     return base64_encoded_str
 
 
-def _get_subject_table_names(config) -> list[str]:
+def _get_subject_table_names(generator: Generator) -> list[str]:
     subject_tables = []
-    for table in config["tables"]:
-        ctx_fks = [fk for fk in table.get("foreign_keys", []) if fk["is_context"]]
+    for table in generator.tables:
+        ctx_fks = [fk for fk in table.foreign_keys or [] if fk.is_context]
         if len(ctx_fks) == 0:
-            subject_tables.append(table["name"])
+            subject_tables.append(table.name)
     return subject_tables
 
 
-def _get_table_name_index(config) -> dict[str, int]:
-    table_name_index = {}
-    for i, table in enumerate(config["tables"]):
-        table_name_index[table["name"]] = i
-    return table_name_index
+Seed = Union[pd.DataFrame, str, Path, list[dict[str, Any]]]
+
+
+def _harmonize_sd_config(
+    generator: Union[Generator, str, None] = None,
+    size: Union[int, dict[str, int], None] = None,
+    seed: Union[Seed, dict[str, Seed], None] = None,
+    config: Union[dict, None] = None,
+    name: Optional[str] = None,
+) -> dict:
+    config = config or {}
+    subject_tables = _get_subject_table_names(generator)
+
+    # insert generatorId into config
+    if isinstance(generator, Generator):
+        config["generatorId"] = str(generator.id)
+    elif generator is not None:
+        config["generatorId"] = str(generator)
+    elif "generatorId" not in config:
+        raise ValueError(
+            "Either a generator or a configuration with a generatorId must be provided."
+        )
+
+    # normalize size
+    size = size if size is not None else {}
+    if not isinstance(size, dict):
+        size = {table: size for table in subject_tables}
+
+    # normalize seed
+    seed = seed if seed is not None else {}
+    if not isinstance(seed, dict):
+        seed = {table: seed for table in subject_tables}
+
+    # insert name into config
+    if name is not None:
+        config |= {"name": name}
+
+    # infer tables if not provided
+    if "tables" not in config:
+        config["tables"] = []
+        for table in generator.tables:
+            configuration = {
+                "sampleSize": None,
+                "sampleSeedData": None,
+                "sampleSeedDict": None,
+            }
+            if table.name in subject_tables:
+                configuration["sampleSize"] = size.get(table.name)
+                configuration["sampleSeedData"] = (
+                    seed.get(table.name)
+                    if not isinstance(seed.get(table.name), list)
+                    else None
+                )
+                configuration["sampleSeedDict"] = (
+                    seed.get(table.name)
+                    if isinstance(seed.get(table.name), list)
+                    else None
+                )
+            config["tables"].append(
+                {"name": table.name, "configuration": configuration}
+            )
+
+    # convert `sample_seed_data` to base64-encoded Parquet files
+    # convert `sample_seed_dict` to base64-encoded dictionaries
+    tables = config["tables"] if "tables" in config else []
+    for table in tables:
+        if (
+            "sampleSeedData" in table["configuration"]
+            and table["configuration"]["sampleSeedData"] is not None
+        ):
+            if isinstance(table["configuration"]["sampleSeedData"], pd.DataFrame):
+                table["configuration"]["sampleSeedData"] = _convert_to_base64(
+                    table["configuration"]["sampleSeedData"]
+                )
+            elif isinstance(table["configuration"]["sampleSeedData"], (Path, str)):
+                _, df = _read_table_from_path(table["configuration"]["sampleSeedData"])
+                table["configuration"]["sampleSeedData"] = _convert_to_base64(df)
+                del df
+            else:
+                raise ValueError("sampleSeedData must be a DataFrame or a file path")
+        if (
+            "sampleSeedDict" in table["configuration"]
+            and table["configuration"]["sampleSeedDict"] is not None
+        ):
+            table["configuration"]["sampleSeedDict"] = _convert_to_base64(
+                table["configuration"]["sampleSeedDict"], format="jsonl"
+            )
+
+    return config
 
 
 def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):

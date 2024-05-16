@@ -6,7 +6,7 @@ import pandas as pd
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import Generator, JobProgress
 from mostlyai.shares import _MostlySharesMixin
-from mostlyai.utils import _convert_df_to_base64, _job_wait, _read_table_from_path
+from mostlyai.utils import _convert_to_base64, _job_wait, _read_table_from_path
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
@@ -61,12 +61,12 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
                 if "data" in table and table["data"] is not None:
                     if isinstance(table["data"], (str, Path)):
                         name, df = _read_table_from_path(table["data"])
-                        table["data"] = _convert_df_to_base64(df)
+                        table["data"] = _convert_to_base64(df)
                         if "name" not in table:
                             table["name"] = name
                         del df
                     elif isinstance(table["data"], pd.DataFrame):
-                        table["data"] = _convert_df_to_base64(table["data"])
+                        table["data"] = _convert_to_base64(table["data"])
                     else:
                         raise ValueError("data must be a DataFrame or a file path")
 
