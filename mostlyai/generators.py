@@ -111,7 +111,6 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _training_wait(
         self, generator_id: str, progress_bar: bool, interval: float
     ) -> Generator:
-        if progress_bar:
-            _job_wait(lambda: self._training_progress(generator_id), interval)
+        _job_wait(lambda: self._training_progress(generator_id), interval, progress_bar)
         generator = self.get(generator_id)
         return generator

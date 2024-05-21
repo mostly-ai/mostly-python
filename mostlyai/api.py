@@ -205,7 +205,7 @@ class MostlyAI(_MostlyBaseClient):
         :param name: Optional. The name of the generator.
         :param start: If true, then training is started right away. Default: true.
         :param wait: If true, then the function only returns once training has finished. Default: true.
-        :param progress_bar: If true, then the progress bar will be displayed.
+        :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
         :return: The created generator.
         """
         if data is not None and config is not None:
@@ -261,7 +261,7 @@ class MostlyAI(_MostlyBaseClient):
         :param name: Optional. The name of the synthetic dataset.
         :param start: If true, then generation is started right away. Default: true.
         :param wait: If true, then the function only returns once generation has finished. Default: true.
-        :param progress_bar: If true, then the progress bar will be displayed.
+        :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
         :return: The created synthetic dataset.
         """
         config = _harmonize_sd_config(generator, size, seed, config, name)

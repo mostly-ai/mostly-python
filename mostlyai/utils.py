@@ -27,90 +27,100 @@ from mostlyai.model import (
 def _job_wait(
     get_progress: Callable,
     interval: float,
+    progress_bar: bool = True,
 ) -> None:
     # ensure that interval is at least 1 sec
     interval = max(interval, 1)
     # retrieve current JobProgress
     job = get_progress()
-    # initialize progress bars
-    progress = Progress(
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(
-            style=Style(color="rgb(245,245,245)"),
-            complete_style=Style(color="rgb(66,77,179)"),
-            finished_style=Style(color="rgb(36,219,149)"),
-            pulse_style=Style(color="rgb(245,245,245)"),
-        ),
-        TaskProgressColumn(),
-        TimeElapsedColumn(),
-    )
-    progress_bars = {
-        "overall": progress.add_task(
-            description="[bold]Overall job progress[/b]",
-            start=job.start_date is not None,
-            completed=0,
-            total=job.progress.max,
+    if progress_bar:
+        # initialize progress bars
+        progress = Progress(
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(
+                style=Style(color="rgb(245,245,245)"),
+                complete_style=Style(color="rgb(66,77,179)"),
+                finished_style=Style(color="rgb(36,219,149)"),
+                pulse_style=Style(color="rgb(245,245,245)"),
+            ),
+            TaskProgressColumn(),
+            TimeElapsedColumn(),
         )
-    }
-    for step in job.steps:
-        step_code = step.step_code.value
-        if step_code == StepCode.train_model.value:
-            step_code += " :gem:"
-        progress_bars |= {
-            step.id: progress.add_task(
-                description=f"Step {step.model_label or 'common'} [#808080]{step_code}[/]",
-                start=step.start_date is not None,
+        progress_bars = {
+            "overall": progress.add_task(
+                description="[bold]Overall job progress[/b]",
+                start=job.start_date is not None,
                 completed=0,
-                total=step.progress.max,
+                total=job.progress.max,
             )
         }
+        for step in job.steps:
+            step_code = step.step_code.value
+            if step_code == StepCode.train_model.value:
+                step_code += " :gem:"
+            progress_bars |= {
+                step.id: progress.add_task(
+                    description=f"Step {step.model_label or 'common'} [#808080]{step_code}[/]",
+                    start=step.start_date is not None,
+                    completed=0,
+                    total=step.progress.max,
+                )
+            }
     try:
-        # loop until job has completed
-        progress.start()
+        if progress_bar:
+            # loop until job has completed
+            progress.start()
         while True:
             # sleep for interval seconds
             time.sleep(interval)
             # retrieve current JobProgress
             job = get_progress()
-            current_task_id = progress_bars["overall"]
-            current_task = progress.tasks[current_task_id]
-            if not current_task.started and job.start_date is not None:
-                progress.start_task(current_task_id)
-            # update progress bars
-            progress.update(
-                current_task_id,
-                total=job.progress.max,
-                completed=job.progress.value,
-            )
-            if current_task.started and job.end_date is not None:
-                progress.stop_task(current_task_id)
-            for i, step in enumerate(job.steps):
-                current_task_id = progress_bars[step.id]
+            if progress_bar:
+                current_task_id = progress_bars["overall"]
                 current_task = progress.tasks[current_task_id]
-                if not current_task.started and step.start_date is not None:
+                if not current_task.started and job.start_date is not None:
                     progress.start_task(current_task_id)
-                if step.progress.max > 0:
-                    progress.update(
-                        current_task_id,
-                        total=step.progress.max,
-                        completed=step.progress.value,
-                    )
-                if current_task.started and step.end_date is not None:
+                # update progress bars
+                progress.update(
+                    current_task_id,
+                    total=job.progress.max,
+                    completed=job.progress.value,
+                )
+                if current_task.started and job.end_date is not None:
                     progress.stop_task(current_task_id)
-                # break if step has failed or been canceled
-                if step.status in (ProgressStatus.failed, ProgressStatus.canceled):
-                    rich.print(
-                        f"[red]Step {step.model_label} {step.step_code.value} {step.status.lower()}"
-                    )
+                for i, step in enumerate(job.steps):
+                    current_task_id = progress_bars[step.id]
+                    current_task = progress.tasks[current_task_id]
+                    if not current_task.started and step.start_date is not None:
+                        progress.start_task(current_task_id)
+                    if step.progress.max > 0:
+                        progress.update(
+                            current_task_id,
+                            total=step.progress.max,
+                            completed=step.progress.value,
+                        )
+                    if current_task.started and step.end_date is not None:
+                        progress.stop_task(current_task_id)
+                    # break if step has failed or been canceled
+                    if step.status in (ProgressStatus.failed, ProgressStatus.canceled):
+                        rich.print(
+                            f"[red]Step {step.model_label} {step.step_code.value} {step.status.lower()}"
+                        )
+                        progress.stop()
+                        return
+                # check whether we are done
+                if job.progress.value >= job.progress.max:
+                    time.sleep(1)  # give the system a moment
                     progress.stop()
                     return
-            # check whether we are done
-            if job.progress.value >= job.progress.max:
-                time.sleep(1)  # give the system a moment
-                progress.stop()
-                return
+            else:
+                if job.end_date or job.progress in (ProgressStatus.failed, ProgressStatus.canceled):
+                    rich.print(f"Job {job.status.lower()}")
+                    return
     except KeyboardInterrupt:
-        rich.print("Exiting gracefully. Job will continue in the background.")
+        rich.print(
+            f"[red]Step {step.model_label} {step.step_code.value} {step.status.lower()}"
+        )
         progress.stop()
         return
 
