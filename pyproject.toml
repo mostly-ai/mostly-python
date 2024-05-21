@@ -14,10 +14,10 @@ exclude = ["tools/", "tools/**/*"]
 [tool.poetry.dependencies]
 python = "^3.9"
 pydantic = "^2.4.2"
-httpx = "^0.25.1"
+httpx = ">=0.25.0"
 pandas = ">=1.5.3,<2.0.0 || ^2.0.0"
-pyarrow = "^14.0.2"
-rich = "^13.7.0"
+pyarrow = ">=14.0.0"
+rich = ">=13.7.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0.0"
