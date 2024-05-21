@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://mostly-ai.github.io/python-client/api_reference/api/">
+        <link rel="canonical" href="https://mostly-ai.github.io/mostly-python/api_reference/api/">
       
       
         <link rel="prev" href="../../home/license/">
@@ -577,6 +577,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#mostlyai.api.MostlyAI.probe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;probe
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#mostlyai.api.MostlyAI.share" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;share
@@ -866,6 +875,15 @@
   <a href="#mostlyai.api.MostlyAI.generate" class="md-nav__link">
     <span class="md-ellipsis">
       <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;generate
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mostlyai.api.MostlyAI.probe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;probe
     </span>
   </a>
   
@@ -1173,12 +1191,7 @@
 
             <details class="quote">
               <summary>Source code in <code>mostlyai/api.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 26</span>
-<span class="normal"> 27</span>
-<span class="normal"> 28</span>
-<span class="normal"> 29</span>
-<span class="normal"> 30</span>
-<span class="normal"> 31</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 31</span>
 <span class="normal"> 32</span>
 <span class="normal"> 33</span>
 <span class="normal"> 34</span>
@@ -1506,27 +1519,7 @@
 <span class="normal">356</span>
 <span class="normal">357</span>
 <span class="normal">358</span>
-<span class="normal">359</span>
-<span class="normal">360</span>
-<span class="normal">361</span>
-<span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span>
-<span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
-<span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span>
-<span class="normal">373</span>
-<span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MostlyAI</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
+<span class="normal">359</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MostlyAI</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Client for interacting with the Mostly AI Public API.</span>
 
@@ -1555,6 +1548,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span> <span class="o">=</span> <span class="n">_MostlyConnectorsClient</span><span class="p">(</span><span class="o">**</span><span class="n">client_kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">generators</span> <span class="o">=</span> <span class="n">_MostlyGeneratorsClient</span><span class="p">(</span><span class="o">**</span><span class="n">client_kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">synthetic_datasets</span> <span class="o">=</span> <span class="n">_MostlySyntheticDatasetsClient</span><span class="p">(</span><span class="o">**</span><span class="n">client_kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">synthetic_probes</span> <span class="o">=</span> <span class="n">_MostlySyntheticProbesClient</span><span class="p">(</span><span class="o">**</span><span class="n">client_kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shares</span> <span class="o">=</span> <span class="n">_MostlySharesClient</span><span class="p">(</span><span class="o">**</span><span class="n">client_kwargs</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Connector</span><span class="p">:</span>
@@ -1567,9 +1561,8 @@
 <span class="sd">        The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:</span>
 
 <span class="sd">        - Cloud storage:</span>
-<span class="sd">            - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: AZURE_STORAGE</span>
+<span class="sd">          ```yaml</span>
+<span class="sd">          - type: AZURE_STORAGE</span>
 <span class="sd">            config:</span>
 <span class="sd">              accountName: string</span>
 <span class="sd">              clientId: string (required for auth via service principal)</span>
@@ -1577,126 +1570,106 @@
 <span class="sd">            secrets:</span>
 <span class="sd">              accountKey: string (required for regular auth)</span>
 <span class="sd">              clientSecret: string (required for auth via service principal)</span>
-<span class="sd">            ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: GOOGLE_CLOUD_STORAGE</span>
+
+<span class="sd">          - type: GOOGLE_CLOUD_STORAGE</span>
 <span class="sd">            config:</span>
 <span class="sd">            secrets:</span>
 <span class="sd">              keyFile: string</span>
-<span class="sd">            ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: S3_STORAGE</span>
+
+<span class="sd">          - type: S3_STORAGE</span>
 <span class="sd">            config:</span>
 <span class="sd">              accessKey: string</span>
+<span class="sd">              endpointUrl: string (only needed for S3-compatible storage services other than AWS)</span>
 <span class="sd">            secrets:</span>
 <span class="sd">              secretKey: string</span>
-<span class="sd">            ```</span>
+<span class="sd">          ```</span>
 <span class="sd">        - Database:</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: BIGQUERY</span>
-<span class="sd">                config:</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  keyFile: string</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: DATABRICKS</span>
-<span class="sd">                config:</span>
-<span class="sd">                  host: string</span>
-<span class="sd">                  httpPath: string</span>
-<span class="sd">                  catalog: string</span>
-<span class="sd">                  clientId: string (required for auth via service principal)</span>
-<span class="sd">                  tenantId: string (required for auth via service principal)</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  accessToken: string (required for regular auth)</span>
-<span class="sd">                  clientSecret: string (required for auth via service principal)</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: HIVE</span>
-<span class="sd">                config:</span>
-<span class="sd">                  host: string</span>
-<span class="sd">                  port: integer, default: 10000</span>
-<span class="sd">                  username: string (required for regular auth)</span>
-<span class="sd">                  kerberos_enabled: boolean, default: false</span>
-<span class="sd">                  kerberos_principal: string (required if kerberos_enabled)</span>
-<span class="sd">                  kerberos_krb5_conf: string (required if kerberos_enabled)</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  password: string (required for regular auth)</span>
-<span class="sd">                  kerberos_keytab: base64-encoded string (required if kerberos_enabled)</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: MARIADB</span>
-<span class="sd">                config:</span>
-<span class="sd">                  host: string</span>
-<span class="sd">                  port: integer, default: 3306</span>
-<span class="sd">                  username: string</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  password: string</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: MSSQL</span>
-<span class="sd">                config:</span>
-<span class="sd">                  host: string</span>
-<span class="sd">                  port: integer, default: 1433</span>
-<span class="sd">                  username: string</span>
-<span class="sd">                  database: string</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                 password: string</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: MYSQL</span>
-<span class="sd">                config:</span>
-<span class="sd">                  host: string</span>
-<span class="sd">                  port: integer, default: 3306</span>
-<span class="sd">                  username: string</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  password: string</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: ORACLE</span>
-<span class="sd">                config:</span>
-<span class="sd">                  host: string</span>
-<span class="sd">                  port: integer, default: 1521</span>
-<span class="sd">                  username: string</span>
-<span class="sd">                  connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
-<span class="sd">                  database: string, default: ORCL</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  password: string</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: POSTGRES</span>
-<span class="sd">                config:</span>
-<span class="sd">                  host: string</span>
-<span class="sd">                  port: integer, default: 5432</span>
-<span class="sd">                  username: string</span>
-<span class="sd">                  database: string</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  password: string</span>
-<span class="sd">                ssl:</span>
-<span class="sd">                  rootCertificate: string</span>
-<span class="sd">                  sslCertificate: string</span>
-<span class="sd">                  sslCertificateKey: string</span>
-<span class="sd">                ```</span>
-<span class="sd">            - \t</span>
-<span class="sd">                ```yaml</span>
-<span class="sd">                type: SNOWFLAKE</span>
-<span class="sd">                config:</span>
-<span class="sd">                  account: string</span>
-<span class="sd">                  username: string</span>
-<span class="sd">                  warehouse: string, default: COMPUTE_WH</span>
-<span class="sd">                  database: string</span>
-<span class="sd">                secrets:</span>
-<span class="sd">                  password: string</span>
-<span class="sd">                ```</span>
+<span class="sd">          ```yaml</span>
+<span class="sd">          - type: BIGQUERY</span>
+<span class="sd">            config:</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              keyFile: string</span>
+
+<span class="sd">          - type: DATABRICKS</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              httpPath: string</span>
+<span class="sd">              catalog: string</span>
+<span class="sd">              clientId: string (required for auth via service principal)</span>
+<span class="sd">              tenantId: string (required for auth via service principal)</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              accessToken: string (required for regular auth)</span>
+<span class="sd">              clientSecret: string (required for auth via service principal)</span>
+
+<span class="sd">          - type: HIVE</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 10000</span>
+<span class="sd">              username: string (required for regular auth)</span>
+<span class="sd">              kerberos_enabled: boolean, default: false</span>
+<span class="sd">              kerberos_principal: string (required if kerberos_enabled)</span>
+<span class="sd">              kerberos_krb5_conf: string (required if kerberos_enabled)</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string (required for regular auth)</span>
+<span class="sd">              kerberos_keytab: base64-encoded string (required if kerberos_enabled)</span>
+
+<span class="sd">          - type: MARIADB</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 3306</span>
+<span class="sd">              username: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+
+<span class="sd">          - type: MSSQL</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 1433</span>
+<span class="sd">              username: string</span>
+<span class="sd">              database: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">             password: string</span>
+
+<span class="sd">          - type: MYSQL</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 3306</span>
+<span class="sd">              username: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+
+<span class="sd">          - type: ORACLE</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 1521</span>
+<span class="sd">              username: string</span>
+<span class="sd">              connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
+<span class="sd">              database: string, default: ORCL</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+
+<span class="sd">          - type: POSTGRES</span>
+<span class="sd">            config:</span>
+<span class="sd">              host: string</span>
+<span class="sd">              port: integer, default: 5432</span>
+<span class="sd">              username: string</span>
+<span class="sd">              database: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+<span class="sd">            ssl:</span>
+<span class="sd">              rootCertificate: string</span>
+<span class="sd">              sslCertificate: string</span>
+<span class="sd">              sslCertificateKey: string</span>
+
+<span class="sd">          - type: SNOWFLAKE</span>
+<span class="sd">            config:</span>
+<span class="sd">              account: string</span>
+<span class="sd">              username: string</span>
+<span class="sd">              warehouse: string, default: COMPUTE_WH</span>
+<span class="sd">              database: string</span>
+<span class="sd">            secrets:</span>
+<span class="sd">              password: string</span>
+<span class="sd">          ```</span>
 
 <span class="sd">        :return: The created connector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1713,7 +1686,8 @@
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">start</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Train a generator</span>
 
@@ -1722,6 +1696,7 @@
 <span class="sd">        :param name: Optional. The name of the generator.</span>
 <span class="sd">        :param start: If true, then training is started right away. Default: true.</span>
 <span class="sd">        :param wait: If true, then the function only returns once training has finished. Default: true.</span>
+<span class="sd">        :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True</span>
 <span class="sd">        :return: The created generator.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1747,7 +1722,7 @@
             <span class="n">g</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
             <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Started generator training&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">start</span> <span class="ow">and</span> <span class="n">wait</span><span class="p">:</span>
-            <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">training_status</span> <span class="o">==</span> <span class="n">ProgressStatus</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
                 <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
                     <span class="s2">&quot;:tada: [bold green]Your generator is ready![/] &quot;</span>
@@ -1760,16 +1735,15 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Generator</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
-            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]],</span> <span class="kc">None</span>
-        <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Seed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Seed</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">start</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
+        <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Train a generator</span>
+<span class="sd">        Generate synthetic data</span>
 
 <span class="sd">        :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.</span>
 <span class="sd">        :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.</span>
@@ -1778,40 +1752,10 @@
 <span class="sd">        :param name: Optional. The name of the synthetic dataset.</span>
 <span class="sd">        :param start: If true, then generation is started right away. Default: true.</span>
 <span class="sd">        :param wait: If true, then the function only returns once generation has finished. Default: true.</span>
+<span class="sd">        :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True</span>
 <span class="sd">        :return: The created synthetic dataset.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">Generator</span><span class="p">):</span>
-            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="s2">&quot;generatorId&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Either a generator or a configuration with a generatorId must be provided.&quot;</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="s2">&quot;tables&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-            <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">])</span>
-            <span class="n">subject_tables</span> <span class="o">=</span> <span class="n">_get_subject_table_names</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">config</span><span class="p">())</span>
-            <span class="n">config</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span>
-                    <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">&quot;sampleSize&quot;</span><span class="p">:</span> <span class="p">(</span>
-                            <span class="n">size</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">size</span>
-                        <span class="p">),</span>
-                        <span class="s2">&quot;sampleSeedData&quot;</span><span class="p">:</span> <span class="p">(</span>
-                            <span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">seed</span>
-                        <span class="p">),</span>
-                    <span class="p">},</span>
-                <span class="p">}</span>
-                <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">subject_tables</span>
-            <span class="p">]</span>
-
-        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">config</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
-
+        <span class="n">config</span> <span class="o">=</span> <span class="n">_harmonize_sd_config</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="n">sd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synthetic_datasets</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
         <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Created synthetic dataset &quot;</span>
@@ -1823,7 +1767,7 @@
             <span class="n">sd</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
             <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Started synthetic dataset generation&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">start</span> <span class="ow">and</span> <span class="n">wait</span><span class="p">:</span>
-            <span class="n">sd</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+            <span class="n">sd</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">generation_status</span> <span class="o">==</span> <span class="n">ProgressStatus</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
                 <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
                     <span class="s2">&quot;:tada: [bold green]Your synthetic dataset is ready![/] &quot;</span>
@@ -1831,6 +1775,30 @@
                     <span class="s2">&quot;Share it so others can do the same.&quot;</span>
                 <span class="p">)</span>
         <span class="k">return</span> <span class="n">sd</span>
+
+    <span class="k">def</span> <span class="nf">probe</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Generator</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Seed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Seed</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">return_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Probe a generator</span>
+
+<span class="sd">        :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.</span>
+<span class="sd">        :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.</span>
+<span class="sd">        :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).</span>
+<span class="sd">        :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).</span>
+<span class="sd">        :return: The created synthetic probe.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">_harmonize_sd_config</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+        <span class="n">dfs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synthetic_probes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">dfs</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">dfs</span>
 
     <span class="c1"># SHARES</span>
 
@@ -1915,135 +1883,114 @@
 <p><code>config</code> is a dictionary with the keys <code>type</code>, <code>config</code>, <code>secrets</code>, and <code>ssl</code>.
 The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</code> parameters depend on the connector <code>type</code>:</p>
 <ul>
-<li>Cloud storage:<ul>
-<li><div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AZURE_STORAGE</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">accountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">clientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
-<span class="w">  </span><span class="nt">tenantId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">accountKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
-<span class="w">  </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<li>Cloud storage:
+  <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AZURE_STORAGE</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">accountName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">clientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="w">    </span><span class="nt">tenantId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">accountKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">    </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GOOGLE_CLOUD_STORAGE</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">keyFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">S3_STORAGE</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">accessKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">endpointUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (only needed for S3-compatible storage services other than AWS)</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 </code></pre></div></li>
-<li><div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GOOGLE_CLOUD_STORAGE</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">keyFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<li>Database:
+  <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BIGQUERY</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">keyFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABRICKS</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">httpPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">catalog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">clientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="w">    </span><span class="nt">tenantId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">accessToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">    </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HIVE</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">    </span><span class="nt">kerberos_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">kerberos_principal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required if kerberos_enabled)</span>
+<span class="w">    </span><span class="nt">kerberos_krb5_conf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required if kerberos_enabled)</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
+<span class="w">    </span><span class="nt">kerberos_keytab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base64-encoded string (required if kerberos_enabled)</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MARIADB</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MSSQL</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1433</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MYSQL</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ORACLE</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1521</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">connectionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enum {SID, SERVICE_NAME}, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SID</span>
+<span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ORCL</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">ssl</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">rootCertificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">sslCertificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">sslCertificateKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNOWFLAKE</span>
+<span class="w">  </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">warehouse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COMPUTE_WH</span>
+<span class="w">    </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">secrets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 </code></pre></div></li>
-<li><div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">S3_STORAGE</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">accessKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div></li>
-</ul>
-</li>
-<li>Database:<ul>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BIGQUERY</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">keyFile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DATABRICKS</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">httpPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">catalog</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">clientId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
-<span class="w">  </span><span class="nt">tenantId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">accessToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
-<span class="w">  </span><span class="nt">clientSecret</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for auth via service principal)</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HIVE</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
-<span class="w">  </span><span class="nt">kerberos_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">kerberos_principal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required if kerberos_enabled)</span>
-<span class="w">  </span><span class="nt">kerberos_krb5_conf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required if kerberos_enabled)</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string (required for regular auth)</span>
-<span class="w">  </span><span class="nt">kerberos_keytab</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base64-encoded string (required if kerberos_enabled)</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MARIADB</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MSSQL</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1433</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w"> </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MYSQL</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3306</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ORACLE</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1521</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">connectionType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">enum {SID, SERVICE_NAME}, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SID</span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ORCL</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POSTGRES</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5432</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">ssl</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">rootCertificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">sslCertificate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">sslCertificateKey</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div>
-</li>
-<li>
-<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNOWFLAKE</span>
-<span class="nt">config</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">account</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">warehouse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string, default</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COMPUTE_WH</span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">secrets</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-</code></pre></div>
-</li>
-</ul>
-</li>
 </ul>
 
 
@@ -2072,13 +2019,7 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 57</span>
-<span class="normal"> 58</span>
-<span class="normal"> 59</span>
-<span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 63</span>
 <span class="normal"> 64</span>
 <span class="normal"> 65</span>
 <span class="normal"> 66</span>
@@ -2204,22 +2145,7 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <span class="normal">186</span>
 <span class="normal">187</span>
 <span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Connector</span><span class="p">:</span>
+<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Connector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a connector, and optionally validate the connection before saving.</span>
 
@@ -2229,9 +2155,8 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <span class="sd">    The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:</span>
 
 <span class="sd">    - Cloud storage:</span>
-<span class="sd">        - \t</span>
-<span class="sd">        ```yaml</span>
-<span class="sd">        type: AZURE_STORAGE</span>
+<span class="sd">      ```yaml</span>
+<span class="sd">      - type: AZURE_STORAGE</span>
 <span class="sd">        config:</span>
 <span class="sd">          accountName: string</span>
 <span class="sd">          clientId: string (required for auth via service principal)</span>
@@ -2239,126 +2164,106 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <span class="sd">        secrets:</span>
 <span class="sd">          accountKey: string (required for regular auth)</span>
 <span class="sd">          clientSecret: string (required for auth via service principal)</span>
-<span class="sd">        ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">        ```yaml</span>
-<span class="sd">        type: GOOGLE_CLOUD_STORAGE</span>
+
+<span class="sd">      - type: GOOGLE_CLOUD_STORAGE</span>
 <span class="sd">        config:</span>
 <span class="sd">        secrets:</span>
 <span class="sd">          keyFile: string</span>
-<span class="sd">        ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">        ```yaml</span>
-<span class="sd">        type: S3_STORAGE</span>
+
+<span class="sd">      - type: S3_STORAGE</span>
 <span class="sd">        config:</span>
 <span class="sd">          accessKey: string</span>
+<span class="sd">          endpointUrl: string (only needed for S3-compatible storage services other than AWS)</span>
 <span class="sd">        secrets:</span>
 <span class="sd">          secretKey: string</span>
-<span class="sd">        ```</span>
+<span class="sd">      ```</span>
 <span class="sd">    - Database:</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: BIGQUERY</span>
-<span class="sd">            config:</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              keyFile: string</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: DATABRICKS</span>
-<span class="sd">            config:</span>
-<span class="sd">              host: string</span>
-<span class="sd">              httpPath: string</span>
-<span class="sd">              catalog: string</span>
-<span class="sd">              clientId: string (required for auth via service principal)</span>
-<span class="sd">              tenantId: string (required for auth via service principal)</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              accessToken: string (required for regular auth)</span>
-<span class="sd">              clientSecret: string (required for auth via service principal)</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: HIVE</span>
-<span class="sd">            config:</span>
-<span class="sd">              host: string</span>
-<span class="sd">              port: integer, default: 10000</span>
-<span class="sd">              username: string (required for regular auth)</span>
-<span class="sd">              kerberos_enabled: boolean, default: false</span>
-<span class="sd">              kerberos_principal: string (required if kerberos_enabled)</span>
-<span class="sd">              kerberos_krb5_conf: string (required if kerberos_enabled)</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              password: string (required for regular auth)</span>
-<span class="sd">              kerberos_keytab: base64-encoded string (required if kerberos_enabled)</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: MARIADB</span>
-<span class="sd">            config:</span>
-<span class="sd">              host: string</span>
-<span class="sd">              port: integer, default: 3306</span>
-<span class="sd">              username: string</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              password: string</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: MSSQL</span>
-<span class="sd">            config:</span>
-<span class="sd">              host: string</span>
-<span class="sd">              port: integer, default: 1433</span>
-<span class="sd">              username: string</span>
-<span class="sd">              database: string</span>
-<span class="sd">            secrets:</span>
-<span class="sd">             password: string</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: MYSQL</span>
-<span class="sd">            config:</span>
-<span class="sd">              host: string</span>
-<span class="sd">              port: integer, default: 3306</span>
-<span class="sd">              username: string</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              password: string</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: ORACLE</span>
-<span class="sd">            config:</span>
-<span class="sd">              host: string</span>
-<span class="sd">              port: integer, default: 1521</span>
-<span class="sd">              username: string</span>
-<span class="sd">              connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
-<span class="sd">              database: string, default: ORCL</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              password: string</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: POSTGRES</span>
-<span class="sd">            config:</span>
-<span class="sd">              host: string</span>
-<span class="sd">              port: integer, default: 5432</span>
-<span class="sd">              username: string</span>
-<span class="sd">              database: string</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              password: string</span>
-<span class="sd">            ssl:</span>
-<span class="sd">              rootCertificate: string</span>
-<span class="sd">              sslCertificate: string</span>
-<span class="sd">              sslCertificateKey: string</span>
-<span class="sd">            ```</span>
-<span class="sd">        - \t</span>
-<span class="sd">            ```yaml</span>
-<span class="sd">            type: SNOWFLAKE</span>
-<span class="sd">            config:</span>
-<span class="sd">              account: string</span>
-<span class="sd">              username: string</span>
-<span class="sd">              warehouse: string, default: COMPUTE_WH</span>
-<span class="sd">              database: string</span>
-<span class="sd">            secrets:</span>
-<span class="sd">              password: string</span>
-<span class="sd">            ```</span>
+<span class="sd">      ```yaml</span>
+<span class="sd">      - type: BIGQUERY</span>
+<span class="sd">        config:</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          keyFile: string</span>
+
+<span class="sd">      - type: DATABRICKS</span>
+<span class="sd">        config:</span>
+<span class="sd">          host: string</span>
+<span class="sd">          httpPath: string</span>
+<span class="sd">          catalog: string</span>
+<span class="sd">          clientId: string (required for auth via service principal)</span>
+<span class="sd">          tenantId: string (required for auth via service principal)</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          accessToken: string (required for regular auth)</span>
+<span class="sd">          clientSecret: string (required for auth via service principal)</span>
+
+<span class="sd">      - type: HIVE</span>
+<span class="sd">        config:</span>
+<span class="sd">          host: string</span>
+<span class="sd">          port: integer, default: 10000</span>
+<span class="sd">          username: string (required for regular auth)</span>
+<span class="sd">          kerberos_enabled: boolean, default: false</span>
+<span class="sd">          kerberos_principal: string (required if kerberos_enabled)</span>
+<span class="sd">          kerberos_krb5_conf: string (required if kerberos_enabled)</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          password: string (required for regular auth)</span>
+<span class="sd">          kerberos_keytab: base64-encoded string (required if kerberos_enabled)</span>
+
+<span class="sd">      - type: MARIADB</span>
+<span class="sd">        config:</span>
+<span class="sd">          host: string</span>
+<span class="sd">          port: integer, default: 3306</span>
+<span class="sd">          username: string</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          password: string</span>
+
+<span class="sd">      - type: MSSQL</span>
+<span class="sd">        config:</span>
+<span class="sd">          host: string</span>
+<span class="sd">          port: integer, default: 1433</span>
+<span class="sd">          username: string</span>
+<span class="sd">          database: string</span>
+<span class="sd">        secrets:</span>
+<span class="sd">         password: string</span>
+
+<span class="sd">      - type: MYSQL</span>
+<span class="sd">        config:</span>
+<span class="sd">          host: string</span>
+<span class="sd">          port: integer, default: 3306</span>
+<span class="sd">          username: string</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          password: string</span>
+
+<span class="sd">      - type: ORACLE</span>
+<span class="sd">        config:</span>
+<span class="sd">          host: string</span>
+<span class="sd">          port: integer, default: 1521</span>
+<span class="sd">          username: string</span>
+<span class="sd">          connectionType: enum {SID, SERVICE_NAME}, default: SID</span>
+<span class="sd">          database: string, default: ORCL</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          password: string</span>
+
+<span class="sd">      - type: POSTGRES</span>
+<span class="sd">        config:</span>
+<span class="sd">          host: string</span>
+<span class="sd">          port: integer, default: 5432</span>
+<span class="sd">          username: string</span>
+<span class="sd">          database: string</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          password: string</span>
+<span class="sd">        ssl:</span>
+<span class="sd">          rootCertificate: string</span>
+<span class="sd">          sslCertificate: string</span>
+<span class="sd">          sslCertificateKey: string</span>
+
+<span class="sd">      - type: SNOWFLAKE</span>
+<span class="sd">        config:</span>
+<span class="sd">          account: string</span>
+<span class="sd">          username: string</span>
+<span class="sd">          warehouse: string, default: COMPUTE_WH</span>
+<span class="sd">          database: string</span>
+<span class="sd">        secrets:</span>
+<span class="sd">          password: string</span>
+<span class="sd">      ```</span>
 
 <span class="sd">    :return: The created connector.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2389,7 +2294,8 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
     <span class="n">name</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">start</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">wait</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span>
+    <span class="n">progress_bar</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="mostlyai.model.Generator" href="../model/#mostlyai.model.Generator">Generator</a></span>
 </code></pre></div>
 
   <div class="doc doc-contents ">
@@ -2479,6 +2385,20 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
                 <code>True</code>
           </td>
         </tr>
+        <tr>
+          <td><code>progress_bar</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If true, then the progress bar will be displayed, in case of wait=True</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2495,6 +2415,7 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
     <tbody>
         <tr>
           <td>
+                <code><a class="autorefs autorefs-internal" title="mostlyai.model.Generator" href="../model/#mostlyai.model.Generator">Generator</a></code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2507,7 +2428,22 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
@@ -2542,27 +2478,15 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <span class="normal">238</span>
 <span class="normal">239</span>
 <span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
+<span class="normal">241</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">start</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">):</span>
+    <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Train a generator</span>
 
@@ -2571,6 +2495,7 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <span class="sd">    :param name: Optional. The name of the generator.</span>
 <span class="sd">    :param start: If true, then training is started right away. Default: true.</span>
 <span class="sd">    :param wait: If true, then the function only returns once training has finished. Default: true.</span>
+<span class="sd">    :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True</span>
 <span class="sd">    :return: The created generator.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2596,7 +2521,7 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
         <span class="n">g</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Started generator training&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">start</span> <span class="ow">and</span> <span class="n">wait</span><span class="p">:</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">training</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">training_status</span> <span class="o">==</span> <span class="n">ProgressStatus</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
             <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
                 <span class="s2">&quot;:tada: [bold green]Your generator is ready![/] &quot;</span>
@@ -2623,23 +2548,18 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <div class="doc-signature highlight"><pre><span></span><code><span class="n">generate</span><span class="p">(</span>
     <span class="n">generator</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="mostlyai.model.Generator" href="../model/#mostlyai.model.Generator">Generator</a></span><span class="p">,</span> <span class="n">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">size</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">int</span><span class="p">,</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">seed</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span>
-        <span class="n"><span title="pandas.DataFrame">DataFrame</span></span><span class="p">,</span>
-        <span class="n">str</span><span class="p">,</span>
-        <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">,</span>
-        <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="pandas.DataFrame">DataFrame</span></span><span class="p">,</span> <span class="n">str</span><span class="p">,</span> <span class="n"><span title="pathlib.Path">Path</span></span><span class="p">]],</span>
-        <span class="kc">None</span><span class="p">,</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="mostlyai.utils.Seed">Seed</span></span><span class="p">,</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="mostlyai.utils.Seed">Seed</span></span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">name</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">start</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">wait</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span>
+    <span class="n">progress_bar</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="mostlyai.model.SyntheticDataset" href="../model/#mostlyai.model.SyntheticDataset">SyntheticDataset</a></span>
 </code></pre></div>
 
   <div class="doc doc-contents ">
   
-      <p>Train a generator</p>
+      <p>Generate synthetic data</p>
 
 
 
@@ -2699,7 +2619,7 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
         <tr>
           <td><code>seed</code></td>
           <td>
-                <code><span title="typing.Union">Union</span>[<span title="pandas.DataFrame">DataFrame</span>, str, <span title="pathlib.Path">Path</span>, dict[str, <span title="typing.Union">Union</span>[<span title="pandas.DataFrame">DataFrame</span>, str, <span title="pathlib.Path">Path</span>]], None]</code>
+                <code><span title="typing.Union">Union</span>[<span title="mostlyai.utils.Seed">Seed</span>, dict[str, <span title="mostlyai.utils.Seed">Seed</span>], None]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2752,6 +2672,20 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
                 <code>True</code>
           </td>
         </tr>
+        <tr>
+          <td><code>progress_bar</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If true, then the progress bar will be displayed, in case of wait=True</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -2768,6 +2702,7 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
     <tbody>
         <tr>
           <td>
+                <code><a class="autorefs autorefs-internal" title="mostlyai.model.SyntheticDataset" href="../model/#mostlyai.model.SyntheticDataset">SyntheticDataset</a></code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2780,7 +2715,20 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">256</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
 <span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
@@ -2810,9 +2758,178 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
+<span class="normal">286</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Generator</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Seed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Seed</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate synthetic data</span>
+
+<span class="sd">    :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.</span>
+<span class="sd">    :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.</span>
+<span class="sd">    :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).</span>
+<span class="sd">    :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or a dictionary of those. Used for seeding the subject table(s).</span>
+<span class="sd">    :param name: Optional. The name of the synthetic dataset.</span>
+<span class="sd">    :param start: If true, then generation is started right away. Default: true.</span>
+<span class="sd">    :param wait: If true, then the function only returns once generation has finished. Default: true.</span>
+<span class="sd">    :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True</span>
+<span class="sd">    :return: The created synthetic dataset.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">_harmonize_sd_config</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">sd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synthetic_datasets</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Created synthetic dataset &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;[link=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/d/synthetic-datasets/</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> blue underline]</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">[/] &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;with generator &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;[link=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/d/generators/</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> blue underline]</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">[/]&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+        <span class="n">sd</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Started synthetic dataset generation&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="ow">and</span> <span class="n">wait</span><span class="p">:</span>
+        <span class="n">sd</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">progress_bar</span><span class="o">=</span><span class="n">progress_bar</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">generation_status</span> <span class="o">==</span> <span class="n">ProgressStatus</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
+            <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
+                <span class="s2">&quot;:tada: [bold green]Your synthetic dataset is ready![/] &quot;</span>
+                <span class="s2">&quot;Use it to consume the generated data. &quot;</span>
+                <span class="s2">&quot;Share it so others can do the same.&quot;</span>
+            <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sd</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="mostlyai.api.MostlyAI.probe" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>          <span class="doc doc-object-name doc-function-name">probe</span>
+
+
+<a href="#mostlyai.api.MostlyAI.probe" class="headerlink" title="Permanent link">¤</a></h3>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">probe</span><span class="p">(</span>
+    <span class="n">generator</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="mostlyai.model.Generator" href="../model/#mostlyai.model.Generator">Generator</a></span><span class="p">,</span> <span class="n">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">size</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">int</span><span class="p">,</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="mostlyai.utils.Seed">Seed</span></span><span class="p">,</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="mostlyai.utils.Seed">Seed</span></span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">return_type</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="pandas.DataFrame">DataFrame</span></span><span class="p">,</span> <span class="n">dict</span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="pandas.DataFrame">DataFrame</span></span><span class="p">]]</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Probe a generator</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>generator</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="mostlyai.model.Generator" href="../model/#mostlyai.model.Generator">Generator</a>, str, None]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The generator instance or its UUID, that is to be used for generating synthetic data.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>config</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[dict, None]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>size</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[int, dict[str, int], None]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>seed</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[<span title="mostlyai.utils.Seed">Seed</span>, dict[str, <span title="mostlyai.utils.Seed">Seed</span>], None]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Union">Union</span>[<span title="pandas.DataFrame">DataFrame</span>, dict[str, <span title="pandas.DataFrame">DataFrame</span>]]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The created synthetic probe.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>mostlyai/api.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">288</span>
 <span class="normal">289</span>
 <span class="normal">290</span>
 <span class="normal">291</span>
@@ -2834,101 +2951,29 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 <span class="normal">307</span>
 <span class="normal">308</span>
 <span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
-<span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
-<span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">generate</span><span class="p">(</span>
+<span class="normal">310</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">probe</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">generator</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Generator</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]],</span> <span class="kc">None</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Seed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Seed</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">start</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">wait</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">):</span>
+    <span class="n">return_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Train a generator</span>
+<span class="sd">    Probe a generator</span>
 
 <span class="sd">    :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.</span>
 <span class="sd">    :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.</span>
 <span class="sd">    :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).</span>
-<span class="sd">    :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or a dictionary of those. Used for seeding the subject table(s).</span>
-<span class="sd">    :param name: Optional. The name of the synthetic dataset.</span>
-<span class="sd">    :param start: If true, then generation is started right away. Default: true.</span>
-<span class="sd">    :param wait: If true, then the function only returns once generation has finished. Default: true.</span>
-<span class="sd">    :return: The created synthetic dataset.</span>
+<span class="sd">    :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).</span>
+<span class="sd">    :return: The created synthetic probe.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">Generator</span><span class="p">):</span>
-        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="s2">&quot;generatorId&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Either a generator or a configuration with a generatorId must be provided.&quot;</span>
-        <span class="p">)</span>
-
-    <span class="k">if</span> <span class="s2">&quot;tables&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config</span><span class="p">:</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generators</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">])</span>
-        <span class="n">subject_tables</span> <span class="o">=</span> <span class="n">_get_subject_table_names</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">config</span><span class="p">())</span>
-        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">table</span><span class="p">,</span>
-                <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;sampleSize&quot;</span><span class="p">:</span> <span class="p">(</span>
-                        <span class="n">size</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">size</span>
-                    <span class="p">),</span>
-                    <span class="s2">&quot;sampleSeedData&quot;</span><span class="p">:</span> <span class="p">(</span>
-                        <span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">seed</span>
-                    <span class="p">),</span>
-                <span class="p">},</span>
-            <span class="p">}</span>
-            <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">subject_tables</span>
-        <span class="p">]</span>
-
-    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">|=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
-
-    <span class="n">sd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synthetic_datasets</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Created synthetic dataset &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;[link=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/d/synthetic-datasets/</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> blue underline]</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">[/] &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;with generator &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;[link=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/d/generators/</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> blue underline]</span><span class="si">{</span><span class="n">sd</span><span class="o">.</span><span class="n">generator</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">[/]&quot;</span>
-    <span class="p">)</span>
-    <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
-        <span class="n">sd</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;Started synthetic dataset generation&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">start</span> <span class="ow">and</span> <span class="n">wait</span><span class="p">:</span>
-        <span class="n">sd</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">generation</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">sd</span><span class="o">.</span><span class="n">generation_status</span> <span class="o">==</span> <span class="n">ProgressStatus</span><span class="o">.</span><span class="n">done</span><span class="p">:</span>
-            <span class="n">rich</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-                <span class="s2">&quot;:tada: [bold green]Your synthetic dataset is ready![/] &quot;</span>
-                <span class="s2">&quot;Use it to consume the generated data. &quot;</span>
-                <span class="s2">&quot;Share it so others can do the same.&quot;</span>
-            <span class="p">)</span>
-    <span class="k">return</span> <span class="n">sd</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">_harmonize_sd_config</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+    <span class="n">dfs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synthetic_probes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_type</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">dfs</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dfs</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -3041,31 +3086,31 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">334</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
 <span class="normal">335</span>
 <span class="normal">336</span>
 <span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span>
-<span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span>
-<span class="normal">349</span>
-<span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span>
-<span class="normal">353</span>
-<span class="normal">354</span>
-<span class="normal">355</span>
-<span class="normal">356</span>
-<span class="normal">357</span>
-<span class="normal">358</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">share</span><span class="p">(</span>
+<span class="normal">338</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">share</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">resource</span><span class="p">:</span> <span class="n">ShareableResource</span><span class="p">,</span>
     <span class="n">user_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3182,19 +3227,19 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">360</span>
-<span class="normal">361</span>
-<span class="normal">362</span>
-<span class="normal">363</span>
-<span class="normal">364</span>
-<span class="normal">365</span>
-<span class="normal">366</span>
-<span class="normal">367</span>
-<span class="normal">368</span>
-<span class="normal">369</span>
-<span class="normal">370</span>
-<span class="normal">371</span>
-<span class="normal">372</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unshare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">ShareableResource</span><span class="p">,</span> <span class="n">user_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">unshare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">:</span> <span class="n">ShareableResource</span><span class="p">,</span> <span class="n">user_email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Unshare a specified resource from a user.</span>
 
@@ -3256,12 +3301,12 @@ The structures of the <code>config</code>, <code>secrets</code> and <code>ssl</c
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/api.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">me</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CurrentUser</span><span class="p">:</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">me</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CurrentUser</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve current user info.</span>
 <span class="sd">    :return: info about the current user.</span>
@@ -3999,7 +4044,9 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="normal">111</span>
 <span class="normal">112</span>
 <span class="normal">113</span>
-<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlyGeneratorsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">,</span> <span class="n">_MostlySharesMixin</span><span class="p">):</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlyGeneratorsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">,</span> <span class="n">_MostlySharesMixin</span><span class="p">):</span>
     <span class="n">SECTION</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;generators&quot;</span><span class="p">]</span>
 
     <span class="c1"># PUBLIC METHODS #</span>
@@ -4051,12 +4098,12 @@ Only connectors, that are independent of a table, will be returned.</p>
                 <span class="k">if</span> <span class="s2">&quot;data&quot;</span> <span class="ow">in</span> <span class="n">table</span> <span class="ow">and</span> <span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
                         <span class="n">name</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">_read_table_from_path</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
-                        <span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_df_to_base64</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+                        <span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_to_base64</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
                         <span class="k">if</span> <span class="s2">&quot;name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">table</span><span class="p">:</span>
                             <span class="n">table</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
                         <span class="k">del</span> <span class="n">df</span>
                     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-                        <span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_df_to_base64</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+                        <span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_to_base64</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;data must be a DataFrame or a file path&quot;</span><span class="p">)</span>
 
@@ -4098,8 +4145,10 @@ Only connectors, that are independent of a table, will be returned.</p>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span>
 
-    <span class="k">def</span> <span class="nf">_training_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
-        <span class="n">_job_wait</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_training_progress</span><span class="p">(</span><span class="n">generator_id</span><span class="p">),</span> <span class="n">interval</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_training_wait</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">generator_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
+        <span class="n">_job_wait</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_training_progress</span><span class="p">(</span><span class="n">generator_id</span><span class="p">),</span> <span class="n">interval</span><span class="p">,</span> <span class="n">progress_bar</span><span class="p">)</span>
         <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">generator_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">generator</span>
 </code></pre></div></td></tr></table></div>
@@ -4438,7 +4487,8 @@ Only connectors, that are independent of a table, will be returned.</p>
 
             <details class="quote">
               <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 14</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 13</span>
+<span class="normal"> 14</span>
 <span class="normal"> 15</span>
 <span class="normal"> 16</span>
 <span class="normal"> 17</span>
@@ -4597,27 +4647,7 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="normal">170</span>
 <span class="normal">171</span>
 <span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlySyntheticDatasetsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
+<span class="normal">173</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlySyntheticDatasetsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
     <span class="n">SECTION</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;synthetic-datasets&quot;</span><span class="p">]</span>
 
     <span class="c1"># PUBLIC METHODS #</span>
@@ -4673,29 +4703,6 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="sd">        :param config: The configuration parameters of the synthetic dataset to be created.</span>
 <span class="sd">        :return: The created synthetic dataset.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># convert `sample_seed_data` to base64-encoded Parquet files</span>
-        <span class="n">tables</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;tables&quot;</span> <span class="ow">in</span> <span class="n">config</span> <span class="k">else</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="s2">&quot;sampleSeedData&quot;</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">]</span>
-                <span class="ow">and</span> <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="p">):</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-                    <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_df_to_base64</span><span class="p">(</span>
-                        <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span>
-                    <span class="p">)</span>
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
-                    <span class="n">_</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">_read_table_from_path</span><span class="p">(</span>
-                        <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span>
-                    <span class="p">)</span>
-                    <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_df_to_base64</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-                    <span class="k">del</span> <span class="n">df</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                        <span class="s2">&quot;sampleSeedData must be a DataFrame or a file path&quot;</span>
-                    <span class="p">)</span>
-        <span class="c1"># convert generator_id to str</span>
-        <span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">])</span>
         <span class="n">synthetic_dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
             <span class="n">verb</span><span class="o">=</span><span class="n">POST</span><span class="p">,</span>
             <span class="n">path</span><span class="o">=</span><span class="p">[],</span>
@@ -4792,9 +4799,13 @@ Only connectors, that are independent of a table, will be returned.</p>
         <span class="k">return</span> <span class="n">response</span>
 
     <span class="k">def</span> <span class="nf">_generation_wait</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">synthetic_dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">float</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">synthetic_dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">progress_bar</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">float</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
-        <span class="n">_job_wait</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generation_progress</span><span class="p">(</span><span class="n">synthetic_dataset_id</span><span class="p">),</span> <span class="n">interval</span><span class="p">)</span>
+        <span class="n">_job_wait</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generation_progress</span><span class="p">(</span><span class="n">synthetic_dataset_id</span><span class="p">),</span>
+            <span class="n">interval</span><span class="p">,</span>
+            <span class="n">progress_bar</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">synthetic_dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">synthetic_dataset_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">synthetic_dataset</span>
 </code></pre></div></td></tr></table></div>
@@ -4933,7 +4944,8 @@ Only connectors, that are independent of a table, will be returned.</p>
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
+<span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
@@ -4960,8 +4972,7 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="normal">43</span>
 <span class="normal">44</span>
 <span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">list</span><span class="p">(</span>
+<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">list</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
@@ -5069,7 +5080,8 @@ Only connectors, that are independent of a table, will be returned.</p>
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+<span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
@@ -5078,8 +5090,7 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">synthetic_dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">synthetic_dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve synthetic dataset</span>
 
@@ -5170,7 +5181,8 @@ Only connectors, that are independent of a table, will be returned.</p>
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
+<span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
@@ -5184,31 +5196,7 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create synthetic dataset</span>
 
@@ -5217,29 +5205,6 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="sd">    :param config: The configuration parameters of the synthetic dataset to be created.</span>
 <span class="sd">    :return: The created synthetic dataset.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># convert `sample_seed_data` to base64-encoded Parquet files</span>
-    <span class="n">tables</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="s2">&quot;tables&quot;</span> <span class="ow">in</span> <span class="n">config</span> <span class="k">else</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">tables</span><span class="p">:</span>
-        <span class="k">if</span> <span class="p">(</span>
-            <span class="s2">&quot;sampleSeedData&quot;</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">]</span>
-            <span class="ow">and</span> <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-        <span class="p">):</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-                <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_df_to_base64</span><span class="p">(</span>
-                    <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span>
-                <span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
-                <span class="n">_</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">_read_table_from_path</span><span class="p">(</span>
-                    <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span>
-                <span class="p">)</span>
-                <span class="n">table</span><span class="p">[</span><span class="s2">&quot;configuration&quot;</span><span class="p">][</span><span class="s2">&quot;sampleSeedData&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_df_to_base64</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-                <span class="k">del</span> <span class="n">df</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;sampleSeedData must be a DataFrame or a file path&quot;</span>
-                <span class="p">)</span>
-    <span class="c1"># convert generator_id to str</span>
-    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;generatorId&quot;</span><span class="p">])</span>
     <span class="n">synthetic_dataset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
         <span class="n">verb</span><span class="o">=</span><span class="n">POST</span><span class="p">,</span>
         <span class="n">path</span><span class="o">=</span><span class="p">[],</span>
