@@ -137,14 +137,15 @@ class Generator:
             """
             return self.generator.client._training_progress(self.generator.id)
 
-        def wait(self, interval: float = 2) -> "Generator":
+        def wait(self, progress_bar: bool, interval: float = 2) -> "Generator":
             """
             Poll training progress and loop until training has completed
 
+            :param progress_bar: If true, then the progress bar will be displayed.
             :param interval: The interval in seconds to poll the job progress
             """
             return self.generator.client._training_wait(
-                self.generator.id, interval=interval
+                self.generator.id, progress_bar=progress_bar, interval=interval
             )
 
         def list_synthetic_dataset(self) -> list["SyntheticDataset"]:
@@ -257,12 +258,13 @@ class SyntheticDataset:
                 self.synthetic_dataset.id
             )
 
-        def wait(self, interval: float = 2) -> "SyntheticDataset":
+        def wait(self, progress_bar: bool, interval: float = 2) -> "SyntheticDataset":
             """
             Poll generation progress and loop until generation has completed
 
+            :param progress_bar: If true, then the progress bar will be displayed.
             :param interval: The interval in seconds to poll the job progress
             """
             return self.synthetic_dataset.client._generation_wait(
-                self.synthetic_dataset.id, interval=interval
+                self.synthetic_dataset.id, progress_bar=progress_bar, interval=interval
             )
