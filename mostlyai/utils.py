@@ -114,7 +114,10 @@ def _job_wait(
                     progress.stop()
                     return
             else:
-                if job.end_date or job.progress in (ProgressStatus.failed, ProgressStatus.canceled):
+                if job.end_date or job.progress in (
+                    ProgressStatus.failed,
+                    ProgressStatus.canceled,
+                ):
                     rich.print(f"Job {job.status.lower()}")
                     return
     except KeyboardInterrupt:

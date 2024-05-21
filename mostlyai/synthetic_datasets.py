@@ -164,7 +164,11 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     def _generation_wait(
         self, synthetic_dataset_id: str, progress_bar: bool, interval: float
     ) -> SyntheticDataset:
-        _job_wait(lambda: self._generation_progress(synthetic_dataset_id), interval, progress_bar)
+        _job_wait(
+            lambda: self._generation_progress(synthetic_dataset_id),
+            interval,
+            progress_bar,
+        )
         synthetic_dataset = self.get(synthetic_dataset_id)
         return synthetic_dataset
 
