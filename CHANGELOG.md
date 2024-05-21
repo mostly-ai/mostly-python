@@ -1,3 +1,10 @@
+## 0.3.6 (2024-05-21)
+
+### Feat
+
+- **api**: make progress bar optional (#36)
+- **api**: support endpoint for probing data (#25)
+
 ## 0.3.5 (2024-05-13)
 
 ### Feat
