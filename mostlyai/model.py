@@ -893,9 +893,9 @@ class User(CustomBaseModel):
         Optional[str], Field(None, description="The unique identifier of a user")
     ] = None
     name: Annotated[Optional[str], Field(None, description="The name of a user")] = None
-    email: Annotated[
-        Optional[str], Field(None, description="The email of a user")
-    ] = None
+    email: Annotated[Optional[str], Field(None, description="The email of a user")] = (
+        None
+    )
 
 
 class CurrentUser(CustomBaseModel):
@@ -903,9 +903,9 @@ class CurrentUser(CustomBaseModel):
         Optional[str], Field(None, description="The unique identifier of a user")
     ] = None
     name: Annotated[Optional[str], Field(None, description="The name of a user")] = None
-    email: Annotated[
-        Optional[str], Field(None, description="The email of a user")
-    ] = None
+    email: Annotated[Optional[str], Field(None, description="The email of a user")] = (
+        None
+    )
     settings: Optional[Dict[str, Any]] = None
     usage: Optional[UserUsage] = None
 
@@ -1035,9 +1035,9 @@ class SourceTable(CustomBaseModel):
 
 
 class Probe(CustomBaseModel):
-    name: Annotated[
-        Optional[str], Field(None, description="The name of the table")
-    ] = None
+    name: Annotated[Optional[str], Field(None, description="The name of the table")] = (
+        None
+    )
     rows: Optional[List[Dict[str, Any]]] = None
 
 
