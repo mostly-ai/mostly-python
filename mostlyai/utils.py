@@ -160,31 +160,44 @@ Seed = Union[pd.DataFrame, str, Path, list[dict[str, Any]]]
 
 def _harmonize_sd_config(
     generator: Union[Generator, str, None] = None,
+    get_generator: Union[Callable[[str], Generator], None] = None,
     size: Union[int, dict[str, int], None] = None,
     seed: Union[Seed, dict[str, Seed], None] = None,
     config: Union[dict, None] = None,
     name: Optional[str] = None,
 ) -> dict:
     config = config or {}
-    subject_tables = _get_subject_table_names(generator)
+    size = size if size is not None else {}
+    seed = seed if seed is not None else {}
 
-    # insert generatorId into config
     if isinstance(generator, Generator):
-        config["generatorId"] = str(generator.id)
+        generator_id = str(generator.id)
     elif generator is not None:
-        config["generatorId"] = str(generator)
+        generator_id = str(generator)
     elif "generatorId" not in config:
         raise ValueError(
             "Either a generator or a configuration with a generatorId must be provided."
         )
 
+    if (
+        not isinstance(size, dict)
+        or not isinstance(seed, dict)
+        or "tables" not in config
+    ):
+        if not isinstance(generator, Generator):
+            generator = get_generator(generator_id)
+        subject_tables = _get_subject_table_names(generator)
+    else:
+        subject_tables = []
+
+    # insert generatorId into config
+    config["generatorId"] = generator_id
+
     # normalize size
-    size = size if size is not None else {}
     if not isinstance(size, dict):
         size = {table: size for table in subject_tables}
 
     # normalize seed
-    seed = seed if seed is not None else {}
     if not isinstance(seed, dict):
         seed = {table: seed for table in subject_tables}
 

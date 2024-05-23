@@ -4,7 +4,7 @@ import math
 import tempfile
 from datetime import datetime
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import patch, Mock, ANY
 
 import pandas as pd
 import pytest
@@ -16,11 +16,15 @@ from mostlyai.model import (
     ProgressStep,
     ProgressValue,
     StepCode,
+    Generator,
+    Metadata,
+    SourceTable,
 )
 from mostlyai.utils import (
     _convert_to_base64,
     _job_wait,
     _read_table_from_path,
+    _harmonize_sd_config,
 )
 
 UTILS_MODULE = "mostlyai.utils"
@@ -141,3 +145,49 @@ def test__job_wait():
         "Step common TRAIN_MODEL 💎 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:02",
     ]
     assert actual_lines == expected_lines
+
+
+@pytest.fixture
+def simple_sd_config():
+    return {"tables": [{"name": "subject", "configuration": {}}]}
+
+
+def test__harmonize_sd_config(simple_sd_config):
+    mock_get_generator = Mock(
+        side_effect=lambda id: Generator(
+            id=id,
+            training_status=ProgressStatus.done,
+            metadata=Metadata(),
+            tables=[SourceTable(id="some_id", name="table", columns=[])],
+        )
+    )
+
+    config = _harmonize_sd_config(
+        generator="some_id", get_generator=mock_get_generator, config=simple_sd_config
+    )
+    assert config == {
+        "generatorId": "some_id",
+        "tables": [{"configuration": {}, "name": "subject"}],
+    }
+    mock_get_generator.assert_not_called()
+
+    config = _harmonize_sd_config(
+        generator="other_id",
+        get_generator=mock_get_generator,
+        size=1234,
+        seed=pd.DataFrame(),
+    )
+    mock_get_generator.assert_called_once_with("other_id")
+    assert config == {
+        "generatorId": "other_id",
+        "tables": [
+            {
+                "name": "table",
+                "configuration": {
+                    "sampleSize": 1234,
+                    "sampleSeedData": ANY,
+                    "sampleSeedDict": None,
+                },
+            }
+        ],
+    }

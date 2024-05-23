@@ -264,7 +264,14 @@ class MostlyAI(_MostlyBaseClient):
         :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
         :return: The created synthetic dataset.
         """
-        config = _harmonize_sd_config(generator, size, seed, config, name)
+        config = _harmonize_sd_config(
+            generator,
+            get_generator=self.generators.get,
+            size=size,
+            seed=seed,
+            config=config,
+            name=name,
+        )
         sd = self.synthetic_datasets.create(config)
         rich.print(
             f"Created synthetic dataset "
@@ -302,7 +309,13 @@ class MostlyAI(_MostlyBaseClient):
         :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).
         :return: The created synthetic probe.
         """
-        config = _harmonize_sd_config(generator, size, seed, config)
+        config = _harmonize_sd_config(
+            generator,
+            get_generator=self.generators.get,
+            size=size,
+            seed=seed,
+            config=config,
+        )
         dfs = self.synthetic_probes.create(config)
         if return_type == "auto" and len(dfs) == 1:
             return list(dfs.values())[0]
