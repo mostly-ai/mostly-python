@@ -31,6 +31,7 @@ commitizen = "^3.18.0"
 mkdocs = "^1.5.3"
 mkdocstrings = "^0.24.1"
 mkdocs-material = "^9.5.13"
+poetry-bumpversion = "^0.3.2"
 
 [tool.mypy]
 python_version = "3.9"
@@ -50,6 +51,11 @@ version_scheme = "pep440"
 version_provider = "poetry"
 update_changelog_on_bump = true
 major_version_zero = true
+
+[[tool.poetry_bumpversion.replacements]]
+files = ["mostlyai/__init__.py"]
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
 
 [build-system]
 requires = ["poetry-core"]
