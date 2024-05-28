@@ -1,3 +1,9 @@
+## 0.3.7 (2024-05-23)
+
+### Fix
+
+- **utils**: _harmonize_sd_config to handle generator carefully (#40)
+
 ## 0.3.6 (2024-05-21)
 
 ### Feat
