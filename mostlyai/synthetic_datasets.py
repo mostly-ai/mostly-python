@@ -105,7 +105,9 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
             verb=GET,
             path=[synthetic_dataset_id, "download"],
             params={
-                "format": ds_format.upper() if isinstance(ds_format, str) else ds_format.value,
+                "format": ds_format.upper()
+                if isinstance(ds_format, str)
+                else ds_format.value,
                 "slft": short_lived_file_token,
             },
             headers={
@@ -123,12 +125,14 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
             filename = None
         return content_bytes, filename
 
-    def _data(self, synthetic_dataset_id: str, short_lived_file_token: Optional[str]) -> dict[str, pd.DataFrame]:
+    def _data(
+        self, synthetic_dataset_id: str, short_lived_file_token: Optional[str]
+    ) -> dict[str, pd.DataFrame]:
         # download pqt
         pqt_zip_bytes, filename = self._download(
             synthetic_dataset_id=synthetic_dataset_id,
             ds_format=SyntheticDatasetFormat.parquet,
-            short_lived_file_token=short_lived_file_token
+            short_lived_file_token=short_lived_file_token,
         )
         # read each parquet file into a pandas dataframe
         with zipfile.ZipFile(io.BytesIO(pqt_zip_bytes), "r") as z:
