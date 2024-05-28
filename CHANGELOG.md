@@ -1,3 +1,9 @@
+## 0.3.8 (2024-05-28)
+
+### Feat
+
+- support shortLivedFileTokens for synthetic data download
+
 ## 0.3.7 (2024-05-23)
 
 ### Fix
