@@ -30,7 +30,7 @@ g = mostly.train(data)      # train a generator on your data
 mostly.share(g, email)      # share the generator with your team
 sd = mostly.generate(g)     # use the generator to create a synthetic dataset
 syn = sd.data()             # consume the synthetic data as pandas DataFrame(s)
-mostly.probe(g, size=1000)  # generate few samples on demand
+mostly.probe(g, size=100)   # generate few samples on demand
 ```
 
 ## Supported Methods
