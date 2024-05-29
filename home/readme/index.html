@@ -498,6 +498,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#info" class="md-nav__link">
+    <span class="md-ellipsis">
+      Info
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -778,6 +787,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#info" class="md-nav__link">
+    <span class="md-ellipsis">
+      Info
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -820,12 +838,16 @@
 <td><code>mostly.share(g, email)</code></td>
 </tr>
 <tr>
-<td>Generate unlimited synthetic data on demand</td>
+<td>Generate any number of synthetic data records</td>
 <td><code>mostly.generate(g, size)</code></td>
 </tr>
 <tr>
 <td>Prompt the generator for the data that you need</td>
 <td><code>mostly.generate(g, seed)</code></td>
+</tr>
+<tr>
+<td>Live probe the generator on demand</td>
+<td><code>mostly.probe(g, size \| seed)</code></td>
 </tr>
 <tr>
 <td>Connect to any data source within your org</td>
@@ -835,17 +857,23 @@
 <td>Info about the current user</td>
 <td><code>mostly.me()</code></td>
 </tr>
+<tr>
+<td>Info about the platform</td>
+<td><code>mostly.about()</code></td>
+</tr>
 </tbody>
 </table>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">¤</a></h2>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mostlyai
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>mostlyai
 </code></pre></div>
 <h2 id="basic-usage">Basic Usage<a class="headerlink" href="#basic-usage" title="Permanent link">¤</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">mostlyai</span> <span class="kn">import</span> <span class="n">MostlyAI</span>
 <span class="n">mostly</span> <span class="o">=</span> <span class="n">MostlyAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s1">&#39;your_api_key&#39;</span><span class="p">)</span>
 <span class="n">g</span> <span class="o">=</span> <span class="n">mostly</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>      <span class="c1"># train a generator on your data</span>
-<span class="n">sd</span> <span class="o">=</span> <span class="n">mostly</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>     <span class="c1"># generate a synthetic dataset</span>
-<span class="n">syn</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">data</span><span class="p">()</span>             <span class="c1"># consume synthetic as pd.DataFrame</span>
+<span class="n">mostly</span><span class="o">.</span><span class="n">share</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">email</span><span class="p">)</span>      <span class="c1"># share the generator with your team</span>
+<span class="n">sd</span> <span class="o">=</span> <span class="n">mostly</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>     <span class="c1"># use the generator to create a synthetic dataset</span>
+<span class="n">syn</span> <span class="o">=</span> <span class="n">sd</span><span class="o">.</span><span class="n">data</span><span class="p">()</span>             <span class="c1"># consume the synthetic data as pandas DataFrame(s)</span>
+<span class="n">mostly</span><span class="o">.</span><span class="n">probe</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>   <span class="c1"># generate few samples on demand</span>
 </code></pre></div>
 <h2 id="supported-methods">Supported Methods<a class="headerlink" href="#supported-methods" title="Permanent link">¤</a></h2>
 <h3 id="connectors">Connectors<a class="headerlink" href="#connectors" title="Permanent link">¤</a></h3>
@@ -912,6 +940,10 @@
 <span class="n">g</span><span class="o">.</span><span class="n">shares</span><span class="p">()</span>
 <span class="n">sd</span><span class="o">.</span><span class="n">shares</span><span class="p">()</span>
 <span class="n">c</span><span class="o">.</span><span class="n">shares</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="info">Info<a class="headerlink" href="#info" title="Permanent link">¤</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">mostly</span><span class="o">.</span><span class="n">about</span><span class="p">()</span>
+<span class="n">mostly</span><span class="o">.</span><span class="n">me</span><span class="p">()</span>
 </code></pre></div>
 
 
