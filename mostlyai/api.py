@@ -374,6 +374,7 @@ class MostlyAI(_MostlyBaseClient):
     def about(self) -> dict[str, Any]:
         """
         Retrieve about info from the endpoint.
+        Supported from release v210 onwards.
         :return: info about the platform.
         """
         return self.request(verb=GET, path=["about"])
