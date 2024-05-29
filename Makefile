@@ -41,9 +41,9 @@ COMMON_OPTIONS = \
 BUMP_TYPE ?= patch
 
 # Targets for Release Workflow/Automation
-.PHONY: release bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build upload confirm-upload clean-dist delete-branch
+.PHONY: release bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build confirm-upload upload clean-dist delete-branch
 
-release: bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build upload confirm-upload clean-dist delete-branch
+release: bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build upload clean-dist delete-branch
 
 bump-version: ## Bump version (default: patch, options: patch, minor, major)
 	@poetry version $(BUMP_TYPE)
@@ -99,8 +99,7 @@ confirm-upload: ## Confirm before the irreversible zone
 	@echo "Are you sure you want to upload to PyPI? (yes/no)"
 	@read ans && [ $${ans:-no} = yes ]
 
-upload: confirm-upload  # Upload to PyPI
-    # Ensure the token is present in .pypirc file before running upload
+upload: confirm-upload ## Upload to PyPI (ensure the token is present in .pypirc file before running upload)
 	@twine upload dist/*$(VERSION)* --verbose
 	@echo "Uploaded version $(VERSION) to PyPI"
 	
