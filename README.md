@@ -2,16 +2,16 @@
 
 A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 
-| Intent                                          | Primitive                            |
-|-------------------------------------------------|--------------------------------------|
-| Train a Generative AI on tabular data           | `g = mostly.train(data)`             |
-| Empower your team with safe synthetic data      | `mostly.share(g, email)`             |
-| Generate any number of synthetic data records   | `mostly.generate(g, size)`      |
-| Prompt the generator for the data that you need | `mostly.generate(g, seed)`      |
-| Live probe the generator on demand              | `mostly.probe(g, size \| seed)` |
-| Connect to any data source within your org      | `mostly.connect(config)`             |
-| Info about the current user                     | `mostly.me()`                        |
-| Info about the platform                         | `mostly.about()`                     |
+| Intent                                          | Primitive                        |
+|-------------------------------------------------|----------------------------------|
+| Train a Generative AI on tabular data           | `g = mostly.train(data)`         |
+| Empower your team with safe synthetic data      | `mostly.share(g, email)`         |
+| Generate any number of synthetic data records   | `mostly.generate(g, size)`       |
+| Prompt the generator for the data that you need | `mostly.generate(g, seed)`       |
+| Live probe the generator on demand              | `mostly.probe(g, size \| seed)`  |
+| Connect to any data source within your org      | `mostly.connect(config)`         |
+| Info about the current user                     | `mostly.me()`                    |
+| Info about the platform                         | `mostly.about()`                 |
 
 
 
