@@ -37,37 +37,45 @@ The important part is to keep the commit messages (on the public repo) follow th
 With that, changelog update is as easy as running `cz ch --incremental`. To avoid a full rewrite of the changelog, `--incremental` is used.
 Bumping based on git log is done with `cz bump`. And so on.
 
-# Publishing to PyPI
+# Release Workflow
 
 The setup is done via `pyproject.toml`, which contains the metadata, dependencies and other configurations.
 In this project `poetry` is being used, and many of the sections being handled by it (those starting with `[tool.poetry]`).
 
+## Versioning Notes
+
 It is important to stick to conventional [versioning](https://py-pkgs.org/07-releasing-versioning.html).
 The most common one is being [semantic versioning](https://semver.org/).
 
-## Build
-
-Run `poetry build`, which will create `sdist` and `wheel` files in `dist` directory.
-
-## Test and Publish
+## PyPI handling
 
 For testing purposes, we could use [TestPyPi](https://test.pypi.org/).
 Run `twine upload --repository testpypi dist/*`. Unless the credentials are saved in env vars or in `$HOME/.pypirc`, those will be promted.
 For credentials use `__token__` as the `username` and the token itself as the `password`. To avoid entering them each time, add the following to `$HOME/.pypirc`:
 
-## Update [documentation site](https://mostly-ai.github.io/mostly-python/)
-
-This is done by running `mkdocs gh-deploy`. After a short while it shall be available.
+## Local setup
 
 ```
+[pypi]
+username = __token__
+password = <PyPI token>
+
 [testpypi]
 username = __token__
 password = <TestPyPI token>
 ```
 
+This should be (part of) the content of `$HOME/.pypirc`, with `testpypi` part being optional.
+In case of further scoping (e.g. project-based), credentials can be specified per project/repository, and be used accordingly.
+
 NOTE: Once a version was uploaded, it cannot be altered anymore!
 
-Finally, uploading to [PyPI](https://pypi.org/) is done very similarly.
+## Release
 
-Run `twine upload dist/*`.
-Have a similar `[pypi]` section in `$HOME/.pypirc` for convenience.
+The release workflow itself is made easy using the `Makefile`. In order to trigger it, run `make release`, with the default
+bump type being `patch`, e.g. `0.0.1` will be bumped to `0.0.2`. Towards the end of the script, a prompt pre-upload to PyPI will appear,
+as it is an irreversible part of this workflow! Ideally, make sure that the current state of the repository is in a ready state
+for a release. Pay attention to `main` branch.
+
+In order to specify a different bump type, the following are possible, which would trigger -> `0.1.0`, `1.0.0` accordingly assuming
+`0.0.1` being the current version: `BUMP_TYPE=minor make release`, `BUMP_TYPE=major make release`.
