@@ -2,21 +2,24 @@
 
 A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 
-| Intent                                          | Primitive                  |
-|-------------------------------------------------|----------------------------|
-| Train a Generative AI on tabular data           | `g = mostly.train(data)`   |
-| Empower your team with safe synthetic data      | `mostly.share(g, email)`   |
-| Generate unlimited synthetic data on demand     | `mostly.generate(g, size)` |
-| Prompt the generator for the data that you need | `mostly.generate(g, seed)` |
-| Connect to any data source within your org      | `mostly.connect(config)`   |
-| Info about the current user                     | `mostly.me()`              |
+| Intent                                          | Primitive                        |
+|-------------------------------------------------|----------------------------------|
+| Train a Generative AI on tabular data           | `g = mostly.train(data)`         |
+| Empower your team with safe synthetic data      | `mostly.share(g, email)`         |
+| Generate any number of synthetic data records   | `mostly.generate(g, size)`       |
+| Prompt the generator for the data that you need | `mostly.generate(g, seed)`       |
+| Live probe the generator on demand              | `mostly.probe(g, size \| seed)`  |
+| Connect to any data source within your org      | `mostly.connect(config)`         |
+| Info about the current user                     | `mostly.me()`                    |
+| Info about the platform                         | `mostly.about()`                 |
 
 
 
 
 ## Installation
+
 ```shell
-pip install mostlyai
+pip install -U mostlyai
 ```
 
 ## Basic Usage
@@ -24,8 +27,10 @@ pip install mostlyai
 from mostlyai import MostlyAI
 mostly = MostlyAI(api_key='your_api_key')
 g = mostly.train(data)      # train a generator on your data
-sd = mostly.generate(g)     # generate a synthetic dataset
-syn = sd.data()             # consume synthetic as pd.DataFrame
+mostly.share(g, email)      # share the generator with your team
+sd = mostly.generate(g)     # use the generator to create a synthetic dataset
+syn = sd.data()             # consume the synthetic data as pandas DataFrame(s)
+mostly.probe(g, size=100)   # generate few samples on demand
 ```
 
 ## Supported Methods
@@ -107,4 +112,11 @@ mostly.unshare(g | sd | c, email)
 g.shares()
 sd.shares()
 c.shares()
+```
+
+### Info
+
+```python
+mostly.about()
+mostly.me()
 ```

@@ -370,3 +370,11 @@ class MostlyAI(_MostlyBaseClient):
         :return: info about the current user.
         """
         return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
+
+    def about(self) -> dict[str, Any]:
+        """
+        Retrieve about info from the endpoint.
+        Supported from release v210 onwards.
+        :return: info about the platform.
+        """
+        return self.request(verb=GET, path=["about"])
