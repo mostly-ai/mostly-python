@@ -41,9 +41,9 @@ COMMON_OPTIONS = \
 BUMP_TYPE ?= patch
 
 # Targets for Release Workflow/Automation
-.PHONY: release bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build confirm-upload upload clean-dist delete-branch
+.PHONY: release bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build confirm-upload upload clean-dist delete-branch docs
 
-release: bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build upload clean-dist delete-branch
+release: bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build upload clean-dist delete-branch docs
 
 bump-version: ## Bump version (default: patch, options: patch, minor, major)
 	@poetry version $(BUMP_TYPE)
@@ -111,3 +111,7 @@ delete-branch: ## Delete the branch both locally and remotely
 	@git branch -D $(BRANCH)
 	@git push origin --delete $(BRANCH)
 	@echo "Deleted branch $(BRANCH) locally and remotely"
+
+docs: ## Update docs site
+	@mkdocs gh-deploy
+	@echo "Deployed docs"
