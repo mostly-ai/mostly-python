@@ -95,7 +95,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             content_disposition = response.headers["Content-Disposition"]
             filename = re.findall("filename=(.+)", content_disposition)[0]
         else:
-            filename = None
+            filename = "generator_export_{}.zip".format(generator_id)
         return content_bytes, filename
 
     def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
