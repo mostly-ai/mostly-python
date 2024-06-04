@@ -76,6 +76,27 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         return generator
 
     # PRIVATE METHODS #
+    def _export(
+        self,
+        generator_id: str,
+    ) -> (bytes, Optional[str]):
+        response = self.request(
+            verb=GET,
+            path=[generator_id, "export"],
+            headers={
+                "Content-Type": "application/zip",
+                "Accept": "application/json, text/plain, */*",
+            },
+            raw_response=True,
+        )
+        content_bytes = response.content
+        # Check if 'Content-Disposition' header is present
+        if "Content-Disposition" in response.headers:
+            content_disposition = response.headers["Content-Disposition"]
+            filename = re.findall("filename=(.+)", content_disposition)[0]
+        else:
+            filename = None
+        return content_bytes, filename
 
     def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
         response = self.request(
