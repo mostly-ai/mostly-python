@@ -81,7 +81,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
     ) -> Generator:
         response = self.request(
             verb=POST,
-            path=["import_from_file"],
+            path=["import-from-file"],
             headers={
                 "Content-Type": "multipart/form-data",
                 "Accept": "application/json, text/plain, */*",
@@ -98,7 +98,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
     ) -> (bytes, Optional[str]):
         response = self.request(
             verb=GET,
-            path=[generator_id, "export_to_file"],
+            path=[generator_id, "export-to-file"],
             headers={
                 "Content-Type": "application/zip",
                 "Accept": "application/json, text/plain, */*",
