@@ -1510,9 +1510,7 @@ class Generator(CustomBaseModel):
 
         :param file_path: The file path to save the synthetic dataset
         """
-        bytes, filename = self.client._export_to_file(
-            generator_id=self.id
-        )
+        bytes, filename = self.client._export_to_file(generator_id=self.id)
         file_path = Path(file_path or ".")
         if file_path.is_dir():
             file_path = file_path / filename
