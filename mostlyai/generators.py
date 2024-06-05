@@ -75,14 +75,30 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return generator
 
+    def import_from_file(
+        self,
+        file_path: Union[str, Path],
+    ) -> Generator:
+        response = self.request(
+            verb=POST,
+            path=["import_from_file"],
+            headers={
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json, text/plain, */*",
+            },
+            files={"file": open(file_path, "rb")},
+            response_type=Generator,
+        )
+        return response
+
     # PRIVATE METHODS #
-    def _export(
+    def _export_to_file(
         self,
         generator_id: str,
     ) -> (bytes, Optional[str]):
         response = self.request(
             verb=GET,
-            path=[generator_id, "export"],
+            path=[generator_id, "export_to_file"],
             headers={
                 "Content-Type": "application/zip",
                 "Accept": "application/json, text/plain, */*",

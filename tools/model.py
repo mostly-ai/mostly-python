@@ -115,7 +115,7 @@ class Generator:
     def shares(self):
         return self.client._shares(resource=self)
 
-    def export(
+    def export_to_file(
         self,
         file_path: Union[str, Path, None] = None,
     ) -> Path:
@@ -124,7 +124,7 @@ class Generator:
 
         :param file_path: The file path to save the synthetic dataset
         """
-        bytes, filename = self.client._export(
+        bytes, filename = self.client._export_to_file(
             generator_id=self.id
         )
         file_path = Path(file_path or ".")
