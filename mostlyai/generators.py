@@ -84,7 +84,6 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             verb=POST,
             path=["import-from-file"],
             headers={
-                "Content-Type": "multipart/form-data",
                 "Accept": "application/json, text/plain, */*",
             },
             files={"file": open(file_path, "rb")},
