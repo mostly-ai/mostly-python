@@ -80,6 +80,13 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         self,
         file_path: Union[str, Path],
     ) -> Generator:
+        """
+        Import a generator from a file.
+        Supported from release v212 onwards.
+
+        :param file_path: Path to the file to import.
+        :return: The imported generator.
+        """
         response = self.request(
             verb=POST,
             path=["import-from-file"],
