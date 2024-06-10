@@ -115,12 +115,15 @@ class MostlyAI(_MostlyBaseClient):
               host: string
               port: integer, default: 10000
               username: string (required for regular auth)
-              kerberos_enabled: boolean, default: false
-              kerberos_principal: string (required if kerberos_enabled)
-              kerberos_krb5_conf: string (required if kerberos_enabled)
+              kerberosEnabled: boolean, default: false
+              kerberosPrincipal: string (required if kerberosEnabled)
+              kerberosKrb5Conf: string (required if kerberosEnabled)
+              sslEnabled: boolean, default: false
             secrets:
               password: string (required for regular auth)
-              kerberos_keytab: base64-encoded string (required if kerberos_enabled)
+              kerberosKeytab: base64-encoded string (required if kerberosEnabled)
+            ssl:
+              caCertificate: base64-encoded string
 
           - type: MARIADB
             config:
