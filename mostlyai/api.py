@@ -166,12 +166,13 @@ class MostlyAI(_MostlyBaseClient):
               port: integer, default: 5432
               username: string
               database: string
+              sslEnabled: boolean, default: false
             secrets:
               password: string
             ssl:
-              rootCertificate: string
-              sslCertificate: string
-              sslCertificateKey: string
+              rootCertificate: base64-encoded string 
+              sslCertificate: base64-encoded string
+              sslCertificateKey: base64-encoded string
 
           - type: SNOWFLAKE
             config:
