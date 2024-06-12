@@ -213,7 +213,7 @@ class CustomBaseModel(BaseModel):
             rich.print(self.dict())
         return capture.get()
 
-    def open(self):
+    def open(self) -> str:
         """
         Opens the instance in a web browser.
         """
@@ -221,6 +221,7 @@ class CustomBaseModel(BaseModel):
             raise APIError("Cannot open the instance")
         url = "/".join([self.client.base_url, *self.OPEN_URL_PARTS, str(self.id)])
         webbrowser.open_new(url)
+        return url
 
     def reload(self):
         """
