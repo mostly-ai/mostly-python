@@ -33,17 +33,6 @@ mkdocstrings = { version = "^0.24.1", extras = ["crystal", "python"] }
 mkdocs-material = "^9.5.13"
 poetry-bumpversion = "^0.3.2"
 
-[tool.mypy]
-python_version = "3.9"
-follow_imports = "silent"
-ignore_missing_imports = true
-warn_unused_to_dicts = true
-warn_redundant_casts = true
-warn_unreachable = true
-
-[tool.isort]
-profile = "black"
-
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"

@@ -170,7 +170,7 @@ class MostlyAI(_MostlyBaseClient):
             secrets:
               password: string
             ssl:
-              rootCertificate: base64-encoded string 
+              rootCertificate: base64-encoded string
               sslCertificate: base64-encoded string
               sslCertificateKey: base64-encoded string
 
