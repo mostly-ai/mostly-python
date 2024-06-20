@@ -849,6 +849,30 @@ class SyntheticTable(CustomBaseModel):
             description="The name of a source table. It must be unique within a generator.",
         ),
     ] = None
+    source_table_total_rows: Annotated[
+        Optional[int],
+        Field(
+            None,
+            alias="sourceTableTotalRows",
+            description="The total number of rows in the source table while fetching data for training.",
+        ),
+    ] = None
+    total_datapoints: Annotated[
+        Optional[int],
+        Field(
+            None,
+            alias="totalDatapoints",
+            description="The total number of datapoints for that table in the generated synthetic dataset.",
+        ),
+    ] = None
+    total_rows: Annotated[
+        Optional[int],
+        Field(
+            None,
+            alias="totalRows",
+            description="The total number of rows for that table in the generated synthetic dataset.",
+        ),
+    ] = None
     configuration: Optional[SyntheticTableConfiguration] = None
     model_metrics: Annotated[
         Optional[ModelMetrics], Field(None, alias="modelMetrics")
