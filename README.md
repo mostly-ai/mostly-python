@@ -65,10 +65,15 @@ g.open()
 g.reload()
 g.delete()
 
+# training
 g.training.start()
 g.training.progress()
 g.training.cancel()
 g.training.wait()
+
+# import / export
+g.export_to_file(file_path)
+mostly.generators.import_from_file(file_path)
 ```
 
 ### Synthetic Datasets

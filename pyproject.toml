@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mostlyai"
-version = "0.3.8"
+version = "0.3.9"
 description = "The official Python client for the MOSTLY AI platform."
 homepage = "https://app.mostly.ai/"
 authors = ["MOSTLY AI <office@mostly.ai>"]
@@ -29,20 +29,9 @@ respx = "^0.20.2"
 twine = "^5.0.0"
 commitizen = "^3.18.0"
 mkdocs = "^1.5.3"
-mkdocstrings = "^0.24.1"
+mkdocstrings = { version = "^0.24.1", extras = ["crystal", "python"] }
 mkdocs-material = "^9.5.13"
 poetry-bumpversion = "^0.3.2"
-
-[tool.mypy]
-python_version = "3.9"
-follow_imports = "silent"
-ignore_missing_imports = true
-warn_unused_to_dicts = true
-warn_redundant_casts = true
-warn_unreachable = true
-
-[tool.isort]
-profile = "black"
 
 [tool.commitizen]
 name = "cz_conventional_commits"

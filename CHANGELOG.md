@@ -1,3 +1,10 @@
+## 0.3.9 (2024-06-10)
+
+### Feat
+
+- **api**: return URL when calling .open()
+- **api**: add mostly.about() for retrieving platform info / version
+
 ## 0.3.8 (2024-05-28)
 
 ### Feat

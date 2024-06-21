@@ -80,6 +80,13 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         self,
         file_path: Union[str, Path],
     ) -> Generator:
+        """
+        Import a generator from a file.
+        Supported from release v212 onwards.
+
+        :param file_path: Path to the file to import.
+        :return: The imported generator.
+        """
         response = self.request(
             verb=POST,
             path=["import-from-file"],
@@ -111,7 +118,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             content_disposition = response.headers["Content-Disposition"]
             filename = re.findall("filename=(.+)", content_disposition)[0]
         else:
-            filename = "generator_export_{}.mostly".format(generator_id[:8])
+            filename = f"generator-{generator_id}.zip"
         return content_bytes, filename
 
     def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
