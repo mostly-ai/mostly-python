@@ -107,7 +107,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             verb=GET,
             path=[generator_id, "export-to-file"],
             headers={
-                "Content-Type": "application/zip",
+                "Content-Type": "application/octet-stream",
                 "Accept": "application/json, text/plain, */*",
             },
             raw_response=True,
