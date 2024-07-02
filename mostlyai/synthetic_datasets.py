@@ -122,7 +122,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
             content_disposition = response.headers["Content-Disposition"]
             filename = re.findall("filename=(.+)", content_disposition)[0]
         else:
-            filename = None
+            filename = f"synthetic-dataset-{synthetic_dataset_id[:8]}.zip"
         return content_bytes, filename
 
     def _data(

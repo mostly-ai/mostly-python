@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Any, Iterator, Optional, Union
+import re
 
 import pandas as pd
 
@@ -75,7 +76,50 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return generator
 
+    def import_from_file(
+        self,
+        file_path: Union[str, Path],
+    ) -> Generator:
+        """
+        Import a generator from a file.
+        Supported from release v212 onwards.
+
+        :param file_path: Path to the file to import.
+        :return: The imported generator.
+        """
+        response = self.request(
+            verb=POST,
+            path=["import-from-file"],
+            headers={
+                "Accept": "application/json, text/plain, */*",
+            },
+            files={"file": open(file_path, "rb")},
+            response_type=Generator,
+        )
+        return response
+
     # PRIVATE METHODS #
+    def _export_to_file(
+        self,
+        generator_id: str,
+    ) -> (bytes, Optional[str]):
+        response = self.request(
+            verb=GET,
+            path=[generator_id, "export-to-file"],
+            headers={
+                "Content-Type": "application/octet-stream",
+                "Accept": "application/json, text/plain, */*",
+            },
+            raw_response=True,
+        )
+        content_bytes = response.content
+        # Check if 'Content-Disposition' header is present
+        if "Content-Disposition" in response.headers:
+            content_disposition = response.headers["Content-Disposition"]
+            filename = re.findall("filename=(.+)", content_disposition)[0]
+        else:
+            filename = f"generator-{generator_id[:8]}.mostly"
+        return content_bytes, filename
 
     def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
         response = self.request(
