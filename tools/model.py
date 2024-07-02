@@ -115,6 +115,22 @@ class Generator:
     def shares(self):
         return self.client._shares(resource=self)
 
+    def export_to_file(
+        self,
+        file_path: Union[str, Path, None] = None,
+    ) -> Path:
+        """
+        Export generator and save to file
+
+        :param file_path: The file path to save the synthetic dataset
+        """
+        bytes, filename = self.client._export_to_file(generator_id=self.id)
+        file_path = Path(file_path or ".")
+        if file_path.is_dir():
+            file_path = file_path / filename
+        file_path.write_bytes(bytes)
+        return file_path
+
     class Training:
         def __init__(self, _generator: "Generator"):
             self.generator = _generator
