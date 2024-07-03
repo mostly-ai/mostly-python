@@ -1,3 +1,11 @@
+## 0.3.10 (2024-07-03)
+
+### Feat
+
+- **api**: add fairness parameters for SD generation
+- **api**: add import / export for generators
+- **api**: added total_rows and total_datapoints for synthetic dataset tables
+
 ## 0.3.9 (2024-06-10)
 
 ### Feat
