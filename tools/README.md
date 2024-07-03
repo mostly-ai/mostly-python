@@ -79,3 +79,11 @@ for a release. Pay attention to `main` branch.
 
 In order to specify a different bump type, the following are possible, which would trigger -> `0.1.0`, `1.0.0` accordingly assuming
 `0.0.1` being the current version: `BUMP_TYPE=minor make release`, `BUMP_TYPE=major make release`.
+
+Release "from scratch", assuming having `$HOME/.pypirc` set, poetry existing, etc. would be:
+```bash
+git clone git@github.com:mostly-ai/mostly-python.git
+cd mostly-python
+poetry install
+make release
+```
