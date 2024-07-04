@@ -70,7 +70,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
                         table["data"] = _convert_to_base64(table["data"])
                     else:
                         raise ValueError("data must be a DataFrame or a file path")
-        # convert `columns` to dict, if provided as list
+        # convert `columns` to list[dict], if provided as list[str]
         if "tables" in config and config["tables"]:
             for table in config["tables"]:
                 if "columns" in table and table["columns"]:
