@@ -74,7 +74,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         if "tables" in config and config["tables"]:
             for table in config["tables"]:
                 if "columns" in table and table["columns"]:
-                    table["columns"] = [{"name": col} if isinstance(col, str) else col for col in table["columns"]]
+                    table["columns"] = [
+                        {"name": col} if isinstance(col, str) else col
+                        for col in table["columns"]
+                    ]
 
         generator = self.request(
             verb=POST, path=[], json=config, response_type=Generator
