@@ -4276,7 +4276,15 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
-<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlyGeneratorsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">,</span> <span class="n">_MostlySharesMixin</span><span class="p">):</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlyGeneratorsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">,</span> <span class="n">_MostlySharesMixin</span><span class="p">):</span>
     <span class="n">SECTION</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;generators&quot;</span><span class="p">]</span>
 
     <span class="c1"># PUBLIC METHODS #</span>
@@ -4336,6 +4344,14 @@ Only connectors, that are independent of a table, will be returned.</p>
                         <span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_convert_to_base64</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;data must be a DataFrame or a file path&quot;</span><span class="p">)</span>
+        <span class="c1"># convert `columns` to list[dict], if provided as list[str]</span>
+        <span class="k">if</span> <span class="s2">&quot;tables&quot;</span> <span class="ow">in</span> <span class="n">config</span> <span class="ow">and</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;tables&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="s2">&quot;columns&quot;</span> <span class="ow">in</span> <span class="n">table</span> <span class="ow">and</span> <span class="n">table</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]:</span>
+                    <span class="n">table</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">col</span><span class="p">}</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">col</span>
+                        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">table</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]</span>
+                    <span class="p">]</span>
 
         <span class="n">generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
             <span class="n">verb</span><span class="o">=</span><span class="n">POST</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="p">[],</span> <span class="n">json</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">response_type</span><span class="o">=</span><span class="n">Generator</span>
@@ -4793,27 +4809,27 @@ Supported from release v212 onwards.</p>
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/generators.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">import_from_file</span><span class="p">(</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">import_from_file</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">file_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Generator</span><span class="p">:</span>
