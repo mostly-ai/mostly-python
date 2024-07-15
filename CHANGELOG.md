@@ -1,3 +1,9 @@
+## 0.3.11 (2024-07-15)
+
+### Feat
+
+- **api**: allow `columns` to be provided as list[str] instead of list[dict[str, str]] in `mostly.train` (#59)
+
 ## 0.3.10 (2024-07-03)
 
 ### Feat
