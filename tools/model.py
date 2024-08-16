@@ -289,3 +289,21 @@ class SyntheticDataset:
             return self.synthetic_dataset.client._generation_wait(
                 self.synthetic_dataset.id, progress_bar=progress_bar, interval=interval
             )
+
+
+class Compute:
+    def update(self, config) -> "Compute":
+        """
+        Update a compute. Only accessible for SuperAdmins.
+
+        For the structure of the config and secrets, see the CREATE method.
+
+        :return: The updated compute
+        """
+        return self.client._update(compute_id=self.id, config=config)
+
+    def delete(self):
+        """
+        Delete compute. Only accessible for SuperAdmins.
+        """
+        return self.client._delete(compute_id=self.id)
