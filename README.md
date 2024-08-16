@@ -120,6 +120,18 @@ sd.shares()
 c.shares()
 ```
 
+### Computes
+
+```python
+l = mostly.computes.list()
+
+cmp = mostly.computes.create(config)
+cmp = mostly.computes.get(id)
+
+cmp.update(config)
+cmp.delete()
+```
+
 ### Info
 
 ```python
