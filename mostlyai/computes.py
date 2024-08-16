@@ -12,6 +12,11 @@ class _MostlyComputesClient(_MostlyBaseClient):
     # PUBLIC METHODS #
 
     def list(self) -> list[Compute]:
+        """
+        List the available computes, sorted by order index. The first returned compute is the default compute.
+
+        :return: List the available computes
+        """
         response = self.request(verb=GET, path=[])
         response = [Compute(**compute) for compute in response]
         return response
