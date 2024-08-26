@@ -21,7 +21,8 @@ from mostlyai.model import (
     Generator,
     ProgressStatus,
     StepCode,
-    SyntheticDataset, ModelEncodingType,
+    SyntheticDataset,
+    ModelEncodingType,
 )
 
 warnings.simplefilter("always", DeprecationWarning)
