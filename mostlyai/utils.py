@@ -1,6 +1,7 @@
 import base64
 import io
 import time
+import warnings
 from pathlib import Path
 from typing import Callable, Union, Optional, Any, Literal
 
@@ -20,8 +21,10 @@ from mostlyai.model import (
     Generator,
     ProgressStatus,
     StepCode,
-    SyntheticDataset,
+    SyntheticDataset, ModelEncodingType,
 )
+
+warnings.simplefilter("always", DeprecationWarning)
 
 
 def _job_wait(
@@ -270,6 +273,48 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
         fn = fn.rsplit(".", 1)[0]
     name = Path(fn).stem
     return name, df
+
+
+def _adapt_deprecate_model_encoding_types(columns: list[dict]) -> list[dict]:
+    mapping = {
+        "AUTO": ModelEncodingType.auto.value,
+        "CATEGORICAL": ModelEncodingType.tabular_categorical.value,
+        "NUMERIC_AUTO": ModelEncodingType.tabular_numeric_auto.value,
+        "NUMERIC_DISCRETE": ModelEncodingType.tabular_numeric_discrete.value,
+        "NUMERIC_BINNED": ModelEncodingType.tabular_numeric_binned.value,
+        "NUMERIC_DIGIT": ModelEncodingType.tabular_numeric_digit.value,
+        "CHARACTER": ModelEncodingType.tabular_character.value,
+        "DATETIME": ModelEncodingType.tabular_datetime.value,
+        "DATETIME_RELATIVE": ModelEncodingType.tabular_datetime_relative.value,
+        "LAT_LONG": ModelEncodingType.tabular_lat_long.value,
+        "TEXT_MODEL": ModelEncodingType.language_text.value,
+    }
+    for column in columns:
+        v = column.get("modelEncodingType")
+        if v is not None:
+            column["modelEncodingType"] = mapping.get(v, v)
+    return columns
+
+
+def _adapt_deprecated_model_size(model_configuration: dict) -> dict:
+    """
+    When the deprecated `modelSize` is provided and `model` is not, map the `modelSize` to `model`.
+    """
+    mapping = {
+        "S": "TABULAR/MOSTLY_AI/Small",
+        "M": "TABULAR/MOSTLY_AI/Medium",
+        "L": "TABULAR/MOSTLY_AI/Large",
+    }
+    model = model_configuration.get("model")
+    model_size = model_configuration.get("modelSize")
+    if model is None and model_size is not None:
+        warnings.warn(
+            "`modelSize` has been deprecated. Please use `model` instead in the future.",
+            DeprecationWarning,
+        )
+        model_configuration["model"] = mapping.get(model_size, None)
+        model_configuration.pop("modelSize")
+    return model_configuration
 
 
 ShareableResource = Union[Connector, Generator, SyntheticDataset]
