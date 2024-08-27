@@ -132,12 +132,18 @@ cmp.update(config)
 cmp.delete()
 ```
 
-### Info
+### Job Configuration Info
+
+```python
+mostly.models(model_type)
+```
+
+### User Info
 
 ```python
 mostly.me()
 mostly.usage_report()
 mostly.usage_report(by_periods=True)
 mostly.about()
-mostly.models(model_type)
+
 ```
