@@ -10,10 +10,10 @@ A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 | Prompt the generator for the data that you need | `mostly.generate(g, seed)`       |
 | Live probe the generator on demand              | `mostly.probe(g, size \| seed)`  |
 | Connect to any data source within your org      | `mostly.connect(config)`         |
+| List the available computes                     | `mostly.computes()`              |
 | Info about the current user                     | `mostly.me()`                    |
 | Info about the usage                            | `mostly.usage_report()`          |
 | Info about the platform                         | `mostly.about()`                 |
-| Info about the available computes               | `mostly.computes()`              |
 
 
 
