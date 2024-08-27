@@ -17,6 +17,7 @@ from mostlyai.model import (
     PermissionLevel,
     ProgressStatus,
     SyntheticDataset,
+    ModelType,
 )
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import (
@@ -404,3 +405,8 @@ class MostlyAI(_MostlyBaseClient):
         :return: info about the platform.
         """
         return self.request(verb=GET, path=["about"])
+
+    def models(self, model_type: str | ModelType) -> list[str]:
+        if isinstance(model_type, ModelType):
+            model_type = model_type.value
+        return self.request(verb=GET, path=["models", model_type])
