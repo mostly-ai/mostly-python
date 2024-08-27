@@ -7,7 +7,6 @@ import pandas as pd
 import rich
 
 from mostlyai.base import GET, _MostlyBaseClient
-from mostlyai.computes import _MostlyComputesClient
 from mostlyai.connectors import _MostlyConnectorsClient
 from mostlyai.generators import _MostlyGeneratorsClient
 from mostlyai.model import (
@@ -62,7 +61,6 @@ class MostlyAI(_MostlyBaseClient):
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
         self.shares = _MostlySharesClient(**client_kwargs)
-        self.computes = _MostlyComputesClient(**client_kwargs)
 
     def connect(self, config: dict[str, Any]) -> Connector:
         """
@@ -404,3 +402,6 @@ class MostlyAI(_MostlyBaseClient):
         :return: info about the platform.
         """
         return self.request(verb=GET, path=["about"])
+
+    def computes(self) -> list[dict[str, Any]]:
+        return self.request(verb=GET, path=["computes"])
