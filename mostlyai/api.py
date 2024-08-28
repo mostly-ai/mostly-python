@@ -406,7 +406,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         return self.request(verb=GET, path=["about"])
 
-    def models(self, model_type: str | ModelType) -> list[str]:
+    def models(self, model_type: Union[str, ModelType]) -> list[str]:
         if isinstance(model_type, ModelType):
             model_type = model_type.value
         return self.request(verb=GET, path=["models", model_type])
