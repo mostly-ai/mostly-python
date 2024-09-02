@@ -11,6 +11,7 @@ A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 | Live probe the generator on demand              | `mostly.probe(g, size \| seed)`  |
 | Connect to any data source within your org      | `mostly.connect(config)`         |
 | List the available models                       | `mostly.models(model_type)`      |
+| List the available computes                     | `mostly.computes()`              |
 | Info about the current user                     | `mostly.me()`                    |
 | Info about the usage                            | `mostly.usage_report()`          |
 | Info about the platform                         | `mostly.about()`                 |
@@ -120,22 +121,10 @@ sd.shares()
 c.shares()
 ```
 
-### Computes
-
-```python
-l = mostly.computes.list()
-
-cmp = mostly.computes.create(config)
-cmp = mostly.computes.get(id)
-
-cmp.update(config)
-cmp.delete()
-```
-
 ### Job Configuration Info
-
 ```python
 mostly.models(model_type)
+mostly.computes()
 ```
 
 ### User Info

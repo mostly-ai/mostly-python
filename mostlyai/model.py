@@ -812,6 +812,7 @@ class AssistantMessageRole(str, Enum):
     user = "user"
     assistant = "assistant"
     tool = "tool"
+    heartbeat = "heartbeat"
 
 
 class AssistantMessageContentType(str, Enum):
@@ -953,22 +954,6 @@ class Compute(CustomBaseModel):
             description="The index for determining the sort order when listing computes",
         ),
     ] = None
-
-    def update(self, config) -> "Compute":
-        """
-        Update a compute. Only accessible for SuperAdmins.
-
-        For the structure of the config and secrets, see the CREATE method.
-
-        :return: The updated compute
-        """
-        return self.client._update(compute_id=self.id, config=config)
-
-    def delete(self):
-        """
-        Delete compute. Only accessible for SuperAdmins.
-        """
-        return self.client._delete(compute_id=self.id)
 
 
 class UsageReportPeriod(CustomBaseModel):
@@ -1224,6 +1209,7 @@ class ProgressStep(CustomBaseModel):
         ),
     ] = None
     messages: Optional[List[Dict[str, Any]]] = None
+    error_message: Annotated[Optional[str], Field(None, alias="errorMessage")] = None
     progress: Optional[ProgressValue] = None
     status: Optional[ProgressStatus] = None
 
