@@ -12,7 +12,6 @@ A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 | Connect to any data source within your org      | `mostly.connect(config)`         |
 | List the available computes                     | `mostly.computes()`              |
 | Info about the current user                     | `mostly.me()`                    |
-| Info about the usage                            | `mostly.usage_report()`          |
 | Info about the platform                         | `mostly.about()`                 |
 
 
@@ -130,7 +129,5 @@ mostly.computes()
 
 ```python
 mostly.me()
-mostly.usage_report()
-mostly.usage_report(by_periods=True)
 mostly.about()
 ```
