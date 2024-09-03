@@ -11,7 +11,6 @@ from mostlyai.utils import (
     _convert_to_base64,
     _job_wait,
     _read_table_from_path,
-    _adapt_deprecate_model_encoding_types,
     _adapt_deprecated_model_size,
 )
 
@@ -82,9 +81,6 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
                         {"name": col} if isinstance(col, str) else col
                         for col in table["columns"]
                     ]
-                    table["columns"] = _adapt_deprecate_model_encoding_types(
-                        table["columns"]
-                    )
                 if table.get("modelConfiguration"):
                     table["modelConfiguration"] = _adapt_deprecated_model_size(
                         table["modelConfiguration"]
