@@ -1,3 +1,18 @@
+## 0.4.0 (2024-09-05)
+
+### Feat
+
+- **api**: introduce language models (#63)
+
+### Fix
+
+- **base**: repr pydantic model without deprecation warning (#66)
+
+### Refactor
+
+- **admin**: drop support for usage report (#65)
+- **computes**: simplify interface for computes (#64)
+
 ## 0.3.13 (2024-08-19)
 
 ### Feat
