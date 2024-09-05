@@ -275,25 +275,4 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
     return name, df
 
 
-def _adapt_deprecated_model_size(model_configuration: dict) -> dict:
-    """
-    When the deprecated `modelSize` is provided and `model` is not, map the `modelSize` to `model`.
-    """
-    mapping = {
-        "S": "MOSTLY_AI/Small",
-        "M": "MOSTLY_AI/Medium",
-        "L": "MOSTLY_AI/Large",
-    }
-    model = model_configuration.get("model")
-    model_size = model_configuration.get("modelSize")
-    if model is None and model_size is not None:
-        warnings.warn(
-            "`modelSize` has been deprecated. Please use `model` instead in the future.",
-            DeprecationWarning,
-        )
-        model_configuration["model"] = mapping.get(model_size, None)
-        model_configuration.pop("modelSize")
-    return model_configuration
-
-
 ShareableResource = Union[Connector, Generator, SyntheticDataset]

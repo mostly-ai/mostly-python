@@ -11,7 +11,6 @@ from mostlyai.utils import (
     _convert_to_base64,
     _job_wait,
     _read_table_from_path,
-    _adapt_deprecated_model_size,
 )
 
 
@@ -81,10 +80,6 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
                         {"name": col} if isinstance(col, str) else col
                         for col in table["columns"]
                     ]
-                if table.get("modelConfiguration"):
-                    table["modelConfiguration"] = _adapt_deprecated_model_size(
-                        table["modelConfiguration"]
-                    )
         generator = self.request(
             verb=POST, path=[], json=config, response_type=Generator
         )
