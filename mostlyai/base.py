@@ -210,7 +210,7 @@ class CustomBaseModel(BaseModel):
         # Use rich.print to create a rich representation of the model
         console = Console()
         with console.capture() as capture:
-            rich.print(self.dict())
+            rich.print(self.model_dump())
         return capture.get()
 
     def open(self) -> str:
