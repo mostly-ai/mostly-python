@@ -1,5 +1,3 @@
-import io
-import json
 from pathlib import Path
 from typing import Any, Optional, Union, Literal
 
@@ -376,24 +374,6 @@ class MostlyAI(_MostlyBaseClient):
         :return: info about the current user.
         """
         return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
-
-    def usage_report(self, by_periods: bool = False) -> pd.DataFrame:
-        """
-        Retrieve usage report as a pd.DataFrame.
-
-        :param by_periods: if True, by periods. Otherwise, the overall usage report.
-        :return: summary of the usage (either by periods or overall)
-        """
-        headers = {"Accept": "*/*"}  # Accept any content type
-        path = ["usage-report"] + (["periods"] if by_periods else ["download"])
-        response = self.request(verb=GET, headers=headers, path=path, raw_response=True)
-        if by_periods:
-            data = json.loads(response.content.decode("utf-8"))["usage"]
-            df = pd.DataFrame(data)
-        else:
-            csv_file = io.BytesIO(response.content)
-            df = pd.read_csv(csv_file)
-        return df
 
     def about(self) -> dict[str, Any]:
         """
