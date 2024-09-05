@@ -1,6 +1,7 @@
 import base64
 import io
 import time
+import warnings
 from pathlib import Path
 from typing import Callable, Union, Optional, Any, Literal
 
@@ -22,6 +23,8 @@ from mostlyai.model import (
     StepCode,
     SyntheticDataset,
 )
+
+warnings.simplefilter("always", DeprecationWarning)
 
 
 def _job_wait(

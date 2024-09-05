@@ -7,7 +7,11 @@ import pandas as pd
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
 from mostlyai.model import Generator, JobProgress
 from mostlyai.shares import _MostlySharesMixin
-from mostlyai.utils import _convert_to_base64, _job_wait, _read_table_from_path
+from mostlyai.utils import (
+    _convert_to_base64,
+    _job_wait,
+    _read_table_from_path,
+)
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
@@ -56,10 +60,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         return response
 
     def create(self, config: dict) -> Generator:
-        # convert `data` to base64-encoded Parquet files
-        if "tables" in config and config["tables"]:
+        if config.get("tables"):
             for table in config["tables"]:
-                if "data" in table and table["data"] is not None:
+                # convert `data` to base64-encoded Parquet files
+                if table.get("data") is not None:
                     if isinstance(table["data"], (str, Path)):
                         name, df = _read_table_from_path(table["data"])
                         table["data"] = _convert_to_base64(df)
@@ -70,15 +74,12 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
                         table["data"] = _convert_to_base64(table["data"])
                     else:
                         raise ValueError("data must be a DataFrame or a file path")
-        # convert `columns` to list[dict], if provided as list[str]
-        if "tables" in config and config["tables"]:
-            for table in config["tables"]:
-                if "columns" in table and table["columns"]:
+                if table.get("columns"):
+                    # convert `columns` to list[dict], if provided as list[str]
                     table["columns"] = [
                         {"name": col} if isinstance(col, str) else col
                         for col in table["columns"]
                     ]
-
         generator = self.request(
             verb=POST, path=[], json=config, response_type=Generator
         )
