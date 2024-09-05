@@ -499,18 +499,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#computes" class="md-nav__link">
+  <a href="#job-configuration-info" class="md-nav__link">
     <span class="md-ellipsis">
-      Computes
+      Job Configuration Info
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#info" class="md-nav__link">
+  <a href="#user-info" class="md-nav__link">
     <span class="md-ellipsis">
-      Info
+      User Info
     </span>
   </a>
   
@@ -797,18 +797,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#computes" class="md-nav__link">
+  <a href="#job-configuration-info" class="md-nav__link">
     <span class="md-ellipsis">
-      Computes
+      Job Configuration Info
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#info" class="md-nav__link">
+  <a href="#user-info" class="md-nav__link">
     <span class="md-ellipsis">
-      Info
+      User Info
     </span>
   </a>
   
@@ -872,12 +872,16 @@
 <td><code>mostly.connect(config)</code></td>
 </tr>
 <tr>
-<td>Info about the current user</td>
-<td><code>mostly.me()</code></td>
+<td>List the available models</td>
+<td><code>mostly.models(model_type)</code></td>
 </tr>
 <tr>
-<td>Info about the usage</td>
-<td><code>mostly.usage_report()</code></td>
+<td>List the available computes</td>
+<td><code>mostly.computes()</code></td>
+</tr>
+<tr>
+<td>Info about the current user</td>
+<td><code>mostly.me()</code></td>
 </tr>
 <tr>
 <td>Info about the platform</td>
@@ -968,19 +972,12 @@
 <span class="n">sd</span><span class="o">.</span><span class="n">shares</span><span class="p">()</span>
 <span class="n">c</span><span class="o">.</span><span class="n">shares</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="computes">Computes<a class="headerlink" href="#computes" title="Permanent link">¤</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">l</span> <span class="o">=</span> <span class="n">mostly</span><span class="o">.</span><span class="n">computes</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-
-<span class="n">cmp</span> <span class="o">=</span> <span class="n">mostly</span><span class="o">.</span><span class="n">computes</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">cmp</span> <span class="o">=</span> <span class="n">mostly</span><span class="o">.</span><span class="n">computes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">)</span>
-
-<span class="n">cmp</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">cmp</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<h3 id="job-configuration-info">Job Configuration Info<a class="headerlink" href="#job-configuration-info" title="Permanent link">¤</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">mostly</span><span class="o">.</span><span class="n">models</span><span class="p">(</span><span class="n">model_type</span><span class="p">)</span>
+<span class="n">mostly</span><span class="o">.</span><span class="n">computes</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="info">Info<a class="headerlink" href="#info" title="Permanent link">¤</a></h3>
+<h3 id="user-info">User Info<a class="headerlink" href="#user-info" title="Permanent link">¤</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">mostly</span><span class="o">.</span><span class="n">me</span><span class="p">()</span>
-<span class="n">mostly</span><span class="o">.</span><span class="n">usage_report</span><span class="p">()</span>
-<span class="n">mostly</span><span class="o">.</span><span class="n">usage_report</span><span class="p">(</span><span class="n">by_periods</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">mostly</span><span class="o">.</span><span class="n">about</span><span class="p">()</span>
 </code></pre></div>
 
