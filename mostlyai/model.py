@@ -5,8 +5,7 @@ from __future__ import annotations
 
 from enum import Enum
 from pathlib import Path
-from typing import (Annotated, Any, ClassVar, Dict, List, Literal, Optional,
-                    Union)
+from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional, Union
 
 import pandas as pd
 from pydantic import AwareDatetime, Field, RootModel
