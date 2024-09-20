@@ -6,7 +6,7 @@ from typing import Any, Iterator, Optional, Union
 import pandas as pd
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat
+from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat, SyntheticDatasetListItem
 from mostlyai.utils import _job_wait
 
 
@@ -21,7 +21,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         limit: int = 50,
         status: Optional[Union[str, list[str]]] = None,
         search_term: Optional[str] = None,
-    ) -> Iterator[SyntheticDataset]:
+    ) -> Iterator[SyntheticDatasetListItem]:
         """
         List synthetic datasets.
 
@@ -36,7 +36,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         status = ",".join(status) if isinstance(status, list) else status
         with Paginator(
             self,
-            SyntheticDataset,
+            SyntheticDatasetListItem,
             offset=offset,
             limit=limit,
             status=status,

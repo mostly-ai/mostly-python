@@ -1,7 +1,7 @@
 from typing import Any, Iterator, Optional, List, Dict
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Connector
+from mostlyai.model import Connector, ConnectorListItem
 from mostlyai.shares import _MostlySharesMixin
 
 
@@ -16,7 +16,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         limit: int = 50,
         access_type: Optional[str] = None,
         search_term: Optional[str] = None,
-    ) -> Iterator[Connector]:
+    ) -> Iterator[ConnectorListItem]:
         """
         List connectors.
 
@@ -31,7 +31,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         """
         with Paginator(
             self,
-            Connector,
+            ConnectorListItem,
             offset=offset,
             limit=limit,
             access_type=access_type,
