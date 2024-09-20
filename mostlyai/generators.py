@@ -5,7 +5,7 @@ import re
 import pandas as pd
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Generator, JobProgress
+from mostlyai.model import Generator, JobProgress, GeneratorListItem
 from mostlyai.shares import _MostlySharesMixin
 from mostlyai.utils import (
     _convert_to_base64,
@@ -25,7 +25,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         limit: int = 50,
         status: Optional[Union[str, list[str]]] = None,
         search_term: Optional[str] = None,
-    ) -> Iterator[Generator]:
+    ) -> Iterator[GeneratorListItem]:
         """
         List generators.
 
@@ -40,7 +40,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         status = ",".join(status) if isinstance(status, list) else status
         with Paginator(
             self,
-            Generator,
+            GeneratorListItem,
             offset=offset,
             limit=limit,
             status=status,
