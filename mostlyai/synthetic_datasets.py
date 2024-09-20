@@ -6,7 +6,12 @@ from typing import Any, Iterator, Optional, Union
 import pandas as pd
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import JobProgress, SyntheticDataset, SyntheticDatasetFormat, SyntheticDatasetListItem
+from mostlyai.model import (
+    JobProgress,
+    SyntheticDataset,
+    SyntheticDatasetFormat,
+    SyntheticDatasetListItem,
+)
 from mostlyai.utils import _job_wait
 
 
