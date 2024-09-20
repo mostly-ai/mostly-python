@@ -3676,7 +3676,7 @@ Supported from release v210 onwards.</p>
         <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">access_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">search_term</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Connector</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ConnectorListItem</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        List connectors.</span>
 
@@ -3691,7 +3691,7 @@ Supported from release v210 onwards.</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="n">Paginator</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
-            <span class="n">Connector</span><span class="p">,</span>
+            <span class="n">ConnectorListItem</span><span class="p">,</span>
             <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
             <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
             <span class="n">access_type</span><span class="o">=</span><span class="n">access_type</span><span class="p">,</span>
@@ -3787,7 +3787,7 @@ Supported from release v210 onwards.</p>
     <span class="n">limit</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="n">access_type</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">search_term</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="mostlyai.model.Connector" href="../model/#mostlyai.model.Connector">Connector</a></span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><span title="mostlyai.model.ConnectorListItem">ConnectorListItem</span></span><span class="p">]</span>
 </code></pre></div>
 
   <div class="doc doc-contents ">
@@ -3881,7 +3881,7 @@ Only connectors, that are independent of a table, will be returned.</p>
     <tbody>
         <tr class="doc-section-item">
           <td>
-                <code><span title="typing.Iterator">Iterator</span>[<a class="autorefs autorefs-internal" title="mostlyai.model.Connector" href="../model/#mostlyai.model.Connector">Connector</a>]</code>
+                <code><span title="typing.Iterator">Iterator</span>[<span title="mostlyai.model.ConnectorListItem">ConnectorListItem</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -3928,7 +3928,7 @@ Only connectors, that are independent of a table, will be returned.</p>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="n">access_type</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">search_term</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Connector</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">ConnectorListItem</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List connectors.</span>
 
@@ -3943,7 +3943,7 @@ Only connectors, that are independent of a table, will be returned.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">Paginator</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">Connector</span><span class="p">,</span>
+        <span class="n">ConnectorListItem</span><span class="p">,</span>
         <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
         <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
         <span class="n">access_type</span><span class="o">=</span><span class="n">access_type</span><span class="p">,</span>
@@ -4308,7 +4308,7 @@ Only connectors, that are independent of a table, will be returned.</p>
         <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">search_term</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Generator</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">GeneratorListItem</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        List generators.</span>
 
@@ -4323,7 +4323,7 @@ Only connectors, that are independent of a table, will be returned.</p>
         <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">status</span>
         <span class="k">with</span> <span class="n">Paginator</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
-            <span class="n">Generator</span><span class="p">,</span>
+            <span class="n">GeneratorListItem</span><span class="p">,</span>
             <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
             <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
@@ -4480,7 +4480,7 @@ Only connectors, that are independent of a table, will be returned.</p>
     <span class="n">limit</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="n">status</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="mostlyai.generators._MostlyGeneratorsClient.list" href="#mostlyai.generators._MostlyGeneratorsClient.list">list</a></span><span class="p">[</span><span class="n">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">search_term</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="mostlyai.model.Generator" href="../model/#mostlyai.model.Generator">Generator</a></span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><span title="mostlyai.model.GeneratorListItem">GeneratorListItem</span></span><span class="p">]</span>
 </code></pre></div>
 
   <div class="doc doc-contents ">
@@ -4573,7 +4573,7 @@ Only connectors, that are independent of a table, will be returned.</p>
     <tbody>
         <tr class="doc-section-item">
           <td>
-                <code><span title="typing.Iterator">Iterator</span>[<a class="autorefs autorefs-internal" title="mostlyai.model.Generator" href="../model/#mostlyai.model.Generator">Generator</a>]</code>
+                <code><span title="typing.Iterator">Iterator</span>[<span title="mostlyai.model.GeneratorListItem">GeneratorListItem</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -4620,7 +4620,7 @@ Only connectors, that are independent of a table, will be returned.</p>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">search_term</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Generator</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">GeneratorListItem</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List generators.</span>
 
@@ -4635,7 +4635,7 @@ Only connectors, that are independent of a table, will be returned.</p>
     <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">status</span>
     <span class="k">with</span> <span class="n">Paginator</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">Generator</span><span class="p">,</span>
+        <span class="n">GeneratorListItem</span><span class="p">,</span>
         <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
         <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
         <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
@@ -4907,12 +4907,7 @@ Supported from release v212 onwards.</p>
 
             <details class="quote">
               <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 13</span>
-<span class="normal"> 14</span>
-<span class="normal"> 15</span>
-<span class="normal"> 16</span>
-<span class="normal"> 17</span>
-<span class="normal"> 18</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 18</span>
 <span class="normal"> 19</span>
 <span class="normal"> 20</span>
 <span class="normal"> 21</span>
@@ -5076,7 +5071,12 @@ Supported from release v212 onwards.</p>
 <span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
-<span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlySyntheticDatasetsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">_MostlySyntheticDatasetsClient</span><span class="p">(</span><span class="n">_MostlyBaseClient</span><span class="p">):</span>
     <span class="n">SECTION</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;synthetic-datasets&quot;</span><span class="p">]</span>
 
     <span class="c1"># PUBLIC METHODS #</span>
@@ -5087,7 +5087,7 @@ Supported from release v212 onwards.</p>
         <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">search_term</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">SyntheticDataset</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">SyntheticDatasetListItem</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        List synthetic datasets.</span>
 
@@ -5102,7 +5102,7 @@ Supported from release v212 onwards.</p>
         <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">status</span>
         <span class="k">with</span> <span class="n">Paginator</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
-            <span class="n">SyntheticDataset</span><span class="p">,</span>
+            <span class="n">SyntheticDatasetListItem</span><span class="p">,</span>
             <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
             <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
             <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
@@ -5276,7 +5276,7 @@ Supported from release v212 onwards.</p>
     <span class="n">limit</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="n">status</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><a class="autorefs autorefs-internal" title="mostlyai.synthetic_datasets._MostlySyntheticDatasetsClient.list" href="#mostlyai.synthetic_datasets._MostlySyntheticDatasetsClient.list">list</a></span><span class="p">[</span><span class="n">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">search_term</span><span class="p">:</span> <span class="n"><span title="typing.Optional">Optional</span></span><span class="p">[</span><span class="n">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="mostlyai.model.SyntheticDataset" href="../model/#mostlyai.model.SyntheticDataset">SyntheticDataset</a></span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><span title="mostlyai.model.SyntheticDatasetListItem">SyntheticDatasetListItem</span></span><span class="p">]</span>
 </code></pre></div>
 
   <div class="doc doc-contents ">
@@ -5369,7 +5369,7 @@ Supported from release v212 onwards.</p>
     <tbody>
         <tr class="doc-section-item">
           <td>
-                <code><span title="typing.Iterator">Iterator</span>[<a class="autorefs autorefs-internal" title="mostlyai.model.SyntheticDataset" href="../model/#mostlyai.model.SyntheticDataset">SyntheticDataset</a>]</code>
+                <code><span title="typing.Iterator">Iterator</span>[<span title="mostlyai.model.SyntheticDatasetListItem">SyntheticDatasetListItem</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -5382,12 +5382,7 @@ Supported from release v212 onwards.</p>
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
@@ -5410,13 +5405,18 @@ Supported from release v212 onwards.</p>
 <span class="normal">43</span>
 <span class="normal">44</span>
 <span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">list</span><span class="p">(</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">list</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
     <span class="n">status</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">search_term</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">SyntheticDataset</span><span class="p">]:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">SyntheticDatasetListItem</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    List synthetic datasets.</span>
 
@@ -5431,7 +5431,7 @@ Supported from release v212 onwards.</p>
     <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="n">status</span>
     <span class="k">with</span> <span class="n">Paginator</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">SyntheticDataset</span><span class="p">,</span>
+        <span class="n">SyntheticDatasetListItem</span><span class="p">,</span>
         <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
         <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
         <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
@@ -5518,17 +5518,17 @@ Supported from release v212 onwards.</p>
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">synthetic_dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">synthetic_dataset_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve synthetic dataset</span>
 
@@ -5619,12 +5619,7 @@ Supported from release v212 onwards.</p>
 
           <details class="quote">
             <summary>Source code in <code>mostlyai/synthetic_datasets.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
 <span class="normal">66</span>
 <span class="normal">67</span>
 <span class="normal">68</span>
@@ -5634,7 +5629,12 @@ Supported from release v212 onwards.</p>
 <span class="normal">72</span>
 <span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SyntheticDataset</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create synthetic dataset</span>
 
