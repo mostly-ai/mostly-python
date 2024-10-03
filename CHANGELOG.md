@@ -1,3 +1,9 @@
+## 0.4.3 (2024-10-03)
+
+### Feat
+
+- **api**: introduce similarity metrics
+
 ## 0.4.2 (2024-09-20)
 
 ### Fix
