@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/</loc>
-         <lastmod>2024-09-20</lastmod>
+         <lastmod>2024-10-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/api_reference/api/</loc>
-         <lastmod>2024-09-20</lastmod>
+         <lastmod>2024-10-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/api_reference/exceptions/</loc>
-         <lastmod>2024-09-20</lastmod>
+         <lastmod>2024-10-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/api_reference/model/</loc>
-         <lastmod>2024-09-20</lastmod>
+         <lastmod>2024-10-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/home/changelog/</loc>
-         <lastmod>2024-09-20</lastmod>
+         <lastmod>2024-10-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/home/license/</loc>
-         <lastmod>2024-09-20</lastmod>
+         <lastmod>2024-10-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/home/readme/</loc>
-         <lastmod>2024-09-20</lastmod>
+         <lastmod>2024-10-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
