@@ -143,6 +143,15 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         response = self.request(verb=DELETE, path=[generator_id])
         return response
 
+    def _clone(self, generator_id: str, training_status: str) -> Generator:
+        response = self.request(
+            verb=POST,
+            path=[generator_id, "clone"],
+            json={"trainingStatus": training_status},
+            response_type=Generator,
+        )
+        return response
+
     def _config(self, generator_id: str) -> Generator:
         response = self.request(verb=GET, path=[generator_id, "config"])
         return response
