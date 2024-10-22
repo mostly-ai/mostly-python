@@ -11,6 +11,11 @@ packages = [
 ]
 exclude = ["tools/", "tools/**/*"]
 
+[tool.poetry.urls]
+"Homepage" = "https://app.mostly.ai/"
+"Documentation" = "https://mostly-ai.github.io/mostly-python/"
+"Source" = "https://github.com/mostly-ai/mostly-python"
+
 [tool.poetry.dependencies]
 python = "^3.9"
 pydantic = "^2.4.2"
