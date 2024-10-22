@@ -1797,9 +1797,14 @@ class Generator(CustomBaseModel):
 
     def clone(self, training_status: Literal["NEW", "CONTINUE"] = "NEW") -> "Generator":
         """
-        Clone generator
+        Create a new generator, re-using existing data and model configurations. By setting trainingStatus
+        to CONTINUE, the model weights are copied as well, and training will continue from there. Note, that
+        in that case, only the training parameters (maxSampleSize, maxEpochs, batchSize, compute, etc.) of
+        the model configuration can still be modified. Other configurations, like columns, model, and
+        valueProtection cannot be changed anymore, as these would break compatibility with the existing model
+        weights.
 
-        :param training_status: The training status of the cloned generator
+        :param training_status: The training status of the new generator.
         """
         return self.client._clone(generator_id=self.id, training_status=training_status)
 
