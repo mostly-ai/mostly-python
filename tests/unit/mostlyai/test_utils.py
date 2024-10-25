@@ -25,6 +25,8 @@ from mostlyai.utils import (
     _job_wait,
     _read_table_from_path,
     _harmonize_sd_config,
+    _snake_to_camel,
+    map_snake_to_camel_case,
 )
 
 UTILS_MODULE = "mostlyai.utils"
@@ -191,3 +193,53 @@ def test__harmonize_sd_config(simple_sd_config):
             }
         ],
     }
+
+
+@pytest.mark.parametrize(
+    "snake_str, expected",
+    [
+        ("snake_case", "snakeCase"),
+        ("this_is_a_test", "thisIsATest"),
+        ("alreadyCamelCase", "alreadyCamelCase"),
+    ],
+)
+def test__snake_to_camel_param(snake_str, expected):
+    assert _snake_to_camel(snake_str) == expected
+
+
+def test_map_snake_to_camel_case():
+    input_data = {
+        "snake_case_key": "value",
+        "nested_dict": {
+            "another_snake_case": 123,
+            "deep_nested_dict": {
+                "yet_another_key": "deepValue",
+                "someCamelCaseKey": "someOtherValue",
+                "normalNumber": 42,
+            },
+        },
+        "list_of_dicts": [{"list_snake_case": "item1"}, {"another_list_key": "item2"}],
+        "mixed_list": ["simpleString", {"nested_snake": "nestedValue"}, 3.14],
+        "alreadyCamelCase": "unchangedValue",
+        "no_underscore_key": "noChange",
+        "empty_string_key": "",
+    }
+
+    expected_output = {
+        "snakeCaseKey": "value",
+        "nestedDict": {
+            "anotherSnakeCase": 123,
+            "deepNestedDict": {
+                "yetAnotherKey": "deepValue",
+                "someCamelCaseKey": "someOtherValue",
+                "normalNumber": 42,
+            },
+        },
+        "listOfDicts": [{"listSnakeCase": "item1"}, {"anotherListKey": "item2"}],
+        "mixedList": ["simpleString", {"nestedSnake": "nestedValue"}, 3.14],
+        "alreadyCamelCase": "unchangedValue",
+        "noUnderscoreKey": "noChange",
+        "emptyStringKey": "",
+    }
+
+    assert map_snake_to_camel_case(input_data) == expected_output

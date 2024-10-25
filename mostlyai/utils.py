@@ -275,4 +275,30 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
     return name, df
 
 
+def _snake_to_camel(snake_str: str) -> str:
+    components = snake_str.split("_")
+    # capitalize the first letter of each component except the first one
+    return components[0] + "".join(x.title() for x in components[1:])
+
+
+def map_snake_to_camel_case(input_dict: dict) -> dict:
+    if not isinstance(input_dict, dict):
+        return input_dict
+
+    new_dict = {}
+    for key, value in input_dict.items():
+        # recursively convert nested dictionaries or lists
+        new_key = _snake_to_camel(key)
+        if isinstance(value, dict):
+            new_dict[new_key] = map_snake_to_camel_case(value)
+        elif isinstance(value, list):
+            new_dict[new_key] = [
+                map_snake_to_camel_case(item) if isinstance(item, dict) else item
+                for item in value
+            ]
+        else:
+            new_dict[new_key] = value
+    return new_dict
+
+
 ShareableResource = Union[Connector, Generator, SyntheticDataset]
