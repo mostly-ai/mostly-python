@@ -23,6 +23,7 @@ from mostlyai.model import (
     StepCode,
     SyntheticDataset,
 )
+from mostlyai.naming_conventions import map_camel_to_snake_case
 
 warnings.simplefilter("always", DeprecationWarning)
 
@@ -173,13 +174,15 @@ def _harmonize_sd_config(
     size = size if size is not None else {}
     seed = seed if seed is not None else {}
 
+    config = map_camel_to_snake_case(config)
+
     if isinstance(generator, Generator):
         generator_id = str(generator.id)
     elif generator is not None:
         generator_id = str(generator)
-    elif "generatorId" not in config:
+    elif "generator_id" not in config:
         raise ValueError(
-            "Either a generator or a configuration with a generatorId must be provided."
+            "Either a generator or a configuration with a generator_id must be provided."
         )
 
     if (
@@ -193,8 +196,8 @@ def _harmonize_sd_config(
     else:
         subject_tables = []
 
-    # insert generatorId into config
-    config["generatorId"] = generator_id
+    # insert generator_id into config
+    config["generator_id"] = generator_id
 
     # normalize size
     if not isinstance(size, dict):
@@ -213,18 +216,18 @@ def _harmonize_sd_config(
         config["tables"] = []
         for table in generator.tables:
             configuration = {
-                "sampleSize": None,
-                "sampleSeedData": None,
-                "sampleSeedDict": None,
+                "sample_size": None,
+                "sample_seed_data": None,
+                "sample_seed_dict": None,
             }
             if table.name in subject_tables:
-                configuration["sampleSize"] = size.get(table.name)
-                configuration["sampleSeedData"] = (
+                configuration["sample_size"] = size.get(table.name)
+                configuration["sample_seed_data"] = (
                     seed.get(table.name)
                     if not isinstance(seed.get(table.name), list)
                     else None
                 )
-                configuration["sampleSeedDict"] = (
+                configuration["sample_seed_dict"] = (
                     seed.get(table.name)
                     if isinstance(seed.get(table.name), list)
                     else None
@@ -238,25 +241,27 @@ def _harmonize_sd_config(
     tables = config["tables"] if "tables" in config else []
     for table in tables:
         if (
-            "sampleSeedData" in table["configuration"]
-            and table["configuration"]["sampleSeedData"] is not None
+            "sample_seed_data" in table["configuration"]
+            and table["configuration"]["sample_seed_data"] is not None
         ):
-            if isinstance(table["configuration"]["sampleSeedData"], pd.DataFrame):
-                table["configuration"]["sampleSeedData"] = _convert_to_base64(
-                    table["configuration"]["sampleSeedData"]
+            if isinstance(table["configuration"]["sample_seed_data"], pd.DataFrame):
+                table["configuration"]["sample_seed_data"] = _convert_to_base64(
+                    table["configuration"]["sample_seed_data"]
                 )
-            elif isinstance(table["configuration"]["sampleSeedData"], (Path, str)):
-                _, df = _read_table_from_path(table["configuration"]["sampleSeedData"])
-                table["configuration"]["sampleSeedData"] = _convert_to_base64(df)
+            elif isinstance(table["configuration"]["sample_seed_data"], (Path, str)):
+                _, df = _read_table_from_path(
+                    table["configuration"]["sample_seed_data"]
+                )
+                table["configuration"]["sample_seed_data"] = _convert_to_base64(df)
                 del df
             else:
-                raise ValueError("sampleSeedData must be a DataFrame or a file path")
+                raise ValueError("sample_seed_data must be a DataFrame or a file path")
         if (
-            "sampleSeedDict" in table["configuration"]
-            and table["configuration"]["sampleSeedDict"] is not None
+            "sample_seed_dict" in table["configuration"]
+            and table["configuration"]["sample_seed_dict"] is not None
         ):
-            table["configuration"]["sampleSeedDict"] = _convert_to_base64(
-                table["configuration"]["sampleSeedDict"], format="jsonl"
+            table["configuration"]["sample_seed_dict"] = _convert_to_base64(
+                table["configuration"]["sample_seed_dict"], format="jsonl"
             )
 
     return config

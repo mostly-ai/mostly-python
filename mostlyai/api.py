@@ -27,7 +27,6 @@ from mostlyai.utils import (
     _harmonize_sd_config,
     Seed,
 )
-from mostlyai.naming_conventions import map_snake_to_camel_case
 
 
 class MostlyAI(_MostlyBaseClient):
@@ -188,7 +187,6 @@ class MostlyAI(_MostlyBaseClient):
 
         :return: The created connector.
         """
-        config = map_snake_to_camel_case(config)
         c = self.connectors.create(config)
         rich.print(
             f"Created connector [link={self.base_url}/d/connectors/{c.id} blue underline]{c.id}[/]"
@@ -215,7 +213,6 @@ class MostlyAI(_MostlyBaseClient):
         :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
         :return: The created generator.
         """
-        config = map_snake_to_camel_case(config)
         if data is not None and config is not None:
             raise ValueError("Either data or config must be provided, but not both")
         if isinstance(data, (str, Path)):
@@ -272,7 +269,6 @@ class MostlyAI(_MostlyBaseClient):
         :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
         :return: The created synthetic dataset.
         """
-        config = map_snake_to_camel_case(config)
         config = _harmonize_sd_config(
             generator,
             get_generator=self.generators.get,
@@ -318,7 +314,6 @@ class MostlyAI(_MostlyBaseClient):
         :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).
         :return: The created synthetic probe.
         """
-        config = map_snake_to_camel_case(config)
         config = _harmonize_sd_config(
             generator,
             get_generator=self.generators.get,
