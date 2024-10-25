@@ -26,8 +26,8 @@ from mostlyai.utils import (
     _read_table_from_path,
     _harmonize_sd_config,
     Seed,
-    map_snake_to_camel_case,
 )
+from mostlyai.naming_conventions import map_snake_to_camel_case
 
 
 class MostlyAI(_MostlyBaseClient):
