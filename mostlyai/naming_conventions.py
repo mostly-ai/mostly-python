@@ -1,4 +1,5 @@
 import re
+from typing import Callable
 
 
 def snake_to_camel(snake_str: str) -> str:
@@ -10,7 +11,7 @@ def camel_to_snake(camel_str: str) -> str:
     return re.sub(r"(?<!^)(?=[A-Z])", "_", camel_str).lower()
 
 
-def convert_case(input_data: dict, conv_func) -> dict:
+def convert_case(input_data: dict, conv_func: Callable[[str], str]) -> dict:
     if not isinstance(input_data, dict):
         return input_data
 
