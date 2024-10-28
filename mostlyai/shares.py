@@ -31,12 +31,12 @@ class _MostlySharesClient(_MostlyBaseClient):
         user_email: str,
         permission_level: PermissionLevel,
     ):
-        config = {"userEmail": user_email, "permissionLevel": permission_level}
+        config = {"user_email": user_email, "permission_level": permission_level}
         resource_type = self.RESOURCE_TYPE.get(type(resource))
         self.request(verb=POST, path=[resource_type, resource.id], json=config)
 
     def _unshare(self, resource: ShareableResource, user_email: str):
-        config = {"userEmail": user_email}
+        config = {"user_email": user_email}
         resource_type = self.RESOURCE_TYPE.get(type(resource))
         self.request(verb=DELETE, path=[resource_type, resource.id], json=config)
 
