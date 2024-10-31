@@ -75,56 +75,56 @@ class MostlyAI(_MostlyBaseClient):
           - type: AZURE_STORAGE
             config:
               accountName: string
-              clientId: string (required for auth via service principal)
-              tenantId: string (required for auth via service principal)
+              client_id: string (required for auth via service principal)
+              tenant_id: string (required for auth via service principal)
             secrets:
-              accountKey: string (required for regular auth)
-              clientSecret: string (required for auth via service principal)
+              account_key: string (required for regular auth)
+              client_secret: string (required for auth via service principal)
 
           - type: GOOGLE_CLOUD_STORAGE
             config:
             secrets:
-              keyFile: string
+              key_file: string
 
           - type: S3_STORAGE
             config:
-              accessKey: string
-              endpointUrl: string (only needed for S3-compatible storage services other than AWS)
+              access_key: string
+              endpoint_url: string (only needed for S3-compatible storage services other than AWS)
             secrets:
-              secretKey: string
+              secret_key: string
           ```
         - Database:
           ```yaml
           - type: BIGQUERY
             config:
             secrets:
-              keyFile: string
+              key_file: string
 
           - type: DATABRICKS
             config:
               host: string
-              httpPath: string
+              http_path: string
               catalog: string
-              clientId: string (required for auth via service principal)
-              tenantId: string (required for auth via service principal)
+              client_id: string (required for auth via service principal)
+              tenant_id: string (required for auth via service principal)
             secrets:
-              accessToken: string (required for regular auth)
-              clientSecret: string (required for auth via service principal)
+              access_token: string (required for regular auth)
+              client_secret: string (required for auth via service principal)
 
           - type: HIVE
             config:
               host: string
               port: integer, default: 10000
               username: string (required for regular auth)
-              kerberosEnabled: boolean, default: false
-              kerberosPrincipal: string (required if kerberosEnabled)
-              kerberosKrb5Conf: string (required if kerberosEnabled)
-              sslEnabled: boolean, default: false
+              kerberos_enabled: boolean, default: false
+              kerberos_principal: string (required if kerberos_enabled)
+              kerberos_krb_5_conf: string (required if kerberos_enabled)
+              ssl_enabled: boolean, default: false
             secrets:
               password: string (required for regular auth)
-              kerberosKeytab: base64-encoded string (required if kerberosEnabled)
+              kerberos_keytab: base64-encoded string (required if kerberos_enabled)
             ssl:
-              caCertificate: base64-encoded string
+              ca_certificate: base64-encoded string
 
           - type: MARIADB
             config:
@@ -156,7 +156,7 @@ class MostlyAI(_MostlyBaseClient):
               host: string
               port: integer, default: 1521
               username: string
-              connectionType: enum {SID, SERVICE_NAME}, default: SID
+              connection_type: enum {SID, SERVICE_NAME}, default: SID
               database: string, default: ORCL
             secrets:
               password: string
@@ -167,13 +167,13 @@ class MostlyAI(_MostlyBaseClient):
               port: integer, default: 5432
               username: string
               database: string
-              sslEnabled: boolean, default: false
+              ssl_enabled: boolean, default: false
             secrets:
               password: string
             ssl:
-              rootCertificate: base64-encoded string
-              sslCertificate: base64-encoded string
-              sslCertificateKey: base64-encoded string
+              root_certificate: base64-encoded string
+              ssl_certificate: base64-encoded string
+              ssl_certificate_key: base64-encoded string
 
           - type: SNOWFLAKE
             config:
