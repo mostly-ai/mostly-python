@@ -166,7 +166,7 @@ def test__harmonize_sd_config(simple_sd_config):
         generator="some_id", get_generator=mock_get_generator, config=simple_sd_config
     )
     assert config == {
-        "generatorId": "some_id",
+        "generator_id": "some_id",
         "tables": [{"configuration": {}, "name": "subject"}],
     }
     mock_get_generator.assert_not_called()
@@ -179,14 +179,14 @@ def test__harmonize_sd_config(simple_sd_config):
     )
     mock_get_generator.assert_called_once_with("other_id")
     assert config == {
-        "generatorId": "other_id",
+        "generator_id": "other_id",
         "tables": [
             {
                 "name": "table",
                 "configuration": {
-                    "sampleSize": 1234,
-                    "sampleSeedData": ANY,
-                    "sampleSeedDict": None,
+                    "sample_size": 1234,
+                    "sample_seed_data": ANY,
+                    "sample_seed_dict": None,
                 },
             }
         ],

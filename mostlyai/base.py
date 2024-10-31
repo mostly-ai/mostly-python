@@ -20,6 +20,11 @@ from pydantic import BaseModel, ConfigDict, Field
 from rich.console import Console
 
 from mostlyai.exceptions import APIError, APIStatusError
+from mostlyai.naming_conventions import (
+    snake_to_camel,
+    map_snake_to_camel_case,
+    map_camel_to_snake_case,
+)
 
 GET = "GET"
 POST = "POST"
@@ -73,6 +78,8 @@ class _MostlyBaseClient:
         response_type: type = dict,
         raw_response: bool = False,
         is_api_call: bool = True,
+        do_json_camel_case: bool = True,
+        do_response_dict_snake_case: bool = True,
         do_include_client: bool = True,
         extra_key_values: Optional[dict] = None,
         **kwargs,
@@ -88,6 +95,8 @@ class _MostlyBaseClient:
         :param response_type: a specific type to return (e.g. Pydantic class)
         :param raw_response: whether to just return a raw response (e.g. content)
         :param is_api_call: True by default; if False, API_SECTION and SECTION won't be prefixed
+        :param do_json_camel_case: ensure a provided json follows camelCase conventions
+        :param do_response_dict_snake_case: ensure the returned dict follows snake_case conventions
         :param do_include_client: True by default; if True, client property will be included in the returned instance
         :param extra_key_values: Any extra information storage to include in the returned object
         :param kwargs: httpx's request function's kwargs
@@ -104,6 +113,9 @@ class _MostlyBaseClient:
             warnings.warn(
                 f"The overall {request_size=} exceeds {MAX_REQUEST_SIZE}.", UserWarning
             )
+
+        if "json" in kwargs and do_json_camel_case:
+            kwargs["json"] = map_snake_to_camel_case(kwargs["json"])
 
         try:
             with httpx.Client(timeout=self.timeout, verify=self.ssl_verify) as client:
@@ -135,6 +147,8 @@ class _MostlyBaseClient:
                     response_json["client"] = self
                 if isinstance(extra_key_values, dict):
                     response_json["extra_key_values"] = extra_key_values
+            elif response_type == dict and do_response_dict_snake_case:
+                response_json = map_camel_to_snake_case(response_json)
             return (
                 response_type(**response_json)
                 if isinstance(response_json, dict)
@@ -157,7 +171,7 @@ class Paginator(Generic[T]):
         self.object_class = object_class
         self.offset = kwargs.pop("offset", 0)
         self.limit = kwargs.pop("limit", 50)
-        self.params = {_snake_to_camel(k): v for k, v in kwargs.items()}
+        self.params = {snake_to_camel(k): v for k, v in kwargs.items()}
         self.current_items = []
         self.current_index = 0
         self.is_last_page = False
@@ -231,11 +245,6 @@ class CustomBaseModel(BaseModel):
             reloaded = self.client.get(self.id)
             for key, value in reloaded.model_dump().items():
                 setattr(self, key, value)
-
-
-def _snake_to_camel(snake_str: str) -> str:
-    components = snake_str.split("_")
-    return components[0] + "".join(x.title() for x in components[1:])
 
 
 def _get_total_size(obj, seen=None):
