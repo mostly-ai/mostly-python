@@ -75,6 +75,10 @@ g.training.wait()
 # import / export
 g.export_to_file(file_path)
 mostly.generators.import_from_file(file_path)
+
+# clone
+cloned_g = g.clone(training_status="NEW")       # clone the generator for new training
+cloned_g = g.clone(training_status="CONTINUE")  # clone the generator and reuse its weights for continued training
 ```
 
 ### Synthetic Datasets

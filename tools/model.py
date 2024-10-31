@@ -131,6 +131,14 @@ class Generator:
         file_path.write_bytes(bytes)
         return file_path
 
+    def clone(self, training_status: Literal["NEW", "CONTINUE"] = "NEW") -> "Generator":
+        """
+        Clone generator
+
+        :param training_status: The training status of the cloned generator
+        """
+        return self.client._clone(generator_id=self.id, training_status=training_status)
+
     class Training:
         def __init__(self, _generator: "Generator"):
             self.generator = _generator
