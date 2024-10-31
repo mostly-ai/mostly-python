@@ -1,3 +1,10 @@
+## 0.4.4 (2024-10-31)
+
+### Feat
+
+- allow snake_case (alongside camelCase) for config dict (#73)
+- **api**: clone generators (#71)
+
 ## 0.4.3 (2024-10-03)
 
 ### Feat
