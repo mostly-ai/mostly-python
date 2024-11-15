@@ -1,3 +1,9 @@
+## 0.4.5 (2024-11-15)
+
+### Feat
+
+- **api**: support differential privacy (#75)
+
 ## 0.4.4 (2024-10-31)
 
 ### Feat
