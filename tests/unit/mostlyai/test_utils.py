@@ -47,15 +47,17 @@ def test_convert_to_base64():
 
 def test_read_table_from_path():
     # Create a temporary CSV file for testing
-    with tempfile.NamedTemporaryFile(suffix=".csv", mode="w", delete=False) as tmp:
-        df = pd.DataFrame({"col1": [1, 2], "col2": [3, 4]})
-        df.to_csv(tmp.name, index=False)
-        tmp_path = tmp.name
+    delimiters = ",;|\t' '"
+    for d in delimiters:
+        with tempfile.NamedTemporaryFile(suffix=".csv", mode="w", delete=False) as tmp:
+            df = pd.DataFrame({"col1": [1, 2], "col2": [3, 4]})
+            df.to_csv(tmp.name, index=False, sep = d)
+            tmp_path = tmp.name
 
-    name, read_df = _read_table_from_path(tmp_path)
+        name, read_df = _read_table_from_path(tmp_path)
 
-    assert name == Path(tmp_path).stem
-    pd.testing.assert_frame_equal(read_df, df)
+        assert name == Path(tmp_path).stem
+        pd.testing.assert_frame_equal(read_df, df)
 
 
 @pytest.mark.skip("Fails on remote during CI")

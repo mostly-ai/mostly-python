@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Callable, Union, Optional, Any, Literal
 
 import pandas as pd
+import csv
 import rich
 from rich.progress import (
     BarColumn,
@@ -273,7 +274,17 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
     if fn.lower().endswith((".pqt", ".parquet")):
         df = pd.read_parquet(fn)
     else:
-        df = pd.read_csv(fn, low_memory=False)
+        delimiter = ","
+        if fn.lower().endswith((".csv", ".tsv")):
+            try:
+                with open(fn) as f:
+                    header = f.readline()
+                sniffer = csv.Sniffer()
+                delimiter = sniffer.sniff(header, ",;|\t' '").delimiter
+            except csv.Error:
+                # happens for example for single column CSV files
+                pass
+        df = pd.read_csv(fn, low_memory=False, delimiter=delimiter)
     if fn.endswith((".gz", ".gzip", ".bz2")):
         fn = fn.rsplit(".", 1)[0]
     name = Path(fn).stem
