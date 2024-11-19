@@ -280,7 +280,7 @@ def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
                 with open(fn) as f:
                     header = f.readline()
                 sniffer = csv.Sniffer()
-                delimiter = sniffer.sniff(header, ",;|\t' '").delimiter
+                delimiter = sniffer.sniff(header, ",;|\t' :").delimiter
             except csv.Error:
                 # happens for example for single column CSV files
                 pass
