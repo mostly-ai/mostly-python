@@ -51,7 +51,7 @@ def test_read_table_from_path():
     for d in delimiters:
         with tempfile.NamedTemporaryFile(suffix=".csv", mode="w", delete=False) as tmp:
             df = pd.DataFrame({"col1": [1, 2], "col2": [3, 4]})
-            df.to_csv(tmp.name, index=False, sep = d)
+            df.to_csv(tmp.name, index=False, sep=d)
             tmp_path = tmp.name
 
         name, read_df = _read_table_from_path(tmp_path)
