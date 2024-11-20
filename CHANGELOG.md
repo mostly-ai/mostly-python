@@ -1,3 +1,9 @@
+## 0.4.7 (2024-11-20)
+
+### Feat
+
+- autodetect csv/tsv separator  (#77)
+
 ## 0.4.6 (2024-11-15)
 
 ### Feat
