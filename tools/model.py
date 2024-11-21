@@ -4,7 +4,7 @@ from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 import pandas as pd
 from pydantic import Field
 
-from mostlyai.model import JobProgress, SyntheticDatasetFormat
+from mostlyai.model import JobProgress, SyntheticDatasetFormat, PermissionLevel
 
 
 class Connector:

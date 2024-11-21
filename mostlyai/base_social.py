@@ -14,7 +14,7 @@ class _MostlyBaseSocialClient(_MostlyBaseClient):
         self.request(verb=POST, path=[resource_id, "share"], json=config)
         permission = PermissionLevel(permission_level).value
         rich.print(
-            f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource_id}[/]"
+            f"Granted [bold]{user_email}[/] [grey]{permission}[/] access to resource [bold cyan]{resource_id}[/]"
         )
 
     def _unshare(self, resource_id: str, user_email: str):

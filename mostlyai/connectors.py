@@ -1,4 +1,3 @@
-from idlelib.rpc import response_queue
 from typing import Any, Iterator, Optional, List, Dict
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator
@@ -101,7 +100,7 @@ class _MostlyConnectorsClient(_MostlyBaseSocialClient):
         return response
 
     def _like(self, resource_id: str):
-        rich.print(f"Like for Connectors is not supported")
+        rich.print("Like for Connectors is not supported")
 
     def _unlike(self, resource_id: str):
-        rich.print(f"Like for Connectors is not supported")
+        rich.print("Like for Connectors is not supported")
