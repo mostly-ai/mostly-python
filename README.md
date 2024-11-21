@@ -120,8 +120,29 @@ mostly.share(g | sd | c, email)
 mostly.unshare(g | sd | c, email)
 
 g.shares()
+g.share(email)
+g.share(email, "VIEW" | "view" | ""EDIT" | "edit" | "ADMIN" | "admin")
+g.share(email, PermissionLevel.view | PermissionLevel.edit | PermissionLevel.admin)
+g.unshare(email)
+g.share_public()
+g.unshare_public()
+g.like()
+g.unlike()
+
 sd.shares()
+sd.share(email)
+sd.unshare(email)
+sd.share_public()
+sd.unshare_public()
+sd.like()
+sd.unlike()
+
 c.shares()
+c.share(email)
+c.share(email, "EDIT")
+c.unshare(email)
+c.share_public()
+c.unshare_public()
 ```
 
 ### Job Configuration Info

@@ -77,7 +77,48 @@ class Connector:
         return self.client._config(connector_id=self.id)
 
     def shares(self):
-        return self.client._shares(resource=self)
+        """
+        Retrieve list of shares
+
+        :return: list of ResourceShares
+        """
+        return self.client._list_shares(resource_id=self.id)
+
+    def share(self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view):
+        """
+        Share the connector with specified user and access rights (default PermissionLevel.view)
+        """
+        self.client._share(resource_id=self.id, user_email=user_email, permission_level=permission_level)
+
+    def unshare(self, user_email: str):
+        """
+        Stop sharing the connector with the specified user
+        """
+        self.client._unshare(resource_id=self.id, user_email=user_email)
+
+    def share_public(self):
+        """
+        Share the connector with everyone
+        """
+        self.client._share_public(resource_id=self.id)
+
+    def unshare_public(self):
+        """
+        Stop sharing the connector with everyone
+        """
+        self.client._unshare_public(resource_id=self.id)
+
+    def like(self):
+        """
+        Like the connector
+        """
+        self.client._like(resource_id=self.id)
+
+    def unlike(self):
+        """
+        Remove the Like of the connector
+        """
+        self.client._unlike(resource_id=self.id)
 
 
 class Generator:
@@ -112,9 +153,6 @@ class Generator:
         """
         return self.client._config(generator_id=self.id)
 
-    def shares(self):
-        return self.client._shares(resource=self)
-
     def export_to_file(
         self,
         file_path: Union[str, Path, None] = None,
@@ -138,6 +176,51 @@ class Generator:
         :param training_status: The training status of the cloned generator
         """
         return self.client._clone(generator_id=self.id, training_status=training_status)
+
+    def shares(self):
+        """
+        Retrieve list of shares
+
+        :return: list of ResourceShares
+        """
+        return self.client._list_shares(resource_id=self.id)
+
+    def share(self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view):
+        """
+        Share the generator with specified user and access rights (default PermissionLevel.view)
+        """
+        self.client._share(resource_id=self.id, user_email=user_email, permission_level=permission_level)
+
+    def unshare(self, user_email: str):
+        """
+        Stop sharing the generator with the specified user
+        """
+        self.client._unshare(resource_id=self.id, user_email=user_email)
+
+    def share_public(self):
+        """
+        Share the generator with everyone
+        """
+        self.client._share_public(resource_id=self.id)
+
+    def unshare_public(self):
+        """
+        Stop sharing the generator with everyone
+        """
+        self.client._unshare_public(resource_id=self.id)
+
+    def like(self):
+        """
+        Like the generator
+        """
+        self.client._like(resource_id=self.id)
+
+    def unlike(self):
+        """
+        Remove the Like of the generator
+        """
+        self.client._unlike(resource_id=self.id)
+
 
     class Training:
         def __init__(self, _generator: "Generator"):
@@ -257,7 +340,49 @@ class SyntheticDataset:
             return dfs
 
     def shares(self):
-        return self.client._shares(resource=self)
+        """
+        Retrieve list of shares
+
+        :return: list of ResourceShares
+        """
+        return self.client._list_shares(resource_id=self.id)
+
+    def share(self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view):
+        """
+        Share the Synthetic Data with specified user and access rights (default PermissionLevel.view)
+        """
+        self.client._share(resource_id=self.id, user_email=user_email, permission_level=permission_level)
+
+    def unshare(self, user_email: str):
+        """
+        Stop sharing the Synthetic Data with the specified user
+        """
+        self.client._unshare(resource_id=self.id, user_email=user_email)
+
+    def share_public(self):
+        """
+        Share the Synthetic Data with everyone
+        """
+        self.client._share_public(resource_id=self.id)
+
+    def unshare_public(self):
+        """
+        Stop sharing the Synthetic Data with everyone
+        """
+        self.client._unshare_public(resource_id=self.id)
+
+    def like(self):
+        """
+        Like the Synthetic Data
+        """
+        self.client._like(resource_id=self.id)
+
+    def unlike(self):
+        """
+        Remove the Like of the Synthetic Data
+        """
+        self.client._unlike(resource_id=self.id)
+
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):

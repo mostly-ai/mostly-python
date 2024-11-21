@@ -16,7 +16,6 @@ from mostlyai.model import (
     SyntheticDataset,
     ModelType,
 )
-from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
     _MostlySyntheticProbesClient,
@@ -59,7 +58,6 @@ class MostlyAI(_MostlyBaseClient):
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
-        self.shares = _MostlySharesClient(**client_kwargs)
 
     def connect(self, config: dict[str, Any]) -> Connector:
         """
@@ -350,10 +348,7 @@ class MostlyAI(_MostlyBaseClient):
             raise ValueError(
                 "ADMIN permission level is not supported. Transfer ownership via the UI."
             )
-        self.shares._share(resource, user_email, permission_level)
-        rich.print(
-            f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource.id}[/]"
-        )
+        resource.share(user_email=user_email, permission_level=permission_level)
 
     def unshare(self, resource: ShareableResource, user_email: str):
         """
@@ -364,10 +359,7 @@ class MostlyAI(_MostlyBaseClient):
 
         :return: None. The function outputs a confirmation message with the details of the revocation action.
         """
-        self.shares._unshare(resource, user_email)
-        rich.print(
-            f"Revoked access of resource [bold cyan]{resource.id}[/] for [bold]{user_email}[/]"
-        )
+        resource.unshare(user_email)
 
     def me(self) -> CurrentUser:
         """

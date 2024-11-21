@@ -1,11 +1,13 @@
+from idlelib.rpc import response_queue
 from typing import Any, Iterator, Optional, List, Dict
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.base import DELETE, GET, PATCH, POST, Paginator
+from mostlyai.base_social import _MostlyBaseSocialClient
 from mostlyai.model import Connector, ConnectorListItem
-from mostlyai.shares import _MostlySharesMixin
+import rich
 
 
-class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
+class _MostlyConnectorsClient(_MostlyBaseSocialClient):
     SECTION = ["connectors"]
 
     # PUBLIC METHODS #
@@ -97,3 +99,9 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
             verb=GET, path=[connector_id, "schema"], params={"location": location}
         )
         return response
+
+    def _like(self, resource_id: str):
+        rich.print(f"Like for Connectors is not supported")
+
+    def _unlike(self, resource_id: str):
+        rich.print(f"Like for Connectors is not supported")
