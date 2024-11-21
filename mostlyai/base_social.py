@@ -2,12 +2,17 @@ from mostlyai.base import _MostlyBaseClient, GET, POST, DELETE, PUT
 from mostlyai.model import ResourceShares, PermissionLevel
 import rich
 
+
 class _MostlyBaseSocialClient(_MostlyBaseClient):
-    def _list_shares(self, resource_id : str):
-        response = self.request(verb=GET, path=[resource_id, "share"], response_type=ResourceShares)
+    def _list_shares(self, resource_id: str):
+        response = self.request(
+            verb=GET, path=[resource_id, "share"], response_type=ResourceShares
+        )
         return response
 
-    def _share(self, resource_id: str, user_email: str, permission_level: PermissionLevel):
+    def _share(
+        self, resource_id: str, user_email: str, permission_level: PermissionLevel
+    ):
         if not isinstance(permission_level, PermissionLevel):
             permission_level = PermissionLevel(permission_level.upper())
         config = {"user_email": user_email, "permission_level": permission_level}

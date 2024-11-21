@@ -84,11 +84,17 @@ class Connector:
         """
         return self.client._list_shares(resource_id=self.id)
 
-    def share(self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view):
+    def share(
+        self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view
+    ):
         """
         Share the connector with specified user and access rights (default PermissionLevel.view)
         """
-        self.client._share(resource_id=self.id, user_email=user_email, permission_level=permission_level)
+        self.client._share(
+            resource_id=self.id,
+            user_email=user_email,
+            permission_level=permission_level,
+        )
 
     def unshare(self, user_email: str):
         """
@@ -185,11 +191,17 @@ class Generator:
         """
         return self.client._list_shares(resource_id=self.id)
 
-    def share(self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view):
+    def share(
+        self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view
+    ):
         """
         Share the generator with specified user and access rights (default PermissionLevel.view)
         """
-        self.client._share(resource_id=self.id, user_email=user_email, permission_level=permission_level)
+        self.client._share(
+            resource_id=self.id,
+            user_email=user_email,
+            permission_level=permission_level,
+        )
 
     def unshare(self, user_email: str):
         """
@@ -220,7 +232,6 @@ class Generator:
         Remove the Like of the generator
         """
         self.client._unlike(resource_id=self.id)
-
 
     class Training:
         def __init__(self, _generator: "Generator"):
@@ -347,11 +358,17 @@ class SyntheticDataset:
         """
         return self.client._list_shares(resource_id=self.id)
 
-    def share(self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view):
+    def share(
+        self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view
+    ):
         """
         Share the Synthetic Data with specified user and access rights (default PermissionLevel.view)
         """
-        self.client._share(resource_id=self.id, user_email=user_email, permission_level=permission_level)
+        self.client._share(
+            resource_id=self.id,
+            user_email=user_email,
+            permission_level=permission_level,
+        )
 
     def unshare(self, user_email: str):
         """
@@ -382,7 +399,6 @@ class SyntheticDataset:
         Remove the Like of the Synthetic Data
         """
         self.client._unlike(resource_id=self.id)
-
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):
