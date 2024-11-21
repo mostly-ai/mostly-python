@@ -1,5 +1,9 @@
 # MOSTLY AI - GenAI for Tabular Data
 
+[![](https://pepy.tech/badge/mostlyai-qa)](https://pypi.org/project/mostlyai/) ![](https://img.shields.io/github/license/mostly-ai/mostly-python) 
+![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostly-python) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai)
+
+
 A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 
 | Intent                                          | Primitive                        |

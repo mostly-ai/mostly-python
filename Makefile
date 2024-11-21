@@ -1,10 +1,6 @@
-# External Environment Variables
-GH_TOKEN ?= YourSecureToken
-
 # Internal Variables
-PUBLIC_OPENAPI_YAML_URL = https://raw.githubusercontent.com/mostly-ai/mostly-app-v2/dev/public-api/public-api.yaml?token=
+PUBLIC_API_FULL_URL = https://raw.githubusercontent.com/mostly-ai/mostly-openapi/refs/heads/main/public-api.yaml
 PUBLIC_API_OUTPUT_PATH = mostlyai/model.py
-PUBLIC_API_FULL_URL = $(PUBLIC_OPENAPI_YAML_URL)$(GH_TOKEN)
 
 # Targets
 .PHONY: help
