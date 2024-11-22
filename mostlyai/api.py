@@ -11,7 +11,6 @@ from mostlyai.model import (
     Connector,
     CurrentUser,
     Generator,
-    PermissionLevel,
     ProgressStatus,
     SyntheticDataset,
     ModelType,
@@ -21,7 +20,6 @@ from mostlyai.synthetic_datasets import (
     _MostlySyntheticProbesClient,
 )
 from mostlyai.utils import (
-    ShareableResource,
     _read_table_from_path,
     _harmonize_sd_config,
     Seed,

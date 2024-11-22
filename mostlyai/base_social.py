@@ -1,4 +1,4 @@
-from mostlyai.base import _MostlyBaseClient, GET, POST, DELETE, PUT
+from mostlyai.base import _MostlyBaseClient, GET, POST, DELETE
 from mostlyai.model import ResourceShares, PermissionLevel
 import rich
 
