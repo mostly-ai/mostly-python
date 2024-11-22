@@ -4,7 +4,7 @@ from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 import pandas as pd
 from pydantic import Field
 
-from mostlyai.model import JobProgress, SyntheticDatasetFormat, PermissionLevel
+from mostlyai.model import JobProgress, SyntheticDatasetFormat, PermissionLevel, ResourceShares
 
 
 class Connector:
@@ -76,11 +76,11 @@ class Connector:
         """
         return self.client._config(connector_id=self.id)
 
-    def shares(self):
+    def shares(self) -> ResourceShares:
         """
-        Retrieve list of shares
+        Retrieve ResourceShares
 
-        :return: list of ResourceShares
+        :return: ResourceShares
         """
         return self.client._list_shares(resource_id=self.id)
 
@@ -101,18 +101,6 @@ class Connector:
         Stop sharing the connector with the specified user
         """
         self.client._unshare(resource_id=self.id, user_email=user_email)
-
-    def share_public(self):
-        """
-        Share the connector with everyone
-        """
-        self.client._share_public(resource_id=self.id)
-
-    def unshare_public(self):
-        """
-        Stop sharing the connector with everyone
-        """
-        self.client._unshare_public(resource_id=self.id)
 
     def like(self):
         """
@@ -183,11 +171,11 @@ class Generator:
         """
         return self.client._clone(generator_id=self.id, training_status=training_status)
 
-    def shares(self):
+    def shares(self) -> ResourceShares:
         """
-        Retrieve list of shares
+        Retrieve ResourceShares
 
-        :return: list of ResourceShares
+        :return: ResourceShares
         """
         return self.client._list_shares(resource_id=self.id)
 
@@ -208,18 +196,6 @@ class Generator:
         Stop sharing the generator with the specified user
         """
         self.client._unshare(resource_id=self.id, user_email=user_email)
-
-    def share_public(self):
-        """
-        Share the generator with everyone
-        """
-        self.client._share_public(resource_id=self.id)
-
-    def unshare_public(self):
-        """
-        Stop sharing the generator with everyone
-        """
-        self.client._unshare_public(resource_id=self.id)
 
     def like(self):
         """
@@ -350,11 +326,11 @@ class SyntheticDataset:
         else:
             return dfs
 
-    def shares(self):
+    def shares(self) -> ResourceShares:
         """
-        Retrieve list of shares
+        Retrieve ResourceShares
 
-        :return: list of ResourceShares
+        :return: ResourceShares
         """
         return self.client._list_shares(resource_id=self.id)
 
@@ -362,7 +338,7 @@ class SyntheticDataset:
         self, user_email: str, permission_level: PermissionLevel = PermissionLevel.view
     ):
         """
-        Share the Synthetic Data with specified user and access rights (default PermissionLevel.view)
+        Share the synthetic dataset with specified user and access rights (default PermissionLevel.view)
         """
         self.client._share(
             resource_id=self.id,
@@ -372,31 +348,19 @@ class SyntheticDataset:
 
     def unshare(self, user_email: str):
         """
-        Stop sharing the Synthetic Data with the specified user
+        Stop sharing the synthetic dataset with the specified user
         """
         self.client._unshare(resource_id=self.id, user_email=user_email)
 
-    def share_public(self):
-        """
-        Share the Synthetic Data with everyone
-        """
-        self.client._share_public(resource_id=self.id)
-
-    def unshare_public(self):
-        """
-        Stop sharing the Synthetic Data with everyone
-        """
-        self.client._unshare_public(resource_id=self.id)
-
     def like(self):
         """
-        Like the Synthetic Data
+        Like the synthetic dataset
         """
         self.client._like(resource_id=self.id)
 
     def unlike(self):
         """
-        Remove the Like of the Synthetic Data
+        Remove the like of the synthetic dataset
         """
         self.client._unlike(resource_id=self.id)
 

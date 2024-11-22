@@ -327,40 +327,6 @@ class MostlyAI(_MostlyBaseClient):
 
     # SHARES
 
-    def share(
-        self,
-        resource: ShareableResource,
-        user_email: str,
-        permission_level: Union[str, PermissionLevel] = PermissionLevel.view,
-    ):
-        """
-        Share a specified resource with a user by granting a specific permission level.
-
-        :param resource: The resource to be shared. This must be an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
-        :param user_email: The email address of the user with whom the resource is to be shared.
-        :param permission_level: The level of permission to be granted. This can be a string or an instance of PermissionLevel. Default is PermissionLevel.view, which grants 'view' access.
-
-        :return: None. The function outputs a confirmation message with the details of the sharing action.
-        """
-        if isinstance(permission_level, PermissionLevel):
-            permission_level = permission_level.value
-        if permission_level == "ADMIN":
-            raise ValueError(
-                "ADMIN permission level is not supported. Transfer ownership via the UI."
-            )
-        resource.share(user_email=user_email, permission_level=permission_level)
-
-    def unshare(self, resource: ShareableResource, user_email: str):
-        """
-        Unshare a specified resource from a user.
-
-        :param resource: The resource from which access is being unshared. This must be an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
-        :param user_email: The email address of the user whose access to the resource is to be unshared.
-
-        :return: None. The function outputs a confirmation message with the details of the revocation action.
-        """
-        resource.unshare(user_email)
-
     def me(self) -> CurrentUser:
         """
         Retrieve current user info.

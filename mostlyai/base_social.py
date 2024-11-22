@@ -4,7 +4,7 @@ import rich
 
 
 class _MostlyBaseSocialClient(_MostlyBaseClient):
-    def _list_shares(self, resource_id: str):
+    def _list_shares(self, resource_id: str) -> ResourceShares:
         response = self.request(
             verb=GET, path=[resource_id, "share"], response_type=ResourceShares
         )
@@ -27,16 +27,6 @@ class _MostlyBaseSocialClient(_MostlyBaseClient):
         self.request(verb=DELETE, path=[resource_id, "share"], json=config)
         rich.print(
             f"Revoked access of resource [bold cyan]{resource_id}[/] for [bold]{user_email}[/]"
-        )
-
-    def _share_public(self, resource_id: str):
-        self.request(verb=PUT, path=[resource_id, "share", "public"])
-        rich.print(f"Resource [bold cyan]{resource_id}[/] is now [bold]public[/]")
-
-    def _unshare_public(self, resource_id: str):
-        self.request(verb=DELETE, path=[resource_id, "share", "public"])
-        rich.print(
-            f"Revoked [bold]public[/] access of resource [bold cyan]{resource_id}[/]"
         )
 
     def _like(self, resource_id: str):
