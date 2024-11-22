@@ -9,7 +9,7 @@ A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
 | Intent                                          | Primitive                        |
 |-------------------------------------------------|----------------------------------|
 | Train a Generative AI on tabular data           | `g = mostly.train(data)`         |
-| Empower your team with safe synthetic data      | `mostly.share(g, email)`         |
+| Empower your team with safe synthetic data      | `g.share(email)`                 |
 | Generate any number of synthetic data records   | `mostly.generate(g, size)`       |
 | Prompt the generator for the data that you need | `mostly.generate(g, seed)`       |
 | Live probe the generator on demand              | `mostly.probe(g, size \| seed)`  |
@@ -32,7 +32,7 @@ pip install -U mostlyai
 from mostlyai import MostlyAI
 mostly = MostlyAI(api_key='your_api_key')
 g = mostly.train(data)      # train a generator on your data
-mostly.share(g, email)      # share the generator with your team
+g.share(email)              # share the generator with your team
 sd = mostly.generate(g)     # use the generator to create a synthetic dataset
 syn = sd.data()             # consume the synthetic data as pandas DataFrame(s)
 mostly.probe(g, size=100)   # generate few samples on demand
