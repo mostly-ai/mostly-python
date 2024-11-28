@@ -1,10 +1,9 @@
 # MOSTLY AI - GenAI for Tabular Data
 
 [![](https://pepy.tech/badge/mostlyai-qa)](https://pypi.org/project/mostlyai/) ![](https://img.shields.io/github/license/mostly-ai/mostly-python) 
-![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostly-python) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai)
+![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostly-python) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai) [![Documentation](https://img.shields.io/badge/docs-latest-green)](https://mostly.ai/docs)
 
-
-A Python wrapper for the MOSTLY AI platform (https://app.mostly.ai/).
+A Python client for the [MOSTLY AI platform](https://app.mostly.ai/). Please refer to the [platform documentation](https://mostly.ai/docs) for detailed feature descriptions and Python code examples.
 
 | Intent                                          | Primitive                        |
 |-------------------------------------------------|----------------------------------|
