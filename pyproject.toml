@@ -13,7 +13,7 @@ exclude = ["tools/", "tools/**/*"]
 
 [tool.poetry.urls]
 "Homepage" = "https://app.mostly.ai/"
-"Documentation" = "https://mostly-ai.github.io/mostly-python/"
+"Documentation" = "https://mostly.ai/docs"
 "Source" = "https://github.com/mostly-ai/mostly-python"
 
 [tool.poetry.dependencies]
