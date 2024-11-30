@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mostlyai"
 version = "0.4.8"
-description = "The official Python client for the MOSTLY AI platform."
+description = "MOSTLY AI - Python Client"
 homepage = "https://app.mostly.ai/"
 authors = [
     { name = "MOSTLY AI", email = "dev@mostly.ai" },
