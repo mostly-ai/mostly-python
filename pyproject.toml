@@ -3,10 +3,10 @@ name = "mostlyai"
 version = "0.4.8"
 description = "MOSTLY AI - Python Client"
 homepage = "https://app.mostly.ai/"
+license = "Apache-2.0"
 authors = [
     { name = "MOSTLY AI", email = "dev@mostly.ai" },
 ]
-license = { text = "Apache License 2.0" }
 readme = "README.md"
 packages = [
     { include = "mostlyai" }
