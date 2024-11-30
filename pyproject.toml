@@ -1,15 +1,28 @@
 [tool.poetry]
 name = "mostlyai"
 version = "0.4.8"
-description = "The official Python client for the MOSTLY AI platform."
+description = "MOSTLY AI - Python Client"
 homepage = "https://app.mostly.ai/"
-authors = ["MOSTLY AI <office@mostly.ai>"]
-license = "Proprietary"
+license = "Apache-2.0"
+authors = ["MOSTLY AI <dev@mostly.ai>"]
 readme = "README.md"
 packages = [
     { include = "mostlyai" }
 ]
 exclude = ["tools/", "tools/**/*"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Telecommunications Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed",
+]
 
 [tool.poetry.urls]
 "Homepage" = "https://app.mostly.ai/"
