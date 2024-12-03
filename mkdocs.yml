@@ -1,14 +1,7 @@
-site_name: "mostly-python"
+site_name: "mostlyai"
 site_url: "https://mostly-ai.github.io/mostly-python/"
 repo_url: "https://github.com/mostly-ai/mostly-python"
 repo_name: "mostly-ai/mostly-python"
-site_dir: "site"
-watch: [mkdocs.yml, README.md, CHANGELOG.md]
-
-validation:
-  omitted_files: warn
-  absolute_links: warn
-  unrecognized_links: warn
 
 theme:
   name: material
