@@ -26,7 +26,7 @@ classifiers = [
 
 [tool.poetry.urls]
 "Homepage" = "https://app.mostly.ai/"
-"Documentation" = "https://mostly.ai/docs"
+"Documentation" = "https://mostly-ai.github.io/mostly-python/"
 "Source" = "https://github.com/mostly-ai/mostly-python"
 
 [tool.poetry.dependencies]
@@ -46,10 +46,15 @@ ruff = "0.4.4"
 respx = "^0.20.2"
 twine = "^5.0.0"
 commitizen = "^3.18.0"
-mkdocs = "^1.5.3"
-mkdocstrings = { version = "^0.24.1", extras = ["crystal", "python"] }
-mkdocs-material = "^9.5.13"
 poetry-bumpversion = "^0.3.2"
+# docs
+mkdocs = ">=1.5.3"
+mkdocstrings = { version = "^0.27.0", extras = ["crystal", "python"] }
+mkdocs-material = "^9.0.0"
+griffe = "^1.0.0"
+pymdown-extensions = "^10.0.0"
+griffe-fieldz = "^0.2.0"
+
 
 [tool.commitizen]
 name = "cz_conventional_commits"

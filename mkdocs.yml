@@ -13,25 +13,35 @@ validation:
 theme:
   name: material
   logo: logo.png
+  favicon: favicon.png
   palette:
-
-    # Palette toggle for light mode
-    - scheme: default
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-
-    # Palette toggle for dark mode
-    - scheme: slate
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+  - media: "(prefers-color-scheme)"
+    scheme: default
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/lightbulb
+      name: "Switch to light mode"
+  - media: "(prefers-color-scheme: light)"
+    scheme: default
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/lightbulb-outline
+      name: "Switch to dark mode"
+  - media: "(prefers-color-scheme: dark)"
+    scheme: slate
+    primary: indigo
+    accent: indigo
+    toggle:
+      icon: material/lightbulb-auto-outline
+      name: "Switch to system preference"
 
   features:
     - navigation.instant
     - navigation.instant.prefetch
-    - navigation.tabs
-    - navigation.tabs.sticky
+#    - navigation.tabs
+#    - navigation.tabs.sticky
     - search.suggest
     - search.highlight
     - search.share
@@ -49,46 +59,71 @@ theme:
 nav:
   - Home:
     - Index: index.md
-    - Readme: home/readme.md
-    - What's New: home/changelog.md
-    - Legal: home/license.md
+    - What's New: changelog.md
   - API Reference:
     - API: api_reference/api.md
     - Model: api_reference/model.md
     - Exceptions: api_reference/exceptions.md
 
 markdown_extensions:
-  - pymdownx.blocks.admonition
-  - pymdownx.blocks.details
-  - pymdownx.magiclink
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-  - pymdownx.snippets:
-      base_path: [!relative $config_dir]
-      check_paths: true
-  - toc:
-      permalink: "¤"
+
+#markdown_extensions:
+#  - pymdownx.blocks.admonition
+#  - pymdownx.blocks.details
+#  - pymdownx.magiclink
+#  - pymdownx.highlight
+#  - pymdownx.inlinehilite
+#  - pymdownx.snippets
+#  - pymdownx.superfences
+#  - pymdownx.snippets:
+#      base_path: [!relative $config_dir]
+#      check_paths: true
+#  - toc:
+#      permalink: "¤"
 
 plugins:
   - search
   - mkdocstrings:
       handlers:
         python:
-          paths: [mostlyai]
           options:
-            docstring_style: sphinx
-            show_bases: false
-            show_symbol_type_heading: true
-            show_docstring_examples: true
-            filters: ["!^_"]
-            members_order: source
-            separate_signature: true
-            show_signature_annotations: true
-            signature_crossrefs: true
-            show_symbol_type_toc: true
             show_root_toc_entry: false
-          rendering:
-            show_source: true
-            show_if_no_docstring: false
+            show_root_heading: true
+            show_docstring: true
+            show_source: false
+            show_signature: true
+            separate_signature: true
+            show_docstring_examples: true
+            docstring_section_style: table
+            extensions:
+            - griffe_fieldz
+            docstring_style: google
+#
+#plugins:
+#  - search
+#  - mkdocstrings:
+#      handlers:
+#        python:
+#          paths: [mostlyai]
+#          options:
+#            docstring_style: sphinx
+#            show_bases: false
+#            show_symbol_type_heading: true
+#            show_docstring_examples: true
+#            filters: ["!^_"]
+#            members_order: source
+#            separate_signature: true
+#            show_signature_annotations: true
+#            signature_crossrefs: true
+#            show_symbol_type_toc: true
+#            show_root_toc_entry: false
+#          rendering:
+#            show_source: true
+#            show_if_no_docstring: false
