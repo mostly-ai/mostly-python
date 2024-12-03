@@ -4,9 +4,9 @@ import re
 
 import pandas as pd
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.base import DELETE, GET, PATCH, POST, Paginator
+from mostlyai.base_social import _MostlyBaseSocialClient
 from mostlyai.model import Generator, JobProgress, GeneratorListItem
-from mostlyai.shares import _MostlySharesMixin
 from mostlyai.utils import (
     _convert_to_base64,
     _job_wait,
@@ -14,7 +14,7 @@ from mostlyai.utils import (
 )
 
 
-class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
+class _MostlyGeneratorsClient(_MostlyBaseSocialClient):
     SECTION = ["generators"]
 
     # PUBLIC METHODS #

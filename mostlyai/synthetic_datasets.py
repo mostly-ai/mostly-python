@@ -6,6 +6,7 @@ from typing import Any, Iterator, Optional, Union
 import pandas as pd
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.base_social import _MostlyBaseSocialClient
 from mostlyai.model import (
     JobProgress,
     SyntheticDataset,
@@ -15,7 +16,7 @@ from mostlyai.model import (
 from mostlyai.utils import _job_wait
 
 
-class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
+class _MostlySyntheticDatasetsClient(_MostlyBaseSocialClient):
     SECTION = ["synthetic-datasets"]
 
     # PUBLIC METHODS #

@@ -29,8 +29,9 @@ from mostlyai.naming_conventions import (
 GET = "GET"
 POST = "POST"
 PATCH = "PATCH"
+PUT = "PUT"
 DELETE = "DELETE"
-HttpVerb = Literal[GET, POST, PATCH, DELETE]
+HttpVerb = Literal[GET, POST, PATCH, PUT, DELETE]
 
 DEFAULT_BASE_URL = "https://app.mostly.ai"
 MAX_REQUEST_SIZE = 250_000_000

@@ -1,6 +1,6 @@
 # Tools
 
-## model extension
+## model extension:
 
 While `datamodel-codegen` is a very handy tool for converting OpenAPI definitions into
 pydantic objects (see `mostlyai/model.py`), it lacks the direct ability of adding extra functionality (e.g. methods)
