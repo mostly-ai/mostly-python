@@ -24,19 +24,6 @@ Be mindful of the following:
 - The relevant code sections from `tools/model.py` are stitched into the resulted `mostlyai/model.py`
 - Make sure to set `GH_TOKEN` env var to be able to fetch the raw data for `public-api.yaml` from the associated GitHub repo
 
-# Commitizen, Conventional Commits, Tags, and Releases on GitHub
-
-[Commitizen](https://commitizen-tools.github.io/commitizen/) is included in the `dev` dependencies. Its purpose is to help us stick to [conventional commits](https://www.conventionalcommits.org/),
-and by that make it easy to maintain versioning - bumps, tags, releases and a changelog.
-
-The important part is to keep the commit messages (on the public repo) follow the above mentioned standard. There are several ways to ensure that:
-- `cz commit` is one option, to help composing such a commit in CLI.
-- There is a pre-commit hook, that could be used (for that, run locally: `pre-commit install --hook-type commit-msg --hook-type pre-push`)
-- Otherwise, if comfortable, follow the commits guidelines independent of the helpers above
-
-With that, changelog update is as easy as running `cz ch --incremental`. To avoid a full rewrite of the changelog, `--incremental` is used.
-Bumping based on git log is done with `cz bump`. And so on.
-
 # Release Workflow
 
 The setup is done via `pyproject.toml`, which contains the metadata, dependencies and other configurations.

@@ -52,7 +52,6 @@ theme:
 nav:
   - Home:
     - Index: index.md
-    - What's New: changelog.md
   - API Reference:
     - API: api_reference/api.md
     - Model: api_reference/model.md
