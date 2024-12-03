@@ -37,9 +37,9 @@ COMMON_OPTIONS = \
 BUMP_TYPE ?= patch
 
 # Targets for Release Workflow/Automation
-.PHONY: release bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build confirm-upload upload clean-dist delete-branch docs
+.PHONY: release bump-version update-version create-branch commit-tag push-changes update-main re-tag build confirm-upload upload clean-dist delete-branch docs
 
-release: bump-version update-version create-branch commit-tag changelog push-changes update-main re-tag build upload clean-dist delete-branch docs
+release: bump-version update-version create-branch commit-tag push-changes update-main re-tag build upload clean-dist delete-branch docs
 
 bump-version: ## Bump version (default: patch, options: patch, minor, major)
 	@poetry version $(BUMP_TYPE)
@@ -55,19 +55,13 @@ create-branch: ## Create verbump_{new_ver} branch
 	@git checkout -b $(BRANCH)
 	@echo "Created branch $(BRANCH)"
 
-commit-tag: ## Commit version bump, so that it's visible to commitizen
+commit-tag: ## Commit version bump
 	@git add pyproject.toml
 	@git add mostlyai/__init__.py
 	# In case of other expectedly changed files to be included, add here
 	@git commit -m "bump: to $(VERSION)"
 	@git tag $(TAG)
 	@echo "Tag $(TAG) created"
-
-changelog: ## Update CHANGELOG.md and commit
-	@cz ch --incremental
-	@git add CHANGELOG.md
-	@git commit -m "bump(changelog): update to $(VERSION)"
-	@echo "Changelog updated"
 
 push-changes: ## Push to version bump branch
 	@git push origin $(BRANCH)

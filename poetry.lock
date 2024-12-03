@@ -409,30 +409,6 @@ files = [
 ]
 
 [[package]]
-name = "commitizen"
-version = "3.31.0"
-description = "Python commitizen client tool"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "commitizen-3.31.0-py3-none-any.whl", hash = "sha256:a28df7ab5b8665d48796c422a97dcfae0d0fce7e2d28404c0e386cf1ebd42c8f"},
-    {file = "commitizen-3.31.0.tar.gz", hash = "sha256:6ab973e91d07c1e745c6c0efe6dd0708b1f6d8fd7e4ab5e7c773b5ceb3df4ff0"},
-]
-
-[package.dependencies]
-argcomplete = ">=1.12.1,<3.6"
-charset-normalizer = ">=2.1.0,<4"
-colorama = ">=0.4.1,<0.5.0"
-decli = ">=0.6.0,<0.7.0"
-importlib_metadata = {version = ">=8.0.0,<9", markers = "python_version < \"3.10\""}
-jinja2 = ">=2.10.3"
-packaging = ">=19"
-pyyaml = ">=3.08"
-questionary = ">=2.0,<3.0"
-termcolor = ">=1.1,<3"
-tomlkit = ">=0.5.3,<1.0.0"
-
-[[package]]
 name = "crashtest"
 version = "0.4.1"
 description = "Manage Python errors with ease"
@@ -526,17 +502,6 @@ debug = ["PySnooper (>=0.4.1,<2.0.0)"]
 graphql = ["graphql-core (>=3.2.3,<4.0.0)"]
 http = ["httpx"]
 validation = ["openapi-spec-validator (>=0.2.8,<0.7.0)", "prance (>=0.18.2)"]
-
-[[package]]
-name = "decli"
-version = "0.6.2"
-description = "Minimal, easy-to-use, declarative cli tool"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "decli-0.6.2-py3-none-any.whl", hash = "sha256:2fc84106ce9a8f523ed501ca543bdb7e416c064917c12a59ebdc7f311a97b7ed"},
-    {file = "decli-0.6.2.tar.gz", hash = "sha256:36f71eb55fd0093895efb4f416ec32b7f6e00147dda448e3365cf73ceab42d6f"},
-]
 
 [[package]]
 name = "distlib"
@@ -1993,20 +1958,6 @@ pyyaml = ">=5.1"
 virtualenv = ">=20.10.0"
 
 [[package]]
-name = "prompt-toolkit"
-version = "3.0.36"
-description = "Library for building powerful interactive command lines in Python"
-optional = false
-python-versions = ">=3.6.2"
-files = [
-    {file = "prompt_toolkit-3.0.36-py3-none-any.whl", hash = "sha256:aa64ad242a462c5ff0363a7b9cfe696c20d55d9fc60c11fd8e632d064804d305"},
-    {file = "prompt_toolkit-3.0.36.tar.gz", hash = "sha256:3e163f254bef5a03b146397d7c1963bd3e2812f0964bb9a24e6ec761fd28db63"},
-]
-
-[package.dependencies]
-wcwidth = "*"
-
-[[package]]
 name = "propcache"
 version = "0.2.1"
 description = "Accelerated property cache"
@@ -2484,20 +2435,6 @@ files = [
 pyyaml = "*"
 
 [[package]]
-name = "questionary"
-version = "2.0.1"
-description = "Python library to build pretty command line user prompts ⭐️"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "questionary-2.0.1-py3-none-any.whl", hash = "sha256:8ab9a01d0b91b68444dff7f6652c1e754105533f083cbe27597c8110ecc230a2"},
-    {file = "questionary-2.0.1.tar.gz", hash = "sha256:bcce898bf3dbb446ff62830c86c5c6fb9a22a54146f0f5597d3da43b10d8fc8b"},
-]
-
-[package.dependencies]
-prompt_toolkit = ">=2.0,<=3.0.36"
-
-[[package]]
 name = "rapidfuzz"
 version = "3.10.1"
 description = "rapid fuzzy string matching"
@@ -2876,20 +2813,6 @@ files = [
 ]
 
 [[package]]
-name = "termcolor"
-version = "2.5.0"
-description = "ANSI color formatting for output in terminal"
-optional = false
-python-versions = ">=3.9"
-files = [
-    {file = "termcolor-2.5.0-py3-none-any.whl", hash = "sha256:37b17b5fc1e604945c2642c872a3764b5d547a48009871aea3edd3afa180afb8"},
-    {file = "termcolor-2.5.0.tar.gz", hash = "sha256:998d8d27da6d48442e8e1f016119076b690d962507531df4890fcd2db2ef8a6f"},
-]
-
-[package.extras]
-tests = ["pytest", "pytest-cov"]
-
-[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -3101,17 +3024,6 @@ files = [
 
 [package.extras]
 watchmedo = ["PyYAML (>=3.10)"]
-
-[[package]]
-name = "wcwidth"
-version = "0.2.13"
-description = "Measures the displayed width of unicode strings in a terminal"
-optional = false
-python-versions = "*"
-files = [
-    {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
-    {file = "wcwidth-0.2.13.tar.gz", hash = "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"},
-]
 
 [[package]]
 name = "wrapt"
@@ -3378,4 +3290,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "7ac9c9682002f561484f63d953f028f5bd4c233d29869261f1443125bf9d0fd7"
+content-hash = "5234246bbcdf9675f2cb209e97cc518ae33037eb6c513622e530696a92cb8c8c"
