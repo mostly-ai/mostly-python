@@ -2,18 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/</loc>
-         <lastmod>2024-12-03</lastmod>
+         <lastmod>2024-12-04</lastmod>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/api_reference/api/</loc>
-         <lastmod>2024-12-03</lastmod>
-    </url>
-    <url>
-         <loc>https://mostly-ai.github.io/mostly-python/api_reference/exceptions/</loc>
-         <lastmod>2024-12-03</lastmod>
+         <lastmod>2024-12-04</lastmod>
     </url>
     <url>
          <loc>https://mostly-ai.github.io/mostly-python/api_reference/model/</loc>
-         <lastmod>2024-12-03</lastmod>
+         <lastmod>2024-12-04</lastmod>
     </url>
 </urlset>
