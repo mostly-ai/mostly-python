@@ -55,7 +55,6 @@ nav:
   - API Reference:
     - API: api_reference/api.md
     - Model: api_reference/model.md
-    - Exceptions: api_reference/exceptions.md
 
 markdown_extensions:
   - pymdownx.highlight:

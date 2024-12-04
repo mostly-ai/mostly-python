@@ -2,7 +2,7 @@
 
 [![Documentation](https://img.shields.io/badge/docs-latest-green)](https://mostly-ai.github.io/mostly-python/) [![stats](https://pepy.tech/badge/mostlyai)](https://pypi.org/project/mostlyai/) ![license](https://img.shields.io/github/license/mostly-ai/mostly-python) ![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostly-python) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai)
 
-The official Python client for the [MOSTLY AI platform](https://app.mostly.ai/). See the [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and Python examples. Check out our [Synthetic Data Tutorials](https://github.com/mostly-ai/mostly-tutorials) for further end-to-end usage demonstrations.
+The official Python client for the [MOSTLY AI platform](https://app.mostly.ai/). See the [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and Python examples. Check out our [Synthetic Data Tutorials](#synthetic-data-tutorials) for further end-to-end usage demonstrations.
 
 ## Overview
 
