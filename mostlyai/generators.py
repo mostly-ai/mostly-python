@@ -10,7 +10,6 @@ from mostlyai.model import (
     JobProgress,
     GeneratorListItem,
     GeneratorConfig,
-    SourceColumnConfig,
     GeneratorPatchConfig,
 )
 from mostlyai.shares import _MostlySharesMixin
@@ -67,26 +66,25 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         return response
 
     def create(self, config: Union[GeneratorConfig, dict]) -> Generator:
-        if isinstance(config, dict):
-            config = GeneratorConfig(**config)
-        if config.tables:
-            for table in config.tables:
-                # convert data to base64-encoded Parquet files
-                if table.data is not None:
-                    if isinstance(table.data, (str, Path)):
-                        name, df = _read_table_from_path(table.data)
-                        table.data = _convert_to_base64(df)
-                        if not table.name:
-                            table.name = name
+        if isinstance(config, dict) and config.get("tables"):
+            for table in config["tables"]:
+                # convert `data` to base64-encoded Parquet files
+                if table.get("data") is not None:
+                    if isinstance(table["data"], (str, Path)):
+                        name, df = _read_table_from_path(table["data"])
+                        table["data"] = _convert_to_base64(df)
+                        if "name" not in table:
+                            table["name"] = name
                         del df
-                    elif isinstance(table.data, pd.DataFrame):
-                        table.data = _convert_to_base64(table.data)
+                    elif isinstance(table["data"], pd.DataFrame):
+                        table["data"] = _convert_to_base64(table["data"])
                     else:
                         raise ValueError("data must be a DataFrame or a file path")
-                if table.columns:
-                    table.columns = [
-                        SourceColumnConfig(name=col) if isinstance(col, str) else col
-                        for col in table.columns
+                if table.get("columns"):
+                    # convert `columns` to list[dict], if provided as list[str]
+                    table["columns"] = [
+                        {"name": col} if isinstance(col, str) else col
+                        for col in table["columns"]
                     ]
         generator = self.request(
             verb=POST, path=[], json=config, response_type=Generator

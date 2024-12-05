@@ -31,6 +31,7 @@ from mostlyai.utils import (
     _read_table_from_path,
     _harmonize_sd_config,
     Seed,
+    _convert_to_base64,
 )
 
 
@@ -223,13 +224,14 @@ class MostlyAI(_MostlyBaseClient):
         if isinstance(data, (str, Path)):
             name, df = _read_table_from_path(data)
             config = GeneratorConfig(
-                name=name, tables=[SourceTableConfig(data=df, name=name)]
+                name=name,
+                tables=[SourceTableConfig(data=_convert_to_base64(df), name=name)],
             )
         elif isinstance(data, pd.DataFrame):
             df = data
             config = GeneratorConfig(
                 name=f"DataFrame {df.shape}",
-                tables=[SourceTableConfig(data=df, name="data")],
+                tables=[SourceTableConfig(data=_convert_to_base64(df), name="data")],
             )
         elif config is None:
             raise ValueError("Either data or config must be provided")
