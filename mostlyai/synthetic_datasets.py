@@ -77,7 +77,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         synthetic_dataset = self.request(
             verb=POST,
             path=[],
-            json=dict(config),
+            json=config,
             response_type=SyntheticDataset,
         )
         return synthetic_dataset
@@ -211,6 +211,6 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
         dicts = self.request(
             verb=POST,
             path=[],
-            json=dict(config),
+            json=config,
         )
         return {dct["name"]: pd.DataFrame(dct["rows"]) for dct in dicts}
