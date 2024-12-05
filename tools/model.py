@@ -11,6 +11,9 @@ from mostlyai.model import (
     GeneratorPatchConfig,
     SyntheticDatasetDelivery,
     SyntheticDatasetPatchConfig,
+    SyntheticDatasetConfig,
+    GeneratorConfig,
+    ConnectorConfig,
 )
 
 
@@ -90,11 +93,11 @@ class Connector:
         """
         return self.client._schema(connector_id=self.id, location=location)
 
-    def config(self) -> dict[str, Any]:
+    def config(self) -> ConnectorConfig:
         """
-        Retrieve writeable generator properties
+        Retrieve writeable connector properties
 
-        :return: The generator properties as dictionary
+        :return: The connector properties as ConnectorConfig
         """
         return self.client._config(connector_id=self.id)
 
@@ -134,7 +137,7 @@ class Generator:
         """
         return self.client._delete(generator_id=self.id)
 
-    def config(self) -> dict[str, Any]:
+    def config(self) -> GeneratorConfig:
         """
         Retrieve writeable generator properties
 
@@ -252,7 +255,7 @@ class SyntheticDataset:
         """
         return self.client._delete(synthetic_dataset_id=self.id)
 
-    def config(self) -> dict[str, Any]:
+    def config(self) -> SyntheticDatasetConfig:
         """
         Retrieve writeable synthetic dataset properties
 

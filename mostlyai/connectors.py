@@ -6,6 +6,7 @@ from mostlyai.model import (
     ConnectorListItem,
     SyntheticDatasetConfig,
     ConnectorPatchConfig,
+    ConnectorConfig,
 )
 from mostlyai.shares import _MostlySharesMixin
 
@@ -87,8 +88,10 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _delete(self, connector_id: str) -> None:
         self.request(verb=DELETE, path=[connector_id])
 
-    def _config(self, connector_id: str):
-        response = self.request(verb=GET, path=[connector_id, "config"])
+    def _config(self, connector_id: str) -> ConnectorConfig:
+        response = self.request(
+            verb=GET, path=[connector_id, "config"], response_type=ConnectorConfig
+        )
         return response
 
     def _locations(self, connector_id: str, prefix: str = "") -> list:

@@ -160,8 +160,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return response
 
-    def _config(self, generator_id: str) -> Generator:
-        response = self.request(verb=GET, path=[generator_id, "config"])
+    def _config(self, generator_id: str) -> GeneratorConfig:
+        response = self.request(
+            verb=GET, path=[generator_id, "config"], response_type=GeneratorConfig
+        )
         return response
 
     def _training_start(self, generator_id: str) -> None:

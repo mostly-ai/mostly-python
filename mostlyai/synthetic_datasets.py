@@ -101,8 +101,12 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         response = self.request(verb=DELETE, path=[synthetic_dataset_id])
         return response
 
-    def _config(self, synthetic_dataset_id: str) -> SyntheticDataset:
-        response = self.request(verb=GET, path=[synthetic_dataset_id, "config"])
+    def _config(self, synthetic_dataset_id: str) -> SyntheticDatasetConfig:
+        response = self.request(
+            verb=GET,
+            path=[synthetic_dataset_id, "config"],
+            response_type=SyntheticDatasetConfig,
+        )
         return response
 
     def _download(
