@@ -53,7 +53,7 @@ NEW_VERSION := $(shell echo $(CURRENT_VERSION) | awk -F. -v bump=$(BUMP_TYPE) '{
     } else if (bump == "major") { \
         printf("%d.0.0", $$1 + 1); \
     } else { \
-        print "Error: Invalid BUMP_TYPE=" bump; \
+        print "Error: Invalid BUMP_TYPE. Expected patch, minor or major. Input was BUMP_TYPE=" bump; \
         exit 1; \
     } \
 }')
@@ -122,6 +122,8 @@ build: # Build the project and create the dist directory if it doesn't exist
 	@mkdir -p dist
 	@poetry build
 	@echo "Built the project"
+	@twine check --strict dist/*
+	@echo "Project is checked"	
 
 confirm-upload: # Confirm before the irreversible zone
 	@echo "Are you sure you want to upload to PyPI? (yes/no)"
