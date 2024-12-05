@@ -37,15 +37,34 @@ COMMON_OPTIONS = \
 clean: ## Remove .gitignore files
 	git clean -fdX
 
+# Default files to update
+PYPROJECT_TOML = pyproject.toml
+INIT_FILE = mostlyai/__init__.py
+
 # Internal Variables for Release Workflow
 BUMP_TYPE ?= patch
+CURRENT_VERSION := $(shell grep -m 1 'version = ' $(PYPROJECT_TOML) | sed -e 's/version = "\(.*\)"/\1/')
+# Assuming current_version is already set from pyproject.toml
+NEW_VERSION := $(shell echo $(CURRENT_VERSION) | awk -F. -v bump=$(BUMP_TYPE) '{ \
+    if (bump == "patch") { \
+        printf("%d.%d.%d", $$1, $$2, $$3 + 1); \
+    } else if (bump == "minor") { \
+        printf("%d.%d.0", $$1, $$2 + 1); \
+    } else if (bump == "major") { \
+        printf("%d.0.0", $$1 + 1); \
+    } else { \
+        print "Error: Invalid BUMP_TYPE=" bump; \
+        exit 1; \
+    } \
+}')
+
 
 # Targets for Release Workflow/Automation
 .PHONY: release-pypi pull-main bump-version update-vars-version create-branch clean-dist build confirm-upload upload-pypi docs
 
-release-pypi: clean-dist build upload docs
+release-pypi: clean-dist pull-main build upload docs  ## Release to PyPI: pull main, build and upload to PyPI
 
-update-version-gh: pull-main bump-version ## Update version in GitHub
+update-version-gh: pull-main bump-version update-vars-version create-branch ## Update version in GitHub: pull main, bump version, create and push the new branch
 
 pull-main: ## Pull main branch
 	# stash changes
@@ -60,8 +79,23 @@ pull-main: ## Pull main branch
 	@git clean -fdX
 
 bump-version: ## Bump version (default: patch, options: patch, minor, major)
-	@poetry version $(BUMP_TYPE)
-	@echo "Bumped version"
+	@echo "Bumping $(BUMP_TYPE) version from $(CURRENT_VERSION) to $(NEW_VERSION)"
+	@echo "Replaces $(CURRENT_VERSION) to $(NEW_VERSION) in $(PYPROJECT_TOML)"
+	@echo "Replaces $(CURRENT_VERSION) to $(NEW_VERSION) in $(INIT_FILE)"
+	@echo "Current directory: $(shell pwd)"
+    # Check if current version was found
+	@if [ -z "$(CURRENT_VERSION)" ]; then \
+        echo "Error: Could not find current version in $(PYPROJECT_TOML)"; \
+        exit 1; \
+    fi
+    # Replace the version in pyproject.toml
+	@if [[ "$(shell uname -s)" == "Darwin" ]]; then \
+        sed -i '' 's/version = "$(CURRENT_VERSION)"/version = "$(NEW_VERSION)"/g' $(PYPROJECT_TOML); \
+        sed -i '' 's/__version__ = "$(CURRENT_VERSION)"/__version__ = "$(NEW_VERSION)"/g' $(INIT_FILE); \
+    else \
+        sed -i 's/version = "$(CURRENT_VERSION)"/version = "$(NEW_VERSION)"/g' $(PYPROJECT_TOML); \
+        sed -i 's/__version__ = "$(CURRENT_VERSION)"/__version__ = "$(NEW_VERSION)"/g' $(INIT_FILE); \
+    fi
 
 update-vars-version: ## Update the required variables after bump
 	$(eval VERSION := $(shell poetry version -s))
@@ -79,17 +113,6 @@ create-branch: ## Create verbump_{new_ver} branch
 	@echo "Committed version bump to $(VERSION)"
 	@git push --set-upstream origin $(BRANCH)
 	@echo "Pushed branch $(BRANCH) to origin"
-	# @gh pr create --base main --head $(BRANCH) --title "Version Bump to $(VERSION)" --body "Automated version bump to $(VERSION)" --output pr_output.txt
-	# echo "Pull request created for branch $(BRANCH) to main with number $$pr_number"; \
-	# gh pr review --approve $$pr_number \
-	# echo "Pull request #$$pr_number has been approved"; \
-    # gh pr merge --auto --squash $$pr_number; \
-    # echo "Pull request #$$pr_number has been merged"; \
-    # rm pr_output.txt
-    # delete branch locally and remotely
-	# @git branch -D $(BRANCH)
-	# @git push origin --delete $(BRANCH)
-	# @echo "Deleted branch $(BRANCH) locally and remotely"	
 
 clean-dist: ## Remove "volatile" directory dist
 	@rm -rf dist
