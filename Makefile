@@ -72,7 +72,13 @@ update-vars-version: ## Update the required variables after bump
 create-branch: ## Create verbump_{new_ver} branch
 	@git checkout -b $(BRANCH)
 	@echo "Created branch $(BRANCH)"
+	# commit the version bump
+	@git add $(INIT_FILE)
+	@git add $(PYPROJECT_TOML)
+	@git commit -m "Version Bump to $(VERSION)"
+	@echo "Committed version bump to $(VERSION)"
 	@git push --set-upstream origin $(BRANCH)
+	@echo "Pushed branch $(BRANCH) to origin"
 	# @gh pr create --base main --head $(BRANCH) --title "Version Bump to $(VERSION)" --body "Automated version bump to $(VERSION)" --output pr_output.txt
 	# echo "Pull request created for branch $(BRANCH) to main with number $$pr_number"; \
 	# gh pr review --approve $$pr_number \
