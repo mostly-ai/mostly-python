@@ -46,7 +46,7 @@ class Connector:
             test_connection=test_connection,
         )
         return self.client._update(
-            connector_id=self.id, config=patch_config.model_dump(exclude_unset=True)
+            connector_id=self.id, config=patch_config.model_dump(exclude_none=True)
         )
 
     def delete(self):
@@ -132,7 +132,7 @@ class Generator:
             description=description,
         )
         return self.client._update(
-            generator_id=self.id, config=patch_config.model_dump(exclude_unset=True)
+            generator_id=self.id, config=patch_config.model_dump(exclude_none=True)
         )
 
     def delete(self):
@@ -251,7 +251,7 @@ class SyntheticDataset:
         )
         return self.client._update(
             synthetic_dataset_id=self.id,
-            config=patch_config.model_dump(exclude_unset=True),
+            config=patch_config.model_dump(exclude_none=True),
         )
 
     def delete(self):
