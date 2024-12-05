@@ -41,13 +41,49 @@ clean: ## Remove .gitignore files
 BUMP_TYPE ?= patch
 
 # Targets for Release Workflow/Automation
-.PHONY: release-pypi bump-version clean-dist build confirm-upload upload-pypi docs
+.PHONY: release-pypi pull-main bump-version update-vars-version create-branch clean-dist build confirm-upload upload-pypi docs
 
 release-pypi: clean-dist build upload docs
+
+update-version-gh: pull-main bump-version ## Update version in GitHub
+
+pull-main: ## Pull main branch
+	# stash changes
+	@git stash
+	# switch to main branch
+	@git checkout main
+	# fetch latest changes
+	@git fetch origin main
+	# get a clean copy of main branch
+	@git reset --hard origin/main
+	# clean
+	@git clean -fdX
 
 bump-version: ## Bump version (default: patch, options: patch, minor, major)
 	@poetry version $(BUMP_TYPE)
 	@echo "Bumped version"
+
+update-vars-version: ## Update the required variables after bump
+	$(eval VERSION := $(shell poetry version -s))
+	$(eval BRANCH := verbump_$(shell echo $(VERSION) | tr '.' '_'))
+	$(eval TAG := $(VERSION))
+	@echo "Updated VERSION to $(VERSION), BRANCH to $(BRANCH), TAG to $(TAG)"
+
+create-branch: ## Create verbump_{new_ver} branch
+	@git checkout -b $(BRANCH)
+	@echo "Created branch $(BRANCH)"
+	@git push --set-upstream origin $(BRANCH)
+	# @gh pr create --base main --head $(BRANCH) --title "Version Bump to $(VERSION)" --body "Automated version bump to $(VERSION)" --output pr_output.txt
+	# echo "Pull request created for branch $(BRANCH) to main with number $$pr_number"; \
+	# gh pr review --approve $$pr_number \
+	# echo "Pull request #$$pr_number has been approved"; \
+    # gh pr merge --auto --squash $$pr_number; \
+    # echo "Pull request #$$pr_number has been merged"; \
+    # rm pr_output.txt
+    # delete branch locally and remotely
+	# @git branch -D $(BRANCH)
+	# @git push origin --delete $(BRANCH)
+	# @echo "Deleted branch $(BRANCH) locally and remotely"	
 
 clean-dist: ## Remove "volatile" directory dist
 	@rm -rf dist
