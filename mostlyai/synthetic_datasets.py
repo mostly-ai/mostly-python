@@ -12,6 +12,7 @@ from mostlyai.model import (
     SyntheticDatasetFormat,
     SyntheticDatasetListItem,
     SyntheticDatasetConfig,
+    SyntheticProbeConfig,
 )
 from mostlyai.utils import _job_wait
 
@@ -68,8 +69,6 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     ) -> SyntheticDataset:
         """
         Create synthetic dataset
-
-        See SyntheticDataset.config for the structure of the parameters.
 
         :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
@@ -194,12 +193,10 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
     SECTION = ["synthetic-probes"]
 
     def create(
-        self, config: dict[str, Any]
+        self, config: Union[SyntheticProbeConfig, dict[str, Any]]
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
         Create synthetic probe
-
-        See SyntheticDataset.config for the structure of the parameters.
 
         :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.

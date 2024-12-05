@@ -72,7 +72,7 @@ class MostlyAI(_MostlyBaseClient):
 
         If validation fails, a 400 status with an error message will be returned.
 
-        `config` is a dictionary with the keys `type`, `config`, `secrets`, and `ssl`.
+        `config` is either a ConnectorConfig or an equivalent dictionary.
         The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
         - Cloud storage:
@@ -211,7 +211,7 @@ class MostlyAI(_MostlyBaseClient):
         Train a generator
 
         :param data: Either a single pandas DataFrame data, a path to a CSV or PARQUET file. Note: Either 'data' or 'config' must be provided.
-        :param config: The configuration parameters of the generator to be created. See Generator.config for the structure of the parameters. Note: Either 'data' or 'config' must be provided.
+        :param config: The configuration parameters of the generator to be created. Note: Either 'data' or 'config' must be provided.
         :param name: Optional. The name of the generator.
         :param start: If true, then training is started right away. Default: true.
         :param wait: If true, then the function only returns once training has finished. Default: true.
@@ -269,7 +269,7 @@ class MostlyAI(_MostlyBaseClient):
         Generate synthetic data
 
         :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
-        :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
+        :param config: The configuration parameters of the synthetic dataset to be created.
         :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
         :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or a dictionary of those. Used for seeding the subject table(s).
         :param name: Optional. The name of the synthetic dataset.
@@ -284,6 +284,7 @@ class MostlyAI(_MostlyBaseClient):
             size=size,
             seed=seed,
             config=config,
+            config_type=SyntheticDatasetConfig,
             name=name,
         )
         sd = self.synthetic_datasets.create(config)
@@ -318,9 +319,10 @@ class MostlyAI(_MostlyBaseClient):
         Probe a generator
 
         :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
-        :param config: The configuration parameters of the synthetic dataset to be created. See SyntheticDataset.config for the structure of the parameters.
+        :param config: The configuration parameters of the synthetic dataset to be created.
         :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
         :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).
+        :param return_type: "auto" (default) for retuning a pandas DataFrame in case of a single table, otherwise a dictionary. "dict" for always returning a dictionary
         :return: The created synthetic probe.
         """
         config = _harmonize_sd_config(
@@ -329,6 +331,7 @@ class MostlyAI(_MostlyBaseClient):
             size=size,
             seed=seed,
             config=config,
+            config_type=SyntheticProbeConfig,
         )
         dfs = self.synthetic_probes.create(config)
         if return_type == "auto" and len(dfs) == 1:
