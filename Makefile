@@ -60,13 +60,13 @@ NEW_VERSION := $(shell echo $(CURRENT_VERSION) | awk -F. -v bump=$(BUMP_TYPE) '{
 
 
 # Targets for Release Workflow/Automation
-.PHONY: release-pypi pull-main bump-version update-vars-version create-branch clean-dist build confirm-upload upload-pypi docs
-
-release-pypi: clean-dist pull-main build upload docs  ## Release to PyPI: pull main, build and upload to PyPI
+.PHONY: update-version-gh release-pypi docs
 
 update-version-gh: pull-main bump-version update-vars-version create-branch ## Update version in GitHub: pull main, bump version, create and push the new branch
 
-pull-main: ## Pull main branch
+release-pypi: clean-dist pull-main build upload docs  ## Release to PyPI: pull main, build and upload to PyPI
+
+pull-main: # Pull main branch
 	# stash changes
 	@git stash
 	# switch to main branch
@@ -78,7 +78,7 @@ pull-main: ## Pull main branch
 	# clean
 	@git clean -fdX
 
-bump-version: ## Bump version (default: patch, options: patch, minor, major)
+bump-version: # Bump version (default: patch, options: patch, minor, major)
 	@echo "Bumping $(BUMP_TYPE) version from $(CURRENT_VERSION) to $(NEW_VERSION)"
 	@echo "Replaces $(CURRENT_VERSION) to $(NEW_VERSION) in $(PYPROJECT_TOML)"
 	@echo "Replaces $(CURRENT_VERSION) to $(NEW_VERSION) in $(INIT_FILE)"
@@ -97,13 +97,13 @@ bump-version: ## Bump version (default: patch, options: patch, minor, major)
         sed -i 's/__version__ = "$(CURRENT_VERSION)"/__version__ = "$(NEW_VERSION)"/g' $(INIT_FILE); \
     fi
 
-update-vars-version: ## Update the required variables after bump
+update-vars-version: # Update the required variables after bump
 	$(eval VERSION := $(shell poetry version -s))
 	$(eval BRANCH := verbump_$(shell echo $(VERSION) | tr '.' '_'))
 	$(eval TAG := $(VERSION))
 	@echo "Updated VERSION to $(VERSION), BRANCH to $(BRANCH), TAG to $(TAG)"
 
-create-branch: ## Create verbump_{new_ver} branch
+create-branch: # Create verbump_{new_ver} branch
 	@git checkout -b $(BRANCH)
 	@echo "Created branch $(BRANCH)"
 	# commit the version bump
@@ -114,20 +114,20 @@ create-branch: ## Create verbump_{new_ver} branch
 	@git push --set-upstream origin $(BRANCH)
 	@echo "Pushed branch $(BRANCH) to origin"
 
-clean-dist: ## Remove "volatile" directory dist
+clean-dist: # Remove "volatile" directory dist
 	@rm -rf dist
 	@echo "Cleaned up dist directory"
 
-build: ## Build the project and create the dist directory if it doesn't exist
+build: # Build the project and create the dist directory if it doesn't exist
 	@mkdir -p dist
 	@poetry build
 	@echo "Built the project"
 
-confirm-upload: ## Confirm before the irreversible zone
+confirm-upload: # Confirm before the irreversible zone
 	@echo "Are you sure you want to upload to PyPI? (yes/no)"
 	@read ans && [ $${ans:-no} = yes ]
 
-upload-pypi: confirm-upload ## Upload to PyPI (ensure the token is present in .pypirc file before running upload)
+upload-pypi: confirm-upload # Upload to PyPI (ensure the token is present in .pypirc file before running upload)
 	@twine upload dist/*$(VERSION)* --verbose
 	@echo "Uploaded version $(VERSION) to PyPI"
 	
