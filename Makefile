@@ -41,7 +41,7 @@ clean: ## Remove .gitignore files
 BUMP_TYPE ?= patch
 
 # Targets for Release Workflow/Automation
-.PHONY: release-pypi bump-version clean-dist build confirm-upload upload docs
+.PHONY: release-pypi bump-version clean-dist build confirm-upload upload-pypi docs
 
 release-pypi: clean-dist build upload docs
 
@@ -62,7 +62,7 @@ confirm-upload: ## Confirm before the irreversible zone
 	@echo "Are you sure you want to upload to PyPI? (yes/no)"
 	@read ans && [ $${ans:-no} = yes ]
 
-upload: confirm-upload ## Upload to PyPI (ensure the token is present in .pypirc file before running upload)
+upload-pypi: confirm-upload ## Upload to PyPI (ensure the token is present in .pypirc file before running upload)
 	@twine upload dist/*$(VERSION)* --verbose
 	@echo "Uploaded version $(VERSION) to PyPI"
 	
