@@ -1,7 +1,7 @@
 from typing import Any, Iterator, Optional, List, Dict, Union
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Connector, ConnectorListItem, ConnectorCreateConfig
+from mostlyai.model import Connector, ConnectorListItem, SyntheticDatasetConfig
 from mostlyai.shares import _MostlySharesMixin
 
 
@@ -52,7 +52,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def create(
         self,
-        config: Union[ConnectorCreateConfig, dict[str, Any]],
+        config: Union[SyntheticDatasetConfig, dict[str, Any]],
     ) -> Connector:
         """
         Create a connector, and optionally validate the connection before saving.

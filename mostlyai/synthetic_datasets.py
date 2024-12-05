@@ -11,7 +11,7 @@ from mostlyai.model import (
     SyntheticDataset,
     SyntheticDatasetFormat,
     SyntheticDatasetListItem,
-    SyntheticDatasetCreateConfig,
+    SyntheticDatasetConfig,
 )
 from mostlyai.utils import _job_wait
 
@@ -64,7 +64,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         return response
 
     def create(
-        self, config: Union[SyntheticDatasetCreateConfig, dict[str, Any]]
+        self, config: Union[SyntheticDatasetConfig, dict[str, Any]]
     ) -> SyntheticDataset:
         """
         Create synthetic dataset
