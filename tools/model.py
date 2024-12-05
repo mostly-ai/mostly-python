@@ -45,7 +45,9 @@ class Connector:
             ssl=ssl,
             test_connection=test_connection,
         )
-        return self.client._update(connector_id=self.id, config=patch_config)
+        return self.client._update(
+            connector_id=self.id, config=patch_config.model_dump(exclude_unset=True)
+        )
 
     def delete(self):
         """
@@ -129,7 +131,9 @@ class Generator:
             name=name,
             description=description,
         )
-        return self.client._update(generator_id=self.id, config=patch_config)
+        return self.client._update(
+            generator_id=self.id, config=patch_config.model_dump(exclude_unset=True)
+        )
 
     def delete(self):
         """
@@ -246,7 +250,8 @@ class SyntheticDataset:
             delivery=delivery,
         )
         return self.client._update(
-            synthetic_dataset_id=self.id, config=patch_config.dict(exclude_unset=True)
+            synthetic_dataset_id=self.id,
+            config=patch_config.model_dump(exclude_unset=True),
         )
 
     def delete(self):
