@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mostlyai"
-version = "0.4.10"
+version = "1.0.0"
 description = "MOSTLY AI - Python Client"
 homepage = "https://app.mostly.ai/"
 license = "Apache-2.0"
