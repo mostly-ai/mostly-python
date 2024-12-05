@@ -26,6 +26,7 @@ from mostlyai.model import (
     SyntheticDatasetConfig,
     SyntheticProbeConfig,
     SyntheticTableConfig,
+    SyntheticTableConfiguration,
 )
 from mostlyai.naming_conventions import map_camel_to_snake_case
 
@@ -176,7 +177,7 @@ def _harmonize_sd_config(
         type[SyntheticDatasetConfig], type[SyntheticProbeConfig], None
     ] = None,
     name: Optional[str] = None,
-) -> dict:
+) -> Union[SyntheticDatasetConfig, SyntheticProbeConfig]:
     config_type = config_type or SyntheticDatasetConfig
     if config is None:
         config = config_type()
@@ -224,7 +225,7 @@ def _harmonize_sd_config(
     if not config.tables:
         config.tables = []
         for table in generator.tables:
-            configuration = SyntheticTableConfig(
+            configuration = SyntheticTableConfiguration(
                 sample_size=None,
                 sample_seed_data=None,
                 sample_seed_dict=None,
@@ -248,6 +249,8 @@ def _harmonize_sd_config(
     # convert `sample_seed_data` to base64-encoded Parquet files
     # convert `sample_seed_dict` to base64-encoded dictionaries
     for table in config.tables:
+        if not table.configuration:
+            continue
         if table.configuration.sample_seed_data is not None:
             if isinstance(table.configuration.sample_seed_data, pd.DataFrame):
                 table.configuration.sample_seed_data = _convert_to_base64(
