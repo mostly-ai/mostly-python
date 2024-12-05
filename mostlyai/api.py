@@ -15,6 +15,11 @@ from mostlyai.model import (
     ProgressStatus,
     SyntheticDataset,
     ModelType,
+    ConnectorCreateConfig,
+    GeneratorCreateConfig,
+    SourceTableCreateConfig,
+    SyntheticDatasetCreateConfig,
+    SyntheticProbeCreateConfig,
 )
 from mostlyai.shares import _MostlySharesClient
 from mostlyai.synthetic_datasets import (
@@ -61,7 +66,9 @@ class MostlyAI(_MostlyBaseClient):
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
         self.shares = _MostlySharesClient(**client_kwargs)
 
-    def connect(self, config: dict[str, Any]) -> Connector:
+    def connect(
+        self, config: Union[ConnectorCreateConfig, dict[str, Any]]
+    ) -> Connector:
         """
         Create a connector, and optionally validate the connection before saving.
 
@@ -196,7 +203,7 @@ class MostlyAI(_MostlyBaseClient):
     def train(
         self,
         data: Union[pd.DataFrame, str, Path, None] = None,
-        config: Union[dict, None] = None,
+        config: Union[GeneratorCreateConfig, dict, None] = None,
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
@@ -217,17 +224,21 @@ class MostlyAI(_MostlyBaseClient):
             raise ValueError("Either data or config must be provided, but not both")
         if isinstance(data, (str, Path)):
             name, df = _read_table_from_path(data)
-            config = {"name": name, "tables": [{"data": df, "name": name}]}
+            config = GeneratorCreateConfig(
+                name=name, tables=[SourceTableCreateConfig(data=df, name=name)]
+            )
         elif isinstance(data, pd.DataFrame):
             df = data
-            config = {
-                "name": f"DataFrame {df.shape}",
-                "tables": [{"data": df, "name": "data"}],
-            }
+            config = GeneratorCreateConfig(
+                name=f"DataFrame {df.shape}",
+                tables=[SourceTableCreateConfig(data=df, name="data")],
+            )
         elif config is None:
             raise ValueError("Either data or config must be provided")
+        if isinstance(config, dict):
+            config = GeneratorCreateConfig(**config)
         if name is not None:
-            config |= {"name": name}
+            config.name = name
         g = self.generators.create(config)
         rich.print(
             f"Created generator [link={self.base_url}/d/generators/{g.id} blue underline]{g.id}[/]"
@@ -250,7 +261,7 @@ class MostlyAI(_MostlyBaseClient):
         generator: Union[Generator, str, None] = None,
         size: Union[int, dict[str, int], None] = None,
         seed: Union[Seed, dict[str, Seed], None] = None,
-        config: Union[dict, None] = None,
+        config: Union[SyntheticDatasetCreateConfig, dict, None] = None,
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
@@ -302,7 +313,7 @@ class MostlyAI(_MostlyBaseClient):
         generator: Union[Generator, str, None] = None,
         size: Union[int, dict[str, int], None] = None,
         seed: Union[Seed, dict[str, Seed], None] = None,
-        config: Union[dict, None] = None,
+        config: Union[SyntheticProbeCreateConfig, dict, None] = None,
         return_type: Literal["auto", "dict"] = "auto",
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """

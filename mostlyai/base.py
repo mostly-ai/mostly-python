@@ -115,6 +115,8 @@ class _MostlyBaseClient:
             )
 
         if "json" in kwargs and do_json_camel_case:
+            if isinstance(kwargs["json"], BaseModel):
+                kwargs["json"] = kwargs["json"].model_dump()
             kwargs["json"] = map_snake_to_camel_case(kwargs["json"])
 
         try:
