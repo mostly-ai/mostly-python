@@ -4,23 +4,45 @@ from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 import pandas as pd
 from pydantic import Field
 
-from mostlyai.model import JobProgress, SyntheticDatasetFormat
+from mostlyai.model import (
+    JobProgress,
+    SyntheticDatasetFormat,
+    ConnectorPatchConfig,
+    GeneratorPatchConfig,
+    SyntheticDatasetDelivery,
+    SyntheticDatasetPatchConfig,
+)
 
 
 class Connector:
     OPEN_URL_PARTS: ClassVar[list] = ["d", "connectors"]
 
-    def update(self, config) -> "Connector":
+    def update(
+        self,
+        name: Optional[str] = None,
+        config: Optional[dict[str, Any]] = None,
+        secrets: Optional[dict[str, str]] = None,
+        ssl: Optional[dict[str, str]] = None,
+        test_connection: Optional[bool] = None,
+    ) -> "Connector":
         """
-        Update a connector, and optionally validate the connection before saving.
+        Update a connector with specific parameters.
 
-        If validation fails, a 400 status with an error message will be returned.
-
-        For the structure of the config, secrets and ssl parameters, see the CREATE method.
-
+        :param name: The name of the connector
+        :param config: Connector configuration
+        :param secrets: Secret values for the connector
+        :param ssl: SSL configuration for the connector
+        :param test_connection: If true, validates the connection before saving
         :return: The updated connector
         """
-        return self.client._update(connector_id=self.id, config=config)
+        patch_config = ConnectorPatchConfig(
+            name=name,
+            config=config,
+            secrets=secrets,
+            ssl=ssl,
+            test_connection=test_connection,
+        )
+        return self.client._update(connector_id=self.id, config=patch_config)
 
     def delete(self):
         """
@@ -88,15 +110,23 @@ class Generator:
         super().__init__(*args, **kwargs)
         self.training = self.Training(self)
 
-    def update(self, config) -> "Generator":
+    def update(
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> "Generator":
         """
-        Update generator
+        Update a generator with specific parameters.
 
-        See config for the structure of the parameters.
-
+        :param name: The name of the generator
+        :param description: The description of the generator
         :return: The updated generator
         """
-        return self.client._update(generator_id=self.id, config=config)
+        patch_config = GeneratorPatchConfig(
+            name=name,
+            description=description,
+        )
+        return self.client._update(generator_id=self.id, config=patch_config)
 
     def delete(self):
         """
@@ -193,15 +223,28 @@ class SyntheticDataset:
         super().__init__(*args, **kwargs)
         self.generation = self.Generation(self)
 
-    def update(self, config) -> "SyntheticDataset":
+    def update(
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        delivery: Optional[SyntheticDatasetDelivery] = None,
+    ) -> "SyntheticDataset":
         """
-        Update synthetic dataset
+        Update a synthetic dataset with specific parameters.
 
-        See config for the structure of the parameters.
-
+        :param name: The name of the synthetic dataset
+        :param description: The description of the synthetic dataset
+        :param delivery: The delivery configuration for the synthetic dataset
         :return: The updated synthetic dataset
         """
-        return self.client._update(synthetic_dataset_id=self.id, config=config)
+        patch_config = SyntheticDatasetPatchConfig(
+            name=name,
+            description=description,
+            delivery=delivery,
+        )
+        return self.client._update(
+            synthetic_dataset_id=self.id, config=patch_config.dict(exclude_unset=True)
+        )
 
     def delete(self):
         """

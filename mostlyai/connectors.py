@@ -1,7 +1,12 @@
 from typing import Any, Iterator, Optional, List, Dict, Union
 
 from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Connector, ConnectorListItem, SyntheticDatasetConfig
+from mostlyai.model import (
+    Connector,
+    ConnectorListItem,
+    SyntheticDatasetConfig,
+    ConnectorPatchConfig,
+)
 from mostlyai.shares import _MostlySharesMixin
 
 
@@ -69,7 +74,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _update(
         self,
         connector_id: str,
-        config: dict[str, Any],
+        config: Union[ConnectorPatchConfig, dict[str, Any]],
     ) -> Connector:
         response = self.request(
             verb=PATCH,

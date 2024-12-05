@@ -11,6 +11,7 @@ from mostlyai.model import (
     GeneratorListItem,
     GeneratorConfig,
     SourceColumnConfig,
+    GeneratorPatchConfig,
 )
 from mostlyai.shares import _MostlySharesMixin
 from mostlyai.utils import (
@@ -137,7 +138,9 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             filename = f"generator-{generator_id[:8]}.mostly"
         return content_bytes, filename
 
-    def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
+    def _update(
+        self, generator_id: str, config: Union[GeneratorPatchConfig, dict[str, Any]]
+    ) -> Generator:
         response = self.request(
             verb=PATCH,
             path=[generator_id],

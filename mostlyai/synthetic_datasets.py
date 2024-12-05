@@ -13,6 +13,7 @@ from mostlyai.model import (
     SyntheticDatasetListItem,
     SyntheticDatasetConfig,
     SyntheticProbeConfig,
+    SyntheticDatasetPatchConfig,
 )
 from mostlyai.utils import _job_wait
 
@@ -84,7 +85,9 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     # PRIVATE METHODS #
 
     def _update(
-        self, synthetic_dataset_id: str, config: dict[str, Any]
+        self,
+        synthetic_dataset_id: str,
+        config: Union[SyntheticDatasetPatchConfig, dict[str, Any]],
     ) -> SyntheticDataset:
         response = self.request(
             verb=PATCH,
