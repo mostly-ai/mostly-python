@@ -33,75 +33,104 @@ COMMON_OPTIONS = \
 	--base-class mostlyai.base.CustomBaseModel \
 	--custom-template-dir tools/custom_template
 
+.PHONY: clean
+clean: ## Remove .gitignore files
+	git clean -fdX
+
+# Default files to update
+PYPROJECT_TOML = pyproject.toml
+INIT_FILE = mostlyai/__init__.py
+
 # Internal Variables for Release Workflow
 BUMP_TYPE ?= patch
+CURRENT_VERSION := $(shell grep -m 1 'version = ' $(PYPROJECT_TOML) | sed -e 's/version = "\(.*\)"/\1/')
+# Assuming current_version is already set from pyproject.toml
+NEW_VERSION := $(shell echo $(CURRENT_VERSION) | awk -F. -v bump=$(BUMP_TYPE) '{ \
+    if (bump == "patch") { \
+        printf("%d.%d.%d", $$1, $$2, $$3 + 1); \
+    } else if (bump == "minor") { \
+        printf("%d.%d.0", $$1, $$2 + 1); \
+    } else if (bump == "major") { \
+        printf("%d.0.0", $$1 + 1); \
+    } else { \
+        print "Error: Invalid BUMP_TYPE=" bump; \
+        exit 1; \
+    } \
+}')
+
 
 # Targets for Release Workflow/Automation
-.PHONY: release bump-version update-version create-branch commit-tag push-changes update-main re-tag build confirm-upload upload clean-dist delete-branch docs
+.PHONY: update-version-gh release-pypi docs
 
-release: bump-version update-version create-branch commit-tag push-changes update-main re-tag build upload clean-dist delete-branch docs
+update-version-gh: pull-main bump-version update-vars-version create-branch ## Update version in GitHub: pull main, bump version, create and push the new branch
 
-bump-version: ## Bump version (default: patch, options: patch, minor, major)
-	@poetry version $(BUMP_TYPE)
-	@echo "Bumped version"
+release-pypi: clean-dist pull-main build upload docs  ## Release to PyPI: pull main, build and upload to PyPI
 
-update-version: ## Update the required variables after bump
+pull-main: # Pull main branch
+	# stash changes
+	@git stash
+	# switch to main branch
+	@git checkout main
+	# fetch latest changes
+	@git fetch origin main
+	# get a clean copy of main branch
+	@git reset --hard origin/main
+	# clean
+	@git clean -fdX
+
+bump-version: # Bump version (default: patch, options: patch, minor, major)
+	@echo "Bumping $(BUMP_TYPE) version from $(CURRENT_VERSION) to $(NEW_VERSION)"
+	@echo "Replaces $(CURRENT_VERSION) to $(NEW_VERSION) in $(PYPROJECT_TOML)"
+	@echo "Replaces $(CURRENT_VERSION) to $(NEW_VERSION) in $(INIT_FILE)"
+	@echo "Current directory: $(shell pwd)"
+    # Check if current version was found
+	@if [ -z "$(CURRENT_VERSION)" ]; then \
+        echo "Error: Could not find current version in $(PYPROJECT_TOML)"; \
+        exit 1; \
+    fi
+    # Replace the version in pyproject.toml
+	@if [[ "$(shell uname -s)" == "Darwin" ]]; then \
+        sed -i '' 's/version = "$(CURRENT_VERSION)"/version = "$(NEW_VERSION)"/g' $(PYPROJECT_TOML); \
+        sed -i '' 's/__version__ = "$(CURRENT_VERSION)"/__version__ = "$(NEW_VERSION)"/g' $(INIT_FILE); \
+    else \
+        sed -i 's/version = "$(CURRENT_VERSION)"/version = "$(NEW_VERSION)"/g' $(PYPROJECT_TOML); \
+        sed -i 's/__version__ = "$(CURRENT_VERSION)"/__version__ = "$(NEW_VERSION)"/g' $(INIT_FILE); \
+    fi
+
+update-vars-version: # Update the required variables after bump
 	$(eval VERSION := $(shell poetry version -s))
 	$(eval BRANCH := verbump_$(shell echo $(VERSION) | tr '.' '_'))
 	$(eval TAG := $(VERSION))
 	@echo "Updated VERSION to $(VERSION), BRANCH to $(BRANCH), TAG to $(TAG)"
 
-create-branch: ## Create verbump_{new_ver} branch
+create-branch: # Create verbump_{new_ver} branch
 	@git checkout -b $(BRANCH)
 	@echo "Created branch $(BRANCH)"
+	# commit the version bump
+	@git add $(INIT_FILE)
+	@git add $(PYPROJECT_TOML)
+	@git commit -m "Version Bump to $(VERSION)"
+	@echo "Committed version bump to $(VERSION)"
+	@git push --set-upstream origin $(BRANCH)
+	@echo "Pushed branch $(BRANCH) to origin"
 
-commit-tag: ## Commit version bump
-	@git add pyproject.toml
-	@git add mostlyai/__init__.py
-	# In case of other expectedly changed files to be included, add here
-	@git commit -m "bump: to $(VERSION)"
-	@git tag $(TAG)
-	@echo "Tag $(TAG) created"
+clean-dist: # Remove "volatile" directory dist
+	@rm -rf dist
+	@echo "Cleaned up dist directory"
 
-push-changes: ## Push to version bump branch
-	@git push origin $(BRANCH)
-	@echo "Pushed changes to $(BRANCH) branch"
-	
-update-main: ## Merge the current branch into main and push changes to origin
-	@git checkout main
-	@git merge --squash $(BRANCH)
-	@git commit -m "bump: to $(VERSION)"
-	@git push origin main
-	@echo "Merged $(BRANCH) into main and pushed changes"
-
-re-tag:  ## Correct the new version tag on main
-	@git tag -d $(TAG)
-	@git tag $(TAG)
-	@git push origin $(TAG)
-	@echo "Re-tagged and pushed $(TAG)"
-
-build: ## Build the project and create the dist directory if it doesn't exist
+build: # Build the project and create the dist directory if it doesn't exist
 	@mkdir -p dist
 	@poetry build
 	@echo "Built the project"
 
-confirm-upload: ## Confirm before the irreversible zone
+confirm-upload: # Confirm before the irreversible zone
 	@echo "Are you sure you want to upload to PyPI? (yes/no)"
 	@read ans && [ $${ans:-no} = yes ]
 
-upload: confirm-upload ## Upload to PyPI (ensure the token is present in .pypirc file before running upload)
+upload-pypi: confirm-upload # Upload to PyPI (ensure the token is present in .pypirc file before running upload)
 	@twine upload dist/*$(VERSION)* --verbose
 	@echo "Uploaded version $(VERSION) to PyPI"
 	
-clean-dist: ## Remove "volatile" directory dist
-	@rm -rf dist
-	@echo "Cleaned up dist directory"
-	
-delete-branch: ## Delete the branch both locally and remotely
-	@git branch -D $(BRANCH)
-	@git push origin --delete $(BRANCH)
-	@echo "Deleted branch $(BRANCH) locally and remotely"
-
 docs: ## Update docs site
 	@mkdocs gh-deploy
 	@echo "Deployed docs"
