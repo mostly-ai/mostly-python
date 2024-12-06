@@ -1,4 +1,4 @@
-::: mostlyai.api
+::: mostlyai.client.api
 
 # MostlyAI.connectors
 
@@ -31,7 +31,7 @@ new_connector = mostly.connectors.create(config=config)
 
 Methods available in `MostlyAI.connectors`.
 
-::: mostlyai.connectors._MostlyConnectorsClient
+::: mostlyai.client.connectors._MostlyConnectorsClient
 
 # MostlyAI.generators
 
@@ -61,7 +61,7 @@ new_generator = mostly.generator.create(data=census_url)
 
 Methods available in `MostlyAI.generators`.
 
-::: mostlyai.generators._MostlyGeneratorsClient
+::: mostlyai.client.generators._MostlyGeneratorsClient
 
 # MostlyAI.synthetic_datasets
 
@@ -91,4 +91,4 @@ new_synthetic_dataset = mostly.synthetic_datasets.create({"generatorId": generat
 
 Methods available in `MostlyAI.synthetic_datasets`.
 
-::: mostlyai.synthetic_datasets._MostlySyntheticDatasetsClient
+::: mostlyai.client.synthetic_datasets._MostlySyntheticDatasetsClient

@@ -1,5 +1,5 @@
 # Constant for the file path
-FILE_PATH = "mostlyai/model.py"
+FILE_PATH = "mostlyai/client/model.py"
 
 
 def postprocess_model_file(file_path):
