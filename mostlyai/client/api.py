@@ -4,10 +4,10 @@ from typing import Any, Optional, Union, Literal
 import pandas as pd
 import rich
 
-from mostlyai.base import GET, _MostlyBaseClient
-from mostlyai.connectors import _MostlyConnectorsClient
-from mostlyai.generators import _MostlyGeneratorsClient
-from mostlyai.model import (
+from mostlyai.client.base import GET, _MostlyBaseClient
+from mostlyai.client.connectors import _MostlyConnectorsClient
+from mostlyai.client.generators import _MostlyGeneratorsClient
+from mostlyai.client.model import (
     Connector,
     CurrentUser,
     Generator,
@@ -21,12 +21,12 @@ from mostlyai.model import (
     SyntheticDatasetConfig,
     SyntheticProbeConfig,
 )
-from mostlyai.shares import _MostlySharesClient
-from mostlyai.synthetic_datasets import (
+from mostlyai.client.shares import _MostlySharesClient
+from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
     _MostlySyntheticProbesClient,
 )
-from mostlyai.utils import (
+from mostlyai.client.utils import (
     ShareableResource,
     _read_table_from_path,
     _harmonize_sd_config,

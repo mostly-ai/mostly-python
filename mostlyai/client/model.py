@@ -10,7 +10,7 @@ from typing import Annotated, Any, ClassVar, Dict, List, Literal, Optional, Unio
 import pandas as pd
 from pydantic import AwareDatetime, Field, RootModel
 
-from mostlyai.base import CustomBaseModel
+from mostlyai.client.base import CustomBaseModel
 
 
 class PermissionLevel(str, Enum):

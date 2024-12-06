@@ -17,7 +17,7 @@ from rich.progress import (
 )
 from rich.style import Style
 
-from mostlyai.model import (
+from mostlyai.client.model import (
     Connector,
     Generator,
     ProgressStatus,
@@ -28,7 +28,7 @@ from mostlyai.model import (
     SyntheticTableConfig,
     SyntheticTableConfiguration,
 )
-from mostlyai.naming_conventions import map_camel_to_snake_case
+from mostlyai.client.naming_conventions import map_camel_to_snake_case
 
 warnings.simplefilter("always", DeprecationWarning)
 

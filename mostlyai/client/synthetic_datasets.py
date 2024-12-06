@@ -5,8 +5,8 @@ from typing import Any, Iterator, Optional, Union
 
 import pandas as pd
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import (
+from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.client.model import (
     JobProgress,
     SyntheticDataset,
     SyntheticDatasetFormat,
@@ -15,7 +15,7 @@ from mostlyai.model import (
     SyntheticProbeConfig,
     SyntheticDatasetPatchConfig,
 )
-from mostlyai.utils import _job_wait
+from mostlyai.client.utils import _job_wait
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):

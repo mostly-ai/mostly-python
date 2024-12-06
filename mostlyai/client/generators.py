@@ -4,16 +4,16 @@ import re
 
 import pandas as pd
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import (
+from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.client.model import (
     Generator,
     JobProgress,
     GeneratorListItem,
     GeneratorConfig,
     GeneratorPatchConfig,
 )
-from mostlyai.shares import _MostlySharesMixin
-from mostlyai.utils import (
+from mostlyai.client.shares import _MostlySharesMixin
+from mostlyai.client.utils import (
     _convert_to_base64,
     _job_wait,
     _read_table_from_path,

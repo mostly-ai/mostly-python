@@ -1,14 +1,14 @@
 from typing import Any, Iterator, Optional, List, Dict, Union
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import (
+from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.client.model import (
     Connector,
     ConnectorListItem,
     SyntheticDatasetConfig,
     ConnectorPatchConfig,
     ConnectorConfig,
 )
-from mostlyai.shares import _MostlySharesMixin
+from mostlyai.client.shares import _MostlySharesMixin
 
 
 class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):

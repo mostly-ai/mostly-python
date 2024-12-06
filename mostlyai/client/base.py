@@ -19,8 +19,8 @@ import rich
 from pydantic import BaseModel, ConfigDict, Field
 from rich.console import Console
 
-from mostlyai.exceptions import APIError, APIStatusError
-from mostlyai.naming_conventions import (
+from mostlyai.client.exceptions import APIError, APIStatusError
+from mostlyai.client.naming_conventions import (
     snake_to_camel,
     map_snake_to_camel_case,
     map_camel_to_snake_case,

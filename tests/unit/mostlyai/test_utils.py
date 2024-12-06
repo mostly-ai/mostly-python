@@ -10,7 +10,7 @@ import pandas as pd
 import pytest
 from rich.console import Console
 
-from mostlyai.model import (
+from mostlyai.client.model import (
     JobProgress,
     ProgressStatus,
     ProgressStep,
@@ -23,7 +23,7 @@ from mostlyai.model import (
     SyntheticTableConfig,
     SyntheticProbeConfig,
 )
-from mostlyai.utils import (
+from mostlyai.client.utils import (
     _convert_to_base64,
     _job_wait,
     _read_table_from_path,
