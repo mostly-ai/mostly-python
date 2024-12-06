@@ -7,77 +7,31 @@ theme:
   name: material
   logo: logo.png
   favicon: favicon.png
-  palette:
-  - media: "(prefers-color-scheme)"
-    scheme: default
-    primary: indigo
-    accent: indigo
-    toggle:
-      icon: material/lightbulb
-      name: "Switch to light mode"
-  - media: "(prefers-color-scheme: light)"
-    scheme: default
-    primary: indigo
-    accent: indigo
-    toggle:
-      icon: material/lightbulb-outline
-      name: "Switch to dark mode"
-  - media: "(prefers-color-scheme: dark)"
-    scheme: slate
-    primary: indigo
-    accent: indigo
-    toggle:
-      icon: material/lightbulb-auto-outline
-      name: "Switch to system preference"
-
+  font:
+    text: Lato
   features:
-    - navigation.instant
-    - navigation.instant.prefetch
-#    - navigation.tabs
-#    - navigation.tabs.sticky
-    - search.suggest
-    - search.highlight
-    - search.share
+    - navigation.top
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
     - content.code.select
     - content.code.copy
-    - content.code.annotate
-    - content.tooltips
     - navigation.footer
-    - navigation.indexes
-    - navigation.sections
-    - toc.follow
 
-  icon:
-    repo: fontawesome/brands/github
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-2
+        name: Switch to light mode
+
 nav:
-  - Home:
-    - Index: index.md
-  - API Reference:
-    - API: api_reference/api.md
-    - Model: api_reference/model.md
-
-markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
-
-#markdown_extensions:
-#  - pymdownx.blocks.admonition
-#  - pymdownx.blocks.details
-#  - pymdownx.magiclink
-#  - pymdownx.highlight
-#  - pymdownx.inlinehilite
-#  - pymdownx.snippets
-#  - pymdownx.superfences
-#  - pymdownx.snippets:
-#      base_path: [!relative $config_dir]
-#      check_paths: true
-#  - toc:
-#      permalink: "¤"
+  - Getting Started: index.md
+  - API Reference: api_client.md
+  - Model Reference: api_model.md
 
 plugins:
   - search
@@ -96,25 +50,14 @@ plugins:
             extensions:
             - griffe_fieldz
             docstring_style: google
-#
-#plugins:
-#  - search
-#  - mkdocstrings:
-#      handlers:
-#        python:
-#          paths: [mostlyai]
-#          options:
-#            docstring_style: sphinx
-#            show_bases: false
-#            show_symbol_type_heading: true
-#            show_docstring_examples: true
-#            filters: ["!^_"]
-#            members_order: source
-#            separate_signature: true
-#            show_signature_annotations: true
-#            signature_crossrefs: true
-#            show_symbol_type_toc: true
-#            show_root_toc_entry: false
-#          rendering:
-#            show_source: true
-#            show_if_no_docstring: false
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - toc:
+      permalink: true

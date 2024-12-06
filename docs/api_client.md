@@ -1,8 +1,13 @@
+---
+hide:
+  - navigation
+---
+
 ::: mostlyai.client.api
 
-# MostlyAI.connectors
+## MostlyAI.connectors
 
-## Examples
+### Examples
 
 Here are some examples of how to use the `connectors` methods.
 
@@ -33,9 +38,9 @@ Methods available in `MostlyAI.connectors`.
 
 ::: mostlyai.client.connectors._MostlyConnectorsClient
 
-# MostlyAI.generators
+## MostlyAI.generators
 
-## Examples
+### Examples
 
 Here are some examples of how to use the `generators` methods.
 
@@ -63,9 +68,9 @@ Methods available in `MostlyAI.generators`.
 
 ::: mostlyai.client.generators._MostlyGeneratorsClient
 
-# MostlyAI.synthetic_datasets
+## MostlyAI.synthetic_datasets
 
-## Examples
+### Examples
 
 Here are some examples of how to use the `synthetic_datasets` methods.
 
