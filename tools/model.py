@@ -13,7 +13,6 @@ from mostlyai.model import (
     SyntheticDatasetPatchConfig,
     SyntheticDatasetConfig,
     GeneratorConfig,
-    ConnectorConfig,
 )
 
 
@@ -94,14 +93,6 @@ class Connector:
         :return: The retrieved schema
         """
         return self.client._schema(connector_id=self.id, location=location)
-
-    def config(self) -> ConnectorConfig:
-        """
-        Retrieve writeable connector properties
-
-        :return: The connector properties as ConnectorConfig
-        """
-        return self.client._config(connector_id=self.id)
 
     def shares(self):
         return self.client._shares(resource=self)
