@@ -220,7 +220,9 @@ class CustomBaseModel(BaseModel):
     OPEN_URL_PARTS: ClassVar[list] = None  # ["d", "object-name"]
     client: Annotated[Optional[Any], Field(exclude=True, repr=False)] = None
     extra_key_values: Annotated[Optional[dict], Field(exclude=True, repr=False)] = None
-    model_config = ConfigDict(protected_namespaces=(), populate_by_name=True)
+    model_config = ConfigDict(
+        protected_namespaces=(), populate_by_name=True, use_enum_values=True
+    )
 
     def _repr_html_(self):
         # Use rich.print to create a rich representation of the model
