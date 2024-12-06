@@ -2,4 +2,4 @@ This module is auto-generated to represent `pydantic`-based classes of the defin
 
 Some of those classes also include methods to operate on existing objects, in conjunction with an instantiated `MostlyAI` client.
 
-::: mostlyai.model
+::: mostlyai.client.model
