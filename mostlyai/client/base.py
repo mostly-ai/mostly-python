@@ -19,8 +19,8 @@ import rich
 from pydantic import BaseModel, ConfigDict, Field
 from rich.console import Console
 
-from mostlyai.exceptions import APIError, APIStatusError
-from mostlyai.naming_conventions import (
+from mostlyai.client.exceptions import APIError, APIStatusError
+from mostlyai.client.naming_conventions import (
     snake_to_camel,
     map_snake_to_camel_case,
     map_camel_to_snake_case,
@@ -115,6 +115,8 @@ class _MostlyBaseClient:
             )
 
         if "json" in kwargs and do_json_camel_case:
+            if isinstance(kwargs["json"], BaseModel):
+                kwargs["json"] = kwargs["json"].model_dump()
             kwargs["json"] = map_snake_to_camel_case(kwargs["json"])
 
         try:

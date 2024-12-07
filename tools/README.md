@@ -3,7 +3,7 @@
 ## model extension
 
 While `datamodel-codegen` is a very handy tool for converting OpenAPI definitions into
-pydantic objects (see `mostlyai/model.py`), it lacks the direct ability of adding extra functionality (e.g. methods)
+pydantic objects (see `mostlyai/client/model.py`), it lacks the direct ability of adding extra functionality (e.g. methods)
 to the classes it creates. For example, having `Generator.add_table(...)` is out of its scope, but
 there's a trick being used here:
 - `datamodel-codegen` works with `Jinja2` templates, and custom templates can be specified
@@ -18,10 +18,10 @@ Moreover, all of that happens by simply running `make gen-public-model`
 
 ## Updating public model (based on `public-api.yaml`)
 
-`make gen-public-model` does all the required actions to rewrite and format `mostlyai/model.py`.
+`make gen-public-model` does all the required actions to rewrite and format `mostlyai/client/model.py`.
 Be mindful of the following:
 - Currently, it's fixed to fetch `public-api.yaml` from `dev`
-- The relevant code sections from `tools/model.py` are stitched into the resulted `mostlyai/model.py`
+- The relevant code sections from `tools/model.py` are stitched into the resulted `mostlyai/client/model.py`
 - Make sure to set `GH_TOKEN` env var to be able to fetch the raw data for `public-api.yaml` from the associated GitHub repo
 
 # Release Workflow

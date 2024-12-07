@@ -1,7 +1,7 @@
 import pytest
 from datamodel_code_generator.reference import camel_to_snake
 
-from mostlyai.naming_conventions import (
+from mostlyai.client.naming_conventions import (
     snake_to_camel,
     map_snake_to_camel_case,
     map_camel_to_snake_case,

@@ -1,6 +1,6 @@
 # Internal Variables
 PUBLIC_API_FULL_URL = https://raw.githubusercontent.com/mostly-ai/mostly-openapi/refs/heads/main/public-api.yaml
-PUBLIC_API_OUTPUT_PATH = mostlyai/model.py
+PUBLIC_API_OUTPUT_PATH = mostlyai/client/model.py
 
 # Targets
 .PHONY: help
@@ -64,7 +64,7 @@ NEW_VERSION := $(shell echo $(CURRENT_VERSION) | awk -F. -v bump=$(BUMP_TYPE) '{
 
 update-version-gh: pull-main bump-version update-vars-version create-branch ## Update version in GitHub: pull main, bump version, create and push the new branch
 
-release-pypi: clean-dist pull-main build upload docs  ## Release to PyPI: pull main, build and upload to PyPI
+release-pypi: clean-dist pull-main build confirm-upload upload-pypi docs  ## Release to PyPI: pull main, build and upload to PyPI
 
 pull-main: # Pull main branch
 	# stash changes
