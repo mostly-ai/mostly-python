@@ -1,12 +1,12 @@
-from mostlyai.base import DELETE, GET, POST, _MostlyBaseClient
-from mostlyai.model import (
+from mostlyai.client.base import DELETE, GET, POST, _MostlyBaseClient
+from mostlyai.client.model import (
     Connector,
     Generator,
     PermissionLevel,
     Share,
     SyntheticDataset,
 )
-from mostlyai.utils import ShareableResource
+from mostlyai.client.utils import ShareableResource
 
 
 class _MostlySharesClient(_MostlyBaseClient):

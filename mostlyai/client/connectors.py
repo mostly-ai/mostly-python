@@ -1,8 +1,14 @@
-from typing import Any, Iterator, Optional, List, Dict
+from typing import Any, Iterator, Optional, List, Dict, Union
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Connector, ConnectorListItem
-from mostlyai.shares import _MostlySharesMixin
+from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.client.model import (
+    Connector,
+    ConnectorListItem,
+    SyntheticDatasetConfig,
+    ConnectorPatchConfig,
+    ConnectorConfig,
+)
+from mostlyai.client.shares import _MostlySharesMixin
 
 
 class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
@@ -52,7 +58,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def create(
         self,
-        config: dict[str, Any],
+        config: Union[SyntheticDatasetConfig, dict[str, Any]],
     ) -> Connector:
         """
         Create a connector, and optionally validate the connection before saving.
@@ -69,7 +75,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _update(
         self,
         connector_id: str,
-        config: dict[str, Any],
+        config: Union[ConnectorPatchConfig, dict[str, Any]],
     ) -> Connector:
         response = self.request(
             verb=PATCH,
@@ -82,8 +88,10 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _delete(self, connector_id: str) -> None:
         self.request(verb=DELETE, path=[connector_id])
 
-    def _config(self, connector_id: str):
-        response = self.request(verb=GET, path=[connector_id, "config"])
+    def _config(self, connector_id: str) -> ConnectorConfig:
+        response = self.request(
+            verb=GET, path=[connector_id, "config"], response_type=ConnectorConfig
+        )
         return response
 
     def _locations(self, connector_id: str, prefix: str = "") -> list:

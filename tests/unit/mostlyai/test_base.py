@@ -5,8 +5,8 @@ import pytest
 import respx
 from httpx import NetworkError, Response
 
-from mostlyai.base import DEFAULT_BASE_URL, Paginator, _MostlyBaseClient
-from mostlyai.exceptions import APIError, APIStatusError
+from mostlyai.client.base import DEFAULT_BASE_URL, Paginator, _MostlyBaseClient
+from mostlyai.client.exceptions import APIError, APIStatusError
 
 
 @pytest.fixture

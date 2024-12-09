@@ -4,10 +4,16 @@ import re
 
 import pandas as pd
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import Generator, JobProgress, GeneratorListItem
-from mostlyai.shares import _MostlySharesMixin
-from mostlyai.utils import (
+from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.client.model import (
+    Generator,
+    JobProgress,
+    GeneratorListItem,
+    GeneratorConfig,
+    GeneratorPatchConfig,
+)
+from mostlyai.client.shares import _MostlySharesMixin
+from mostlyai.client.utils import (
     _convert_to_base64,
     _job_wait,
     _read_table_from_path,
@@ -59,8 +65,8 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         response = self.request(verb=GET, path=[generator_id], response_type=Generator)
         return response
 
-    def create(self, config: dict) -> Generator:
-        if config.get("tables"):
+    def create(self, config: Union[GeneratorConfig, dict]) -> Generator:
+        if isinstance(config, dict) and config.get("tables"):
             for table in config["tables"]:
                 # convert `data` to base64-encoded Parquet files
                 if table.get("data") is not None:
@@ -130,7 +136,9 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
             filename = f"generator-{generator_id[:8]}.mostly"
         return content_bytes, filename
 
-    def _update(self, generator_id: str, config: dict[str, Any]) -> Generator:
+    def _update(
+        self, generator_id: str, config: Union[GeneratorPatchConfig, dict[str, Any]]
+    ) -> Generator:
         response = self.request(
             verb=PATCH,
             path=[generator_id],
@@ -152,8 +160,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         )
         return response
 
-    def _config(self, generator_id: str) -> Generator:
-        response = self.request(verb=GET, path=[generator_id, "config"])
+    def _config(self, generator_id: str) -> GeneratorConfig:
+        response = self.request(
+            verb=GET, path=[generator_id, "config"], response_type=GeneratorConfig
+        )
         return response
 
     def _training_start(self, generator_id: str) -> None:
