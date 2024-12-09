@@ -1,7 +1,7 @@
 site_name: "mostlyai"
-site_url: "https://mostly-ai.github.io/mostly-python/"
-repo_url: "https://github.com/mostly-ai/mostly-python"
-repo_name: "mostly-ai/mostly-python"
+site_url: "https://mostly-ai.github.io/mostlyai-client/"
+repo_url: "https://github.com/mostly-ai/mostlyai-client"
+repo_name: "mostly-ai/mostlyai-client"
 
 theme:
   name: material
