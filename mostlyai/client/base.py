@@ -239,15 +239,6 @@ class CustomBaseModel(BaseModel):
         webbrowser.open_new(url)
         return url
 
-    def reload(self):
-        """
-        Reload the instance to reflect its current state.
-        """
-        if hasattr(self.client, "get"):
-            reloaded = self.client.get(self.id)
-            for key, value in reloaded.model_dump().items():
-                setattr(self, key, value)
-
 
 def _get_total_size(obj, seen=None):
     """Recursively finds size of objects in bytes."""

@@ -201,8 +201,8 @@ class MostlyAI(_MostlyBaseClient):
 
     def train(
         self,
-        data: Union[pd.DataFrame, str, Path, None] = None,
         config: Union[GeneratorConfig, dict, None] = None,
+        data: Union[pd.DataFrame, str, Path, None] = None,
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,
@@ -211,16 +211,21 @@ class MostlyAI(_MostlyBaseClient):
         """
         Train a generator
 
-        :param data: Either a single pandas DataFrame data, a path to a CSV or PARQUET file. Note: Either 'data' or 'config' must be provided.
-        :param config: The configuration parameters of the generator to be created. Note: Either 'data' or 'config' must be provided.
-        :param name: Optional. The name of the generator.
+        :param config: The configuration parameters of the generator to be created. Note: Either `data` or `config` must be provided.
+        :param data: Either a single pandas DataFrame data, a path to a CSV or PARQUET file. Note: Either `data` or `config` must be provided.
+        :param name: Optional. The name of the generator. Alternatively specify via `config`.
         :param start: If true, then training is started right away. Default: true.
         :param wait: If true, then the function only returns once training has finished. Default: true.
         :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
         :return: The created generator.
         """
+        if data is None and config is None:
+            raise ValueError("Either config or data must be provided")
         if data is not None and config is not None:
-            raise ValueError("Either data or config must be provided, but not both")
+            raise ValueError("Either config or data must be provided, but not both")
+        if config is not None and isinstance(config, (pd.DataFrame, str, Path)) is None:
+            # map config to data, in case user provided config as a DataFrame or path
+            data = config
         if isinstance(data, (str, Path)):
             name, df = _read_table_from_path(data)
             config = GeneratorConfig(
@@ -233,8 +238,6 @@ class MostlyAI(_MostlyBaseClient):
                 name=f"DataFrame {df.shape}",
                 tables=[SourceTableConfig(data=_convert_to_base64(df), name="data")],
             )
-        elif config is None:
-            raise ValueError("Either data or config must be provided")
         if isinstance(config, dict):
             config = GeneratorConfig(**config)
         if name is not None:
@@ -259,9 +262,9 @@ class MostlyAI(_MostlyBaseClient):
     def generate(
         self,
         generator: Union[Generator, str, None] = None,
+        config: Union[SyntheticDatasetConfig, dict, None] = None,
         size: Union[int, dict[str, int], None] = None,
         seed: Union[Seed, dict[str, Seed], None] = None,
-        config: Union[SyntheticDatasetConfig, dict, None] = None,
         name: Optional[str] = None,
         start: bool = True,
         wait: bool = True,

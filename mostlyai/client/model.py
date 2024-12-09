@@ -1754,7 +1754,9 @@ class SyntheticDataset(CustomBaseModel):
                 self.synthetic_dataset.id
             )
 
-        def wait(self, progress_bar: bool, interval: float = 2) -> "SyntheticDataset":
+        def wait(
+            self, progress_bar: bool = True, interval: float = 2
+        ) -> "SyntheticDataset":
             """
             Poll generation progress and loop until generation has completed
 
@@ -1896,7 +1898,7 @@ class Generator(CustomBaseModel):
             """
             return self.generator.client._training_progress(self.generator.id)
 
-        def wait(self, progress_bar: bool, interval: float = 2) -> "Generator":
+        def wait(self, progress_bar: bool = True, interval: float = 2) -> "Generator":
             """
             Poll training progress and loop until training has completed
 
