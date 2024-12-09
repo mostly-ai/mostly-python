@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://mostly-ai.github.io/mostly-python/</loc>
-         <lastmod>2024-12-04</lastmod>
+         <loc>https://mostly-ai.github.io/mostlyai-client/</loc>
+         <lastmod>2024-12-09</lastmod>
     </url>
     <url>
-         <loc>https://mostly-ai.github.io/mostly-python/api_reference/api/</loc>
-         <lastmod>2024-12-04</lastmod>
+         <loc>https://mostly-ai.github.io/mostlyai-client/api_reference/api/</loc>
+         <lastmod>2024-12-09</lastmod>
     </url>
     <url>
-         <loc>https://mostly-ai.github.io/mostly-python/api_reference/model/</loc>
-         <lastmod>2024-12-04</lastmod>
+         <loc>https://mostly-ai.github.io/mostlyai-client/api_reference/model/</loc>
+         <lastmod>2024-12-09</lastmod>
     </url>
 </urlset>
