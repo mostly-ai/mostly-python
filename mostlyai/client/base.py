@@ -85,22 +85,26 @@ class _MostlyBaseClient:
         **kwargs,
     ) -> Any:
         """
-        This method is rather an extended request helper method, which could be split into two:
-        1. Create a request with its params and execute it; Raise an exception in case of an unsuccessful result.
-        2. Pack the response into: a specific type (e.g. Pydantic class) with the optional inclusion of:
-            - client - so that the returned object can access the API
-            - extra_key_values - to store extra information, that is potentially used via that object
-        :param path: a single str, or a list of parts of the path to concatenate
-        :param verb: get/post/patch/delete
-        :param response_type: a specific type to return (e.g. Pydantic class)
-        :param raw_response: whether to just return a raw response (e.g. content)
-        :param is_api_call: True by default; if False, API_SECTION and SECTION won't be prefixed
-        :param do_json_camel_case: ensure a provided json follows camelCase conventions
-        :param do_response_dict_snake_case: ensure the returned dict follows snake_case conventions
-        :param do_include_client: True by default; if True, client property will be included in the returned instance
-        :param extra_key_values: Any extra information storage to include in the returned object
-        :param kwargs: httpx's request function's kwargs
-        :return: response in a designated type with optional extras
+        Extended request helper method to send HTTP requests and process the response.
+
+        Args:
+            path (Union[str, List[Any]]): A single string or a list of parts of the path to concatenate.
+            verb (HttpVerb): HTTP method (GET, POST, PATCH, DELETE).
+            response_type (type): Type to cast the response into. Defaults to `dict`.
+            raw_response (bool): Whether to return the raw response object. Defaults to `False`.
+            is_api_call (bool): If `False`, skips prefixing API_SECTION and SECTION. Defaults to `True`.
+            do_json_camel_case (bool): Convert the provided JSON to camelCase. Defaults to `True`.
+            do_response_dict_snake_case (bool): Convert the response dictionary to snake_case. Defaults to `True`.
+            do_include_client (bool): Include the client property in the returned object. Defaults to `True`.
+            extra_key_values (dict, optional): Additional key-value pairs to include in the response object.
+            **kwargs: Additional arguments passed to the HTTP request.
+
+        Returns:
+            Any: Processed response based on the `response_type`.
+
+        Raises:
+            APIStatusError: For HTTP errors (non-2XX responses).
+            APIError: For network issues or request errors.
         """
         path_list = [path] if isinstance(path, str) else [str(p) for p in path]
         prefix = self.API_SECTION + self.SECTION if is_api_call else []
@@ -165,9 +169,10 @@ class Paginator(Generic[T]):
         """
         Generic paginator for listing objects with pagination.
 
-        :param request_context: The context in which the request function is called.
-        :param object_class: Class of the object to be listed.
-        :param kwargs: Additional filter parameters including 'offset' and 'limit'.
+        Args:
+            request_context: The context in which the request function is called.
+            object_class (T): Class of the objects to be listed.
+            **kwargs: Additional filter parameters including 'offset' and 'limit'.
         """
         self.request_context = request_context
         self.object_class = object_class
