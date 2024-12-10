@@ -34,13 +34,16 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         """
         List generators.
 
-        Paginate through all generators that the user has access to.
+        Paginate through all generators accessible by the user.
 
-        :param offset: Offset the entities in the response. Optional. Default: 0
-        :param limit: Limit the number of entities in the response. Optional. Default: 50
-        :param status: Filter by training status. Optional. Default: None
-        :param search_term: Filter by string in name or description. Optional
-        :return: Iterator over generators.
+        Args:
+            offset (int): Offset for the entities in the response.
+            limit (int): Limit for the number of entities in the response.
+            status (Union[str, list[str]], optional): Filter by training status.
+            search_term (str, optional): Filter by name or description.
+
+        Returns:
+            Iterator[GeneratorListItem]: An iterator over generator list items.
         """
         status = ",".join(status) if isinstance(status, list) else status
         with Paginator(
@@ -56,15 +59,27 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def get(self, generator_id: str) -> Generator:
         """
-        Retrieve generator
+        Retrieve a generator by its ID.
 
-        :param generator_id: The unique identifier of a generator
-        :return: The retrieved generator
+        Args:
+            generator_id (str): The unique identifier of the generator.
+
+        Returns:
+            Generator: The retrieved generator object.
         """
         response = self.request(verb=GET, path=[generator_id], response_type=Generator)
         return response
 
     def create(self, config: Union[GeneratorConfig, dict]) -> Generator:
+        """
+        Create a generator.
+
+        Args:
+            config (Union[GeneratorConfig, dict]): Configuration for the generator.
+
+        Returns:
+            Generator: The created generator object.
+        """
         if isinstance(config, dict) and config.get("tables"):
             for table in config["tables"]:
                 # convert `data` to base64-encoded Parquet files
@@ -98,8 +113,11 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         Import a generator from a file.
         Supported from release v212 onwards.
 
-        :param file_path: Path to the file to import.
-        :return: The imported generator.
+        Args:
+            file_path (Union[str, Path]): Path to the file to import.
+
+        Returns:
+            Generator: The imported generator object.
         """
         response = self.request(
             verb=POST,

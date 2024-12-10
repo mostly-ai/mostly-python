@@ -26,14 +26,16 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         """
         List connectors.
 
-        Paginate through all connectors that the user has access to.
-        Only connectors, that are independent of a table, will be returned.
+        Paginate through all connectors accessible by the user. Only connectors that are independent of a table will be returned.
 
-        :param offset: Offset the entities in the response. Optional. Default: 0
-        :param limit: Limit the number of entities in the response. Optional. Default: 50
-        :param access_type: Filter by access type. Possible values: "SOURCE", "DESTINATION"
-        :param search_term: Filter by string in name. Optional
-        :return: Iterator over connectors.
+        Args:
+            offset (int): Offset for entities in the response.
+            limit (int): Limit for the number of entities in the response.
+            access_type (str, optional): Filter by access type (e.g., "SOURCE" or "DESTINATION").
+            search_term (str, optional): Filter by string in the connector name.
+
+        Returns:
+            Iterator[ConnectorListItem]: An iterator over connector list items.
         """
         with Paginator(
             self,
@@ -48,10 +50,13 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
 
     def get(self, connector_id: str) -> Connector:
         """
-        Retrieve a connector.
+        Retrieve a connector by its ID.
 
-        :param connector_id: The unique identifier of a connector
-        :return: The retrieved connector
+        Args:
+            connector_id (str): The unique identifier of the connector.
+
+        Returns:
+            Connector: The retrieved connector object.
         """
         response = self.request(verb=GET, path=[connector_id], response_type=Connector)
         return response
@@ -61,9 +66,15 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         config: Union[SyntheticDatasetConfig, dict[str, Any]],
     ) -> Connector:
         """
-        Create a connector, and optionally validate the connection before saving.
+        Create a connector and optionally validate the connection before saving.
 
         See `mostly.connect` for more details.
+
+        Args:
+            config (Union[SyntheticDatasetConfig, dict[str, Any]]): Configuration for the connector.
+
+        Returns:
+            Connector: The created connector object.
         """
         response = self.request(
             verb=POST, path=[], json=config, response_type=Connector

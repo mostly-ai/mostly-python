@@ -74,7 +74,8 @@ class MostlyAI(_MostlyBaseClient):
 
         Args:
             config (Union[ConnectorConfig, dict]): Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
-            The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
+
+        The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
         - Cloud storage:
           ```yaml
@@ -215,10 +216,10 @@ class MostlyAI(_MostlyBaseClient):
         Args:
             config (Union[GeneratorConfig, dict, None]): The configuration parameters of the generator to be created. Either `data` or `config` must be provided.
             data (Union[pd.DataFrame, str, Path, None]): A single pandas DataFrame, or a path to a CSV or PARQUET file.
-            name (str, optional): Name of the generator. Defaults to None.
-            start (bool): Whether to start training immediately. Defaults to True.
-            wait (bool): Whether to wait for training to finish. Defaults to True.
-            progress_bar (bool): Whether to display a progress bar during training. Defaults to True.
+            name (str, optional): Name of the generator.
+            start (bool): Whether to start training immediately.
+            wait (bool): Whether to wait for training to finish.
+            progress_bar (bool): Whether to display a progress bar during training.
 
         Returns:
             Generator: The created generator.
@@ -282,10 +283,10 @@ class MostlyAI(_MostlyBaseClient):
             config (Union[SyntheticDatasetConfig, dict, None]): Configuration for the synthetic dataset.
             size (Union[int, dict[str, int], None]): Sample size(s) for the subject table(s).
             seed (Union[Seed, dict[str, Seed], None]): Seed data for the subject table(s).
-            name (str, optional): Name of the synthetic dataset. Defaults to None.
-            start (bool): Whether to start generation immediately. Defaults to True.
-            wait (bool): Whether to wait for generation to finish. Defaults to True.
-            progress_bar (bool): Whether to display a progress bar during generation. Defaults to True.
+            name (str, optional): Name of the synthetic dataset.
+            start (bool): Whether to start generation immediately.
+            wait (bool): Whether to wait for generation to finish.
+            progress_bar (bool): Whether to display a progress bar during generation.
 
         Returns:
             SyntheticDataset: The created synthetic dataset.
@@ -361,14 +362,14 @@ class MostlyAI(_MostlyBaseClient):
         resource: ShareableResource,
         user_email: str,
         permission_level: Union[str, PermissionLevel] = PermissionLevel.view,
-    ):
+    ) -> None:
         """
         Share a resource with a user.
 
         Args:
             resource (ShareableResource): The resource to share.
             user_email (str): Email address of the user to share the resource with.
-            permission_level (Union[str, PermissionLevel]): Permission level to grant. Defaults to PermissionLevel.view.
+            permission_level (Union[str, PermissionLevel]): Permission level to grant.
 
         Returns:
             None
@@ -384,7 +385,7 @@ class MostlyAI(_MostlyBaseClient):
             f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource.id}[/]"
         )
 
-    def unshare(self, resource: ShareableResource, user_email: str):
+    def unshare(self, resource: ShareableResource, user_email: str) -> None:
         """
         Unshare a resource from a user.
 

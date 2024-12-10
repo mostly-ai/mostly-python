@@ -33,13 +33,16 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         """
         List synthetic datasets.
 
-        Paginate through all synthetic datasets that the user has access to.
+        Paginate through all synthetic datasets accessible by the user.
 
-        :param offset: Offset the entities in the response. Optional. Default: 0
-        :param limit: Limit the number of entities in the response. Optional. Default: 50
-        :param status: Filter by generation status. Optional. Default: None
-        :param search_term: Filter by string in name or description. Optional
-        :return: Iterator over synthetic datasets.
+        Args:
+            offset (int): Offset for the entities in the response.
+            limit (int): Limit for the number of entities in the response.
+            status (Union[str, list[str]], optional): Filter by generation status.
+            search_term (str, optional): Filter by name or description.
+
+        Returns:
+            Iterator[SyntheticDatasetListItem]: An iterator over synthetic datasets.
         """
         status = ",".join(status) if isinstance(status, list) else status
         with Paginator(
@@ -55,10 +58,13 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
 
     def get(self, synthetic_dataset_id: str) -> SyntheticDataset:
         """
-        Retrieve synthetic dataset
+        Retrieve a synthetic dataset by its ID.
 
-        :param synthetic_dataset_id: The unique identifier of a synthetic dataset
-        :return: The retrieved synthetic dataset
+        Args:
+            synthetic_dataset_id (str): The unique identifier of the synthetic dataset.
+
+        Returns:
+            SyntheticDataset: The retrieved synthetic dataset object.
         """
         response = self.request(
             verb=GET, path=[synthetic_dataset_id], response_type=SyntheticDataset
@@ -69,10 +75,13 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         self, config: Union[SyntheticDatasetConfig, dict[str, Any]]
     ) -> SyntheticDataset:
         """
-        Create synthetic dataset
+        Create a synthetic dataset.
 
-        :param config: The configuration parameters of the synthetic dataset to be created.
-        :return: The created synthetic dataset.
+        Args:
+            config (Union[SyntheticDatasetConfig, dict[str, Any]]): Configuration for the synthetic dataset.
+
+        Returns:
+            SyntheticDataset: The created synthetic dataset object.
         """
         synthetic_dataset = self.request(
             verb=POST,
@@ -203,10 +212,13 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
         self, config: Union[SyntheticProbeConfig, dict[str, Any]]
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
-        Create synthetic probe
+        Create a synthetic probe.
 
-        :param config: The configuration parameters of the synthetic dataset to be created.
-        :return: The created synthetic dataset.
+        Args:
+            config (Union[SyntheticProbeConfig, dict[str, Any]]): Configuration for the synthetic probe.
+
+        Returns:
+            Union[pd.DataFrame, dict[str, pd.DataFrame]]: A dictionary mapping probe names to pandas DataFrames.
         """
         dicts = self.request(
             verb=POST,
