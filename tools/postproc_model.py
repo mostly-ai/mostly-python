@@ -1,5 +1,13 @@
 # Constant for the file path
-FILE_PATH = "mostlyai/model.py"
+FILE_PATH = "mostlyai/client/model.py"
+
+# Dictionary for enum replacements
+enum_replace_dict = {
+    "        'AUTO'": "        ModelEncodingType.auto",
+    "        'NEW'": "        GeneratorCloneTrainingStatus.new",
+    "        'CONSTANT'": "        RareCategoryReplacementMethod.constant",
+    "Field('SOURCE'": "Field(ConnectorAccessType.source",
+}
 
 
 def postprocess_model_file(file_path):
@@ -17,16 +25,25 @@ def postprocess_model_file(file_path):
             pass
         # Skip the import line for UUID
         elif "import UUID" in line:
-            new_lines.append("import pandas as pd\nfrom pathlib import Path")
+            new_lines.append(
+                "import pandas as pd\nfrom pathlib import Path\n"
+                "from pydantic import field_validator\nfrom mostlyai.client.base_utils import _convert_to_base64"
+            )
         elif "from typing" in line and not import_typing_updated:
             # Append ', ClassVar' to the line if it doesn't already contain ClassVar
             if "ClassVar" not in line:
-                line = line.rstrip() + ", ClassVar, Union, Literal\n"
+                line = line.rstrip() + ", ClassVar, Union, Literal, Annotated\n"
                 import_typing_updated = True
             new_lines.append(line)
         else:
             # Replace 'UUID' with 'str'
             new_line = line.replace("UUID", "str")
+
+            # Apply replacements from enum_replace_dict
+            for old, new in enum_replace_dict.items():
+                if old in new_line:
+                    new_line = new_line.replace(old, new)
+
             new_lines.append(new_line)
 
     # Write the modified contents back to the file

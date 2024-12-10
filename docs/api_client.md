@@ -1,8 +1,13 @@
-::: mostlyai.api
+---
+hide:
+  - navigation
+---
 
-# MostlyAI.connectors
+::: mostlyai.client.api
 
-## Examples
+## MostlyAI.connectors
+
+### Examples
 
 Here are some examples of how to use the `connectors` methods.
 
@@ -31,11 +36,11 @@ new_connector = mostly.connectors.create(config=config)
 
 Methods available in `MostlyAI.connectors`.
 
-::: mostlyai.connectors._MostlyConnectorsClient
+::: mostlyai.client.connectors._MostlyConnectorsClient
 
-# MostlyAI.generators
+## MostlyAI.generators
 
-## Examples
+### Examples
 
 Here are some examples of how to use the `generators` methods.
 
@@ -61,11 +66,11 @@ new_generator = mostly.generator.create(data=census_url)
 
 Methods available in `MostlyAI.generators`.
 
-::: mostlyai.generators._MostlyGeneratorsClient
+::: mostlyai.client.generators._MostlyGeneratorsClient
 
-# MostlyAI.synthetic_datasets
+## MostlyAI.synthetic_datasets
 
-## Examples
+### Examples
 
 Here are some examples of how to use the `synthetic_datasets` methods.
 
@@ -91,4 +96,4 @@ new_synthetic_dataset = mostly.synthetic_datasets.create({"generatorId": generat
 
 Methods available in `MostlyAI.synthetic_datasets`.
 
-::: mostlyai.synthetic_datasets._MostlySyntheticDatasetsClient
+::: mostlyai.client.synthetic_datasets._MostlySyntheticDatasetsClient

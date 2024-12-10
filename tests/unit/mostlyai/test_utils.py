@@ -10,7 +10,7 @@ import pandas as pd
 import pytest
 from rich.console import Console
 
-from mostlyai.model import (
+from mostlyai.client.model import (
     JobProgress,
     ProgressStatus,
     ProgressStep,
@@ -19,11 +19,16 @@ from mostlyai.model import (
     Generator,
     Metadata,
     SourceTable,
+    SyntheticDatasetConfig,
+    SyntheticTableConfig,
+    SyntheticProbeConfig,
 )
-from mostlyai.utils import (
+from mostlyai.client.base_utils import (
     _convert_to_base64,
-    _job_wait,
     _read_table_from_path,
+)
+from mostlyai.client.mostly_utils import (
+    _job_wait,
     _harmonize_sd_config,
 )
 
@@ -151,7 +156,7 @@ def test__job_wait():
 
 @pytest.fixture
 def simple_sd_config():
-    return {"tables": [{"name": "subject", "configuration": {}}]}
+    return SyntheticDatasetConfig(tables=[SyntheticTableConfig(name="subject")])
 
 
 def test__harmonize_sd_config(simple_sd_config):
@@ -164,32 +169,32 @@ def test__harmonize_sd_config(simple_sd_config):
         )
     )
 
+    # case 1: existing config
     config = _harmonize_sd_config(
-        generator="some_id", get_generator=mock_get_generator, config=simple_sd_config
+        generator="some_id",
+        get_generator=mock_get_generator,
+        config=simple_sd_config,
+        config_type=SyntheticDatasetConfig,
     )
-    assert config == {
-        "generator_id": "some_id",
-        "tables": [{"configuration": {}, "name": "subject"}],
-    }
+    assert config == SyntheticDatasetConfig(
+        generator_id="some_id", tables=[SyntheticTableConfig(name="subject")]
+    )
     mock_get_generator.assert_not_called()
 
+    # case 2: existing config
     config = _harmonize_sd_config(
         generator="other_id",
         get_generator=mock_get_generator,
         size=1234,
         seed=pd.DataFrame(),
+        config_type=SyntheticProbeConfig,
     )
     mock_get_generator.assert_called_once_with("other_id")
-    assert config == {
-        "generator_id": "other_id",
-        "tables": [
-            {
-                "name": "table",
-                "configuration": {
-                    "sample_size": 1234,
-                    "sample_seed_data": ANY,
-                    "sample_seed_dict": None,
-                },
-            }
-        ],
-    }
+    assert isinstance(config, SyntheticProbeConfig)
+    assert config.generator_id == "other_id"
+    assert len(config.tables) == 1
+    table = config.tables[0]
+    assert table.name == "table"
+    assert table.configuration.sample_size == 1234
+    assert table.configuration.sample_seed_data == ANY
+    assert table.configuration.sample_seed_dict is None

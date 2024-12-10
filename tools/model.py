@@ -2,25 +2,52 @@ from pathlib import Path
 from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 
 import pandas as pd
-from pydantic import Field
+from pydantic import Field, field_validator
 
-from mostlyai.model import JobProgress, SyntheticDatasetFormat
+from mostlyai.client.base_utils import _convert_to_base64
+from mostlyai.client.model import (
+    JobProgress,
+    SyntheticDatasetFormat,
+    ConnectorPatchConfig,
+    GeneratorPatchConfig,
+    SyntheticDatasetDelivery,
+    SyntheticDatasetPatchConfig,
+    SyntheticDatasetConfig,
+    GeneratorConfig,
+)
 
 
 class Connector:
     OPEN_URL_PARTS: ClassVar[list] = ["d", "connectors"]
 
-    def update(self, config) -> "Connector":
+    def update(
+        self,
+        name: Optional[str] = None,
+        config: Optional[dict[str, Any]] = None,
+        secrets: Optional[dict[str, str]] = None,
+        ssl: Optional[dict[str, str]] = None,
+        test_connection: Optional[bool] = None,
+    ) -> "Connector":
         """
-        Update a connector, and optionally validate the connection before saving.
+        Update a connector with specific parameters.
 
-        If validation fails, a 400 status with an error message will be returned.
-
-        For the structure of the config, secrets and ssl parameters, see the CREATE method.
-
+        :param name: The name of the connector
+        :param config: Connector configuration
+        :param secrets: Secret values for the connector
+        :param ssl: SSL configuration for the connector
+        :param test_connection: If true, validates the connection before saving
         :return: The updated connector
         """
-        return self.client._update(connector_id=self.id, config=config)
+        patch_config = ConnectorPatchConfig(
+            name=name,
+            config=config,
+            secrets=secrets,
+            ssl=ssl,
+            test_connection=test_connection,
+        )
+        return self.client._update(
+            connector_id=self.id, config=patch_config.model_dump(exclude_none=True)
+        )
 
     def delete(self):
         """
@@ -68,14 +95,6 @@ class Connector:
         """
         return self.client._schema(connector_id=self.id, location=location)
 
-    def config(self) -> dict[str, Any]:
-        """
-        Retrieve writeable generator properties
-
-        :return: The generator properties as dictionary
-        """
-        return self.client._config(connector_id=self.id)
-
     def shares(self):
         return self.client._shares(resource=self)
 
@@ -88,15 +107,25 @@ class Generator:
         super().__init__(*args, **kwargs)
         self.training = self.Training(self)
 
-    def update(self, config) -> "Generator":
+    def update(
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+    ) -> "Generator":
         """
-        Update generator
+        Update a generator with specific parameters.
 
-        See config for the structure of the parameters.
-
+        :param name: The name of the generator
+        :param description: The description of the generator
         :return: The updated generator
         """
-        return self.client._update(generator_id=self.id, config=config)
+        patch_config = GeneratorPatchConfig(
+            name=name,
+            description=description,
+        )
+        return self.client._update(
+            generator_id=self.id, config=patch_config.model_dump(exclude_none=True)
+        )
 
     def delete(self):
         """
@@ -104,7 +133,7 @@ class Generator:
         """
         return self.client._delete(generator_id=self.id)
 
-    def config(self) -> dict[str, Any]:
+    def config(self) -> GeneratorConfig:
         """
         Retrieve writeable generator properties
 
@@ -161,7 +190,7 @@ class Generator:
             """
             return self.generator.client._training_progress(self.generator.id)
 
-        def wait(self, progress_bar: bool, interval: float = 2) -> "Generator":
+        def wait(self, progress_bar: bool = True, interval: float = 2) -> "Generator":
             """
             Poll training progress and loop until training has completed
 
@@ -185,6 +214,29 @@ class Generator:
             pass
 
 
+class SourceTableConfig:
+    @field_validator("data", mode="before")
+    @classmethod
+    def validate_data_before(cls, value):
+        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+
+
+class SyntheticTableConfiguration:
+    @field_validator("sample_seed_dict", mode="before")
+    @classmethod
+    def validate_dict_before(cls, value):
+        return (
+            _convert_to_base64(value, format="jsonl")
+            if isinstance(value, dict)
+            else value
+        )
+
+    @field_validator("sample_seed_data", mode="before")
+    @classmethod
+    def validate_data_before(cls, value):
+        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+
+
 class SyntheticDataset:
     OPEN_URL_PARTS: ClassVar[list] = ["d", "synthetic-datasets"]
     generation: Annotated[Optional[Any], Field(exclude=True)] = None
@@ -193,15 +245,29 @@ class SyntheticDataset:
         super().__init__(*args, **kwargs)
         self.generation = self.Generation(self)
 
-    def update(self, config) -> "SyntheticDataset":
+    def update(
+        self,
+        name: Optional[str] = None,
+        description: Optional[str] = None,
+        delivery: Optional[SyntheticDatasetDelivery] = None,
+    ) -> "SyntheticDataset":
         """
-        Update synthetic dataset
+        Update a synthetic dataset with specific parameters.
 
-        See config for the structure of the parameters.
-
+        :param name: The name of the synthetic dataset
+        :param description: The description of the synthetic dataset
+        :param delivery: The delivery configuration for the synthetic dataset
         :return: The updated synthetic dataset
         """
-        return self.client._update(synthetic_dataset_id=self.id, config=config)
+        patch_config = SyntheticDatasetPatchConfig(
+            name=name,
+            description=description,
+            delivery=delivery,
+        )
+        return self.client._update(
+            synthetic_dataset_id=self.id,
+            config=patch_config.model_dump(exclude_none=True),
+        )
 
     def delete(self):
         """
@@ -209,7 +275,7 @@ class SyntheticDataset:
         """
         return self.client._delete(synthetic_dataset_id=self.id)
 
-    def config(self) -> dict[str, Any]:
+    def config(self) -> SyntheticDatasetConfig:
         """
         Retrieve writeable synthetic dataset properties
 
@@ -287,7 +353,9 @@ class SyntheticDataset:
                 self.synthetic_dataset.id
             )
 
-        def wait(self, progress_bar: bool, interval: float = 2) -> "SyntheticDataset":
+        def wait(
+            self, progress_bar: bool = True, interval: float = 2
+        ) -> "SyntheticDataset":
             """
             Poll generation progress and loop until generation has completed
 

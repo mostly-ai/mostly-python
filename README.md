@@ -59,7 +59,7 @@ sd.data()
 ### Generators
 
 ```python
-g = mostly.train(data, config, name, start=True, wait=True)
+g = mostly.train(config, data, name, start=True, wait=True)
 
 g = mostly.generators.create(config)
 g = mostly.generators.get(id)
@@ -67,14 +67,13 @@ it = mostly.generators.list()
 g = g.update(config)
 config = g.config()
 g.open()
-g.reload()
 g.delete()
 
 # training
 g.training.start()
 g.training.progress()
 g.training.cancel()
-g.training.wait()
+g = g.training.wait()
 
 # import / export
 g.export_to_file(file_path)
@@ -97,14 +96,13 @@ sd = mostly.synthetic_datasets.get(id)
 it = mostly.synthetic_datasets.list()
 config = sd.config()
 sd.open()
-sd.reload()
 sd.delete()
 
 
 sd.generation.start()
 sd.generation.progress()
 sd.generation.cancel()
-sd.generation.wait()
+sd = sd.generation.wait()
 
 sd.data()
 sd.download(file, format)
@@ -130,7 +128,6 @@ c = c.update(config)
 ls = c.locations(prefix)
 config = c.config()
 c.open()
-c.reload()
 c.delete()
 ```
 

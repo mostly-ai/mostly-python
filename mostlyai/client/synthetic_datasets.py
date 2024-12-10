@@ -5,14 +5,17 @@ from typing import Any, Iterator, Optional, Union
 
 import pandas as pd
 
-from mostlyai.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.model import (
+from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
+from mostlyai.client.model import (
     JobProgress,
     SyntheticDataset,
     SyntheticDatasetFormat,
     SyntheticDatasetListItem,
+    SyntheticDatasetConfig,
+    SyntheticProbeConfig,
+    SyntheticDatasetPatchConfig,
 )
-from mostlyai.utils import _job_wait
+from mostlyai.client.mostly_utils import _job_wait
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
@@ -62,11 +65,11 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         )
         return response
 
-    def create(self, config: dict[str, Any]) -> SyntheticDataset:
+    def create(
+        self, config: Union[SyntheticDatasetConfig, dict[str, Any]]
+    ) -> SyntheticDataset:
         """
         Create synthetic dataset
-
-        See SyntheticDataset.config for the structure of the parameters.
 
         :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
@@ -74,7 +77,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         synthetic_dataset = self.request(
             verb=POST,
             path=[],
-            json=dict(config),
+            json=config,
             response_type=SyntheticDataset,
         )
         return synthetic_dataset
@@ -82,7 +85,9 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     # PRIVATE METHODS #
 
     def _update(
-        self, synthetic_dataset_id: str, config: dict[str, Any]
+        self,
+        synthetic_dataset_id: str,
+        config: Union[SyntheticDatasetPatchConfig, dict[str, Any]],
     ) -> SyntheticDataset:
         response = self.request(
             verb=PATCH,
@@ -96,8 +101,12 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         response = self.request(verb=DELETE, path=[synthetic_dataset_id])
         return response
 
-    def _config(self, synthetic_dataset_id: str) -> SyntheticDataset:
-        response = self.request(verb=GET, path=[synthetic_dataset_id, "config"])
+    def _config(self, synthetic_dataset_id: str) -> SyntheticDatasetConfig:
+        response = self.request(
+            verb=GET,
+            path=[synthetic_dataset_id, "config"],
+            response_type=SyntheticDatasetConfig,
+        )
         return response
 
     def _download(
@@ -191,12 +200,10 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
     SECTION = ["synthetic-probes"]
 
     def create(
-        self, config: dict[str, Any]
+        self, config: Union[SyntheticProbeConfig, dict[str, Any]]
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
         Create synthetic probe
-
-        See SyntheticDataset.config for the structure of the parameters.
 
         :param config: The configuration parameters of the synthetic dataset to be created.
         :return: The created synthetic dataset.
@@ -204,6 +211,6 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
         dicts = self.request(
             verb=POST,
             path=[],
-            json=dict(config),
+            json=config,
         )
         return {dct["name"]: pd.DataFrame(dct["rows"]) for dct in dicts}

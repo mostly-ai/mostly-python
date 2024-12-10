@@ -1,6 +1,6 @@
 # Internal Variables
 PUBLIC_API_FULL_URL = https://raw.githubusercontent.com/mostly-ai/mostly-openapi/refs/heads/main/public-api.yaml
-PUBLIC_API_OUTPUT_PATH = mostlyai/model.py
+PUBLIC_API_OUTPUT_PATH = mostlyai/client/model.py
 
 # Targets
 .PHONY: help
@@ -14,7 +14,7 @@ gen-public-model: ## build pydantic models for public api
 	@echo "Generating Pydantic models from $(PUBLIC_API_FULL_URL)"
 	datamodel-codegen --url $(PUBLIC_API_FULL_URL) $(COMMON_OPTIONS)
 	python tools/postproc_model.py
-	black $(PUBLIC_API_OUTPUT_PATH) && isort $(PUBLIC_API_OUTPUT_PATH) && ruff --fix $(PUBLIC_API_OUTPUT_PATH)
+	black $(PUBLIC_API_OUTPUT_PATH) && isort $(PUBLIC_API_OUTPUT_PATH) && ruff format $(PUBLIC_API_OUTPUT_PATH)
 
 # Common options for both targets
 COMMON_OPTIONS = \
@@ -24,13 +24,12 @@ COMMON_OPTIONS = \
 	--target-python-version 3.9 \
 	--use-schema-description \
 	--field-constraints \
-	--use-annotated \
 	--collapse-root-models \
 	--use-one-literal-as-default \
 	--enum-field-as-literal one \
 	--use-subclass-enum \
 	--output-model-type pydantic_v2.BaseModel \
-	--base-class mostlyai.base.CustomBaseModel \
+	--base-class mostlyai.client.base.CustomBaseModel \
 	--custom-template-dir tools/custom_template
 
 .PHONY: clean
@@ -64,7 +63,7 @@ NEW_VERSION := $(shell echo $(CURRENT_VERSION) | awk -F. -v bump=$(BUMP_TYPE) '{
 
 update-version-gh: pull-main bump-version update-vars-version create-branch ## Update version in GitHub: pull main, bump version, create and push the new branch
 
-release-pypi: clean-dist pull-main build upload docs  ## Release to PyPI: pull main, build and upload to PyPI
+release-pypi: clean-dist pull-main build confirm-upload upload-pypi docs  ## Release to PyPI: pull main, build and upload to PyPI
 
 pull-main: # Pull main branch
 	# stash changes
@@ -123,7 +122,7 @@ build: # Build the project and create the dist directory if it doesn't exist
 	@poetry build
 	@echo "Built the project"
 	@twine check --strict dist/*
-	@echo "Project is checked"	
+	@echo "Project is checked"
 
 confirm-upload: # Confirm before the irreversible zone
 	@echo "Are you sure you want to upload to PyPI? (yes/no)"
@@ -132,7 +131,7 @@ confirm-upload: # Confirm before the irreversible zone
 upload-pypi: confirm-upload # Upload to PyPI (ensure the token is present in .pypirc file before running upload)
 	@twine upload dist/*$(VERSION)* --verbose
 	@echo "Uploaded version $(VERSION) to PyPI"
-	
+
 docs: ## Update docs site
 	@mkdocs gh-deploy
 	@echo "Deployed docs"
