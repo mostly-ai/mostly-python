@@ -26,12 +26,12 @@ from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
     _MostlySyntheticProbesClient,
 )
-from mostlyai.client.utils import (
+from mostlyai.client.base_utils import _convert_to_base64
+from mostlyai.client.mostly_utils import (
     ShareableResource,
     _read_table_from_path,
     _harmonize_sd_config,
     Seed,
-    _convert_to_base64,
 )
 
 

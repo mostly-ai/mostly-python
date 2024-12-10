@@ -6,7 +6,8 @@ from mostlyai.client.model import (
     Share,
     SyntheticDataset,
 )
-from mostlyai.client.utils import ShareableResource
+
+from mostlyai.client.mostly_utils import ShareableResource
 
 
 class _MostlySharesClient(_MostlyBaseClient):

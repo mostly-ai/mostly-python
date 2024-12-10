@@ -13,11 +13,10 @@ from mostlyai.client.model import (
     GeneratorPatchConfig,
 )
 from mostlyai.client.shares import _MostlySharesMixin
-from mostlyai.client.utils import (
+from mostlyai.client.base_utils import (
     _convert_to_base64,
-    _job_wait,
-    _read_table_from_path,
 )
+from mostlyai.client.mostly_utils import _job_wait, _read_table_from_path
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
