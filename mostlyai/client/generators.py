@@ -37,10 +37,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         Paginate through all generators accessible by the user.
 
         Args:
-            offset (int): Offset for the entities in the response.
-            limit (int): Limit for the number of entities in the response.
+            offset: Offset for the entities in the response.
+            limit: Limit for the number of entities in the response.
             status (Union[str, list[str]], optional): Filter by training status.
-            search_term (str, optional): Filter by name or description.
+            search_term: Filter by name or description.
 
         Returns:
             Iterator[GeneratorListItem]: An iterator over generator list items.
@@ -62,7 +62,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
         Retrieve a generator by its ID.
 
         Args:
-            generator_id (str): The unique identifier of the generator.
+            generator_id: The unique identifier of the generator.
 
         Returns:
             Generator: The retrieved generator object.

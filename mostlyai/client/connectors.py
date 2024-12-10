@@ -29,10 +29,10 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         Paginate through all connectors accessible by the user. Only connectors that are independent of a table will be returned.
 
         Args:
-            offset (int): Offset for entities in the response.
-            limit (int): Limit for the number of entities in the response.
-            access_type (str, optional): Filter by access type (e.g., "SOURCE" or "DESTINATION").
-            search_term (str, optional): Filter by string in the connector name.
+            offset: Offset for entities in the response.
+            limit: Limit for the number of entities in the response.
+            access_type: Filter by access type (e.g., "SOURCE" or "DESTINATION").
+            search_term: Filter by string in the connector name.
 
         Returns:
             Iterator[ConnectorListItem]: An iterator over connector list items.
@@ -53,7 +53,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
         Retrieve a connector by its ID.
 
         Args:
-            connector_id (str): The unique identifier of the connector.
+            connector_id: The unique identifier of the connector.
 
         Returns:
             Connector: The retrieved connector object.

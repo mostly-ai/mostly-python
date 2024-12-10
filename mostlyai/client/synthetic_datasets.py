@@ -36,10 +36,10 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         Paginate through all synthetic datasets accessible by the user.
 
         Args:
-            offset (int): Offset for the entities in the response.
-            limit (int): Limit for the number of entities in the response.
+            offset: Offset for the entities in the response.
+            limit: Limit for the number of entities in the response.
             status (Union[str, list[str]], optional): Filter by generation status.
-            search_term (str, optional): Filter by name or description.
+            search_term: Filter by name or description.
 
         Returns:
             Iterator[SyntheticDatasetListItem]: An iterator over synthetic datasets.
@@ -61,7 +61,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         Retrieve a synthetic dataset by its ID.
 
         Args:
-            synthetic_dataset_id (str): The unique identifier of the synthetic dataset.
+            synthetic_dataset_id: The unique identifier of the synthetic dataset.
 
         Returns:
             SyntheticDataset: The retrieved synthetic dataset object.

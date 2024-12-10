@@ -32,11 +32,11 @@ class Connector:
         Update a connector with specific parameters.
 
         Args:
-            name (str, optional): The name of the connector.
+            name: The name of the connector.
             config (dict[str, Any], optional): Connector configuration.
             secrets (dict[str, str], optional): Secret values for the connector.
             ssl (dict[str, str], optional): SSL configuration for the connector.
-            test_connection (bool, optional): If true, validates the connection before saving.
+            test_connection: If true, validates the connection before saving.
 
         Returns:
             Connector: The updated connector object.
@@ -87,7 +87,7 @@ class Connector:
             - `SNOWFLAKE`: `schema.table`
 
         Args:
-            prefix (str): The prefix to filter the results by.
+            prefix: The prefix to filter the results by.
 
         Returns:
             list: A list of locations (schemas, databases, directories, etc.)."""
@@ -99,7 +99,7 @@ class Connector:
         Please refer to `locations()` for the format of the location.
 
         Args:
-            location (str): The location of the table.
+            location: The location of the table.
 
         Returns:
             list[dict[str, Any]]: The retrieved schema.
@@ -127,8 +127,8 @@ class Generator:
         Update a generator with specific parameters.
 
         Args:
-            name (str, optional): The name of the generator.
-            description (str, optional): The description of the generator.
+            name: The name of the generator.
+            description: The description of the generator.
 
         Returns:
             Generator: The updated generator object.
@@ -230,8 +230,8 @@ class Generator:
             Poll training progress and loop until training has completed.
 
             Args:
-                progress_bar (bool): If true, displays the progress bar.
-                interval (float): The interval in seconds to poll the job progress.
+                progress_bar: If true, displays the progress bar.
+                interval: The interval in seconds to poll the job progress.
 
             Returns:
                 Generator: The generator after training has completed.
@@ -294,9 +294,9 @@ class SyntheticDataset:
         Update a synthetic dataset with specific parameters.
 
         Args:
-            name (str, optional): The name of the synthetic dataset.
-            description (str, optional): The description of the synthetic dataset.
-            delivery (SyntheticDatasetDelivery, optional): The delivery configuration for the synthetic dataset.
+            name: The name of the synthetic dataset.
+            description: The description of the synthetic dataset.
+            delivery: The delivery configuration for the synthetic dataset.
 
         Returns:
             SyntheticDataset: The updated synthetic dataset object.
@@ -338,7 +338,7 @@ class SyntheticDataset:
         Download synthetic dataset and save to file.
 
         Args:
-            format (SyntheticDatasetFormat): The format of the synthetic dataset.
+            format: The format of the synthetic dataset.
             file_path (Union[str, Path, None], optional): The file path to save the synthetic dataset.
 
         Returns:
@@ -423,8 +423,8 @@ class SyntheticDataset:
             Poll the generation progress and wait until the process is complete.
 
             Args:
-                progress_bar (bool): If true, displays a progress bar.
-                interval (float): Interval in seconds to poll the job progress.
+                progress_bar: If true, displays a progress bar.
+                interval: Interval in seconds to poll the job progress.
 
             Returns:
                 SyntheticDataset: The synthetic dataset after the generation process is complete.

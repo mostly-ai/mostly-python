@@ -89,14 +89,14 @@ class _MostlyBaseClient:
 
         Args:
             path (Union[str, List[Any]]): A single string or a list of parts of the path to concatenate.
-            verb (HttpVerb): HTTP method (GET, POST, PATCH, DELETE).
-            response_type (type): Type to cast the response into. Defaults to `dict`.
-            raw_response (bool): Whether to return the raw response object. Defaults to `False`.
-            is_api_call (bool): If `False`, skips prefixing API_SECTION and SECTION. Defaults to `True`.
-            do_json_camel_case (bool): Convert the provided JSON to camelCase. Defaults to `True`.
-            do_response_dict_snake_case (bool): Convert the response dictionary to snake_case. Defaults to `True`.
-            do_include_client (bool): Include the client property in the returned object. Defaults to `True`.
-            extra_key_values (dict, optional): Additional key-value pairs to include in the response object.
+            verb: HTTP method (GET, POST, PATCH, DELETE).
+            response_type: Type to cast the response into. Defaults to `dict`.
+            raw_response: Whether to return the raw response object. Defaults to `False`.
+            is_api_call: If `False`, skips prefixing API_SECTION and SECTION. Defaults to `True`.
+            do_json_camel_case: Convert the provided JSON to camelCase. Defaults to `True`.
+            do_response_dict_snake_case: Convert the response dictionary to snake_case. Defaults to `True`.
+            do_include_client: Include the client property in the returned object. Defaults to `True`.
+            extra_key_values: Additional key-value pairs to include in the response object.
             **kwargs: Additional arguments passed to the HTTP request.
 
         Returns:
@@ -171,7 +171,7 @@ class Paginator(Generic[T]):
 
         Args:
             request_context: The context in which the request function is called.
-            object_class (T): Class of the objects to be listed.
+            object_class: Class of the objects to be listed.
             **kwargs: Additional filter parameters including 'offset' and 'limit'.
         """
         self.request_context = request_context
