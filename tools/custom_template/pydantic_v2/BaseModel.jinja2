@@ -405,3 +405,23 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
                 self.synthetic_dataset.id, progress_bar=progress_bar, interval=interval
             )
 {%- endif %}
+{%- if class_name == "SourceTableConfig" %}
+    @field_validator("data", mode="before")
+    @classmethod
+    def validate_data_before(cls, value):
+        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+{%- endif %}{%- if class_name == "SyntheticTableConfiguration" %}
+    @field_validator("sample_seed_dict", mode="before")
+    @classmethod
+    def validate_dict_before(cls, value):
+        return (
+            _convert_to_base64(value, format="jsonl")
+            if isinstance(value, dict)
+            else value
+        )
+
+    @field_validator("sample_seed_data", mode="before")
+    @classmethod
+    def validate_data_before(cls, value):
+        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+{%- endif %}

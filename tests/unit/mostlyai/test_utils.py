@@ -23,10 +23,12 @@ from mostlyai.client.model import (
     SyntheticTableConfig,
     SyntheticProbeConfig,
 )
-from mostlyai.client.utils import (
+from mostlyai.client.base_utils import (
     _convert_to_base64,
-    _job_wait,
     _read_table_from_path,
+)
+from mostlyai.client.mostly_utils import (
+    _job_wait,
     _harmonize_sd_config,
 )
 

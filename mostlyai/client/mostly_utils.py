@@ -1,36 +1,31 @@
-import base64
-import io
 import time
-import warnings
 from pathlib import Path
-from typing import Callable, Union, Optional, Any, Literal
+from typing import Callable, Union, Any, Optional
 
 import pandas as pd
-import csv
 import rich
 from rich.progress import (
-    BarColumn,
     Progress,
-    TaskProgressColumn,
     TextColumn,
+    BarColumn,
+    TaskProgressColumn,
     TimeElapsedColumn,
 )
 from rich.style import Style
 
+from mostlyai.client.base_utils import _convert_to_base64, _read_table_from_path
 from mostlyai.client.model import (
-    Connector,
-    Generator,
-    ProgressStatus,
     StepCode,
-    SyntheticDataset,
+    ProgressStatus,
+    Generator,
     SyntheticDatasetConfig,
     SyntheticProbeConfig,
-    SyntheticTableConfig,
     SyntheticTableConfiguration,
+    SyntheticTableConfig,
+    Connector,
+    SyntheticDataset,
 )
 from mostlyai.client.naming_conventions import map_camel_to_snake_case
-
-warnings.simplefilter("always", DeprecationWarning)
 
 
 def _job_wait(
@@ -135,24 +130,6 @@ def _job_wait(
         )
         progress.stop()
         return
-
-
-def _convert_to_base64(
-    df: Union[pd.DataFrame, list[dict[str, Any]]],
-    format: Literal["parquet", "jsonl"] = "parquet",
-) -> str:
-    # Save the DataFrame to a buffer in Parquet / JSONL format
-    if not isinstance(df, pd.DataFrame):
-        df = pd.DataFrame(df)
-    buffer = io.BytesIO()
-    if format == "parquet":
-        df.to_parquet(buffer, index=False)
-    else:  # format == "jsonl"
-        df.to_json(buffer, orient="records", date_format="iso", lines=True, index=False)
-    buffer.seek(0)
-    binary_data = buffer.read()
-    base64_encoded_str = base64.b64encode(binary_data).decode()
-    return base64_encoded_str
 
 
 def _get_subject_table_names(generator: Generator) -> list[str]:
@@ -268,29 +245,6 @@ def _harmonize_sd_config(
             )
 
     return config
-
-
-def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
-    # read data from file
-    fn = str(path)
-    if fn.lower().endswith((".pqt", ".parquet")):
-        df = pd.read_parquet(fn)
-    else:
-        delimiter = ","
-        if fn.lower().endswith((".csv", ".tsv")):
-            try:
-                with open(fn) as f:
-                    header = f.readline()
-                sniffer = csv.Sniffer()
-                delimiter = sniffer.sniff(header, ",;|\t' :").delimiter
-            except csv.Error:
-                # happens for example for single column CSV files
-                pass
-        df = pd.read_csv(fn, low_memory=False, delimiter=delimiter)
-    if fn.lower().endswith((".gz", ".gzip", ".bz2")):
-        fn = fn.rsplit(".", 1)[0]
-    name = Path(fn).stem
-    return name, df
 
 
 ShareableResource = Union[Connector, Generator, SyntheticDataset]
