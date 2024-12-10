@@ -39,10 +39,11 @@ class MostlyAI(_MostlyBaseClient):
     """
     Client for interacting with the Mostly AI Public API.
 
-    :param base_url: The base URL. If not provided, a default value is used.
-    :param api_key: The API key for authenticating. If not provided, it would rely on env vars.
-    :param timeout: Timeout for HTTPS requests in seconds.
-    :param ssl_verify: Whether to verify SSL certificates.
+    Args:
+        base_url: The base URL. If not provided, a default value is used.
+        api_key: The API key for authenticating. If not provided, it would rely on environment variables.
+        timeout: Timeout for HTTPS requests in seconds.
+        ssl_verify: Whether to verify SSL certificates.
     """
 
     def __init__(
@@ -69,11 +70,11 @@ class MostlyAI(_MostlyBaseClient):
 
     def connect(self, config: Union[ConnectorConfig, dict[str, Any]]) -> Connector:
         """
-        Create a connector, and optionally validate the connection before saving.
+        Create a connector and optionally validate the connection before saving.
 
-        If validation fails, a 400 status with an error message will be returned.
+        Args:
+            config (Union[ConnectorConfig, dict]): Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
 
-        `config` is either a ConnectorConfig or an equivalent dictionary.
         The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
         - Cloud storage:
@@ -191,7 +192,8 @@ class MostlyAI(_MostlyBaseClient):
               password: string
           ```
 
-        :return: The created connector.
+        Returns:
+            Connector: The created connector.
         """
         c = self.connectors.create(config)
         rich.print(
@@ -209,15 +211,18 @@ class MostlyAI(_MostlyBaseClient):
         progress_bar: bool = True,
     ) -> Generator:
         """
-        Train a generator
+        Train a generator.
 
-        :param config: The configuration parameters of the generator to be created. Note: Either `data` or `config` must be provided.
-        :param data: Either a single pandas DataFrame data, a path to a CSV or PARQUET file. Note: Either `data` or `config` must be provided.
-        :param name: Optional. The name of the generator. Alternatively specify via `config`.
-        :param start: If true, then training is started right away. Default: true.
-        :param wait: If true, then the function only returns once training has finished. Default: true.
-        :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
-        :return: The created generator.
+        Args:
+            config (Union[GeneratorConfig, dict, None]): The configuration parameters of the generator to be created. Either `data` or `config` must be provided.
+            data (Union[pd.DataFrame, str, Path, None]): A single pandas DataFrame, or a path to a CSV or PARQUET file.
+            name: Name of the generator.
+            start: Whether to start training immediately.
+            wait: Whether to wait for training to finish.
+            progress_bar: Whether to display a progress bar during training.
+
+        Returns:
+            Generator: The created generator.
         """
         if data is None and config is None:
             raise ValueError("Either config or data must be provided")
@@ -271,17 +276,20 @@ class MostlyAI(_MostlyBaseClient):
         progress_bar: bool = True,
     ) -> SyntheticDataset:
         """
-        Generate synthetic data
+        Generate synthetic data.
 
-        :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
-        :param config: The configuration parameters of the synthetic dataset to be created.
-        :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
-        :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or a dictionary of those. Used for seeding the subject table(s).
-        :param name: Optional. The name of the synthetic dataset.
-        :param start: If true, then generation is started right away. Default: true.
-        :param wait: If true, then the function only returns once generation has finished. Default: true.
-        :param progress_bar: If true, then the progress bar will be displayed, in case of wait=True
-        :return: The created synthetic dataset.
+        Args:
+            generator (Union[Generator, str, None]): The generator instance or its UUID.
+            config (Union[SyntheticDatasetConfig, dict, None]): Configuration for the synthetic dataset.
+            size (Union[int, dict[str, int], None]): Sample size(s) for the subject table(s).
+            seed (Union[Seed, dict[str, Seed], None]): Seed data for the subject table(s).
+            name: Name of the synthetic dataset.
+            start: Whether to start generation immediately.
+            wait: Whether to wait for generation to finish.
+            progress_bar: Whether to display a progress bar during generation.
+
+        Returns:
+            SyntheticDataset: The created synthetic dataset.
         """
         config = _harmonize_sd_config(
             generator,
@@ -321,14 +329,17 @@ class MostlyAI(_MostlyBaseClient):
         return_type: Literal["auto", "dict"] = "auto",
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
-        Probe a generator
+        Probe a generator.
 
-        :param generator: The generator instance or its UUID, that is to be used for generating synthetic data.
-        :param config: The configuration parameters of the synthetic dataset to be created.
-        :param size: Optional. Either a single integer, or a dictionary of integers. Used for specifying the sample_size of the subject table(s).
-        :param seed: Optional. Either a single pandas DataFrame data, or a path to a CSV or PARQUET file, or list of samples, or a dictionary of those. Used for seeding the subject table(s).
-        :param return_type: "auto" (default) for retuning a pandas DataFrame in case of a single table, otherwise a dictionary. "dict" for always returning a dictionary
-        :return: The created synthetic probe.
+        Args:
+            generator (Union[Generator, str, None]): The generator instance or its UUID.
+            size (Union[int, dict[str, int], None]): Sample size(s) for the subject table(s).
+            seed (Union[Seed, dict[str, Seed], None]): Seed data for the subject table(s).
+            config (Union[SyntheticProbeConfig, dict, None]): Configuration for the probe.
+            return_type (Literal["auto", "dict"]): Format of the return value. "auto" for pandas DataFrame if a single table, otherwise a dictionary.
+
+        Returns:
+            Union[pd.DataFrame, dict[str, pd.DataFrame]]: The created synthetic probe.
         """
         config = _harmonize_sd_config(
             generator,
@@ -351,15 +362,17 @@ class MostlyAI(_MostlyBaseClient):
         resource: ShareableResource,
         user_email: str,
         permission_level: Union[str, PermissionLevel] = PermissionLevel.view,
-    ):
+    ) -> None:
         """
-        Share a specified resource with a user by granting a specific permission level.
+        Share a resource with a user.
 
-        :param resource: The resource to be shared. This must be an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
-        :param user_email: The email address of the user with whom the resource is to be shared.
-        :param permission_level: The level of permission to be granted. This can be a string or an instance of PermissionLevel. Default is PermissionLevel.view, which grants 'view' access.
+        Args:
+            resource: The resource to share.
+            user_email: Email address of the user to share the resource with.
+            permission_level (Union[str, PermissionLevel]): Permission level to grant.
 
-        :return: None. The function outputs a confirmation message with the details of the sharing action.
+        Returns:
+            None
         """
         if isinstance(permission_level, PermissionLevel):
             permission_level = permission_level.value
@@ -372,14 +385,16 @@ class MostlyAI(_MostlyBaseClient):
             f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource.id}[/]"
         )
 
-    def unshare(self, resource: ShareableResource, user_email: str):
+    def unshare(self, resource: ShareableResource, user_email: str) -> None:
         """
-        Unshare a specified resource from a user.
+        Unshare a resource from a user.
 
-        :param resource: The resource from which access is being unshared. This must be an instance of a ShareableResource (Connector, Generator, or SyntheticDataset).
-        :param user_email: The email address of the user whose access to the resource is to be unshared.
+        Args:
+            resource: The resource to unshare.
+            user_email: Email address of the user to revoke access.
 
-        :return: None. The function outputs a confirmation message with the details of the revocation action.
+        Returns:
+            None
         """
         self.shares._unshare(resource, user_email)
         rich.print(
@@ -388,16 +403,20 @@ class MostlyAI(_MostlyBaseClient):
 
     def me(self) -> CurrentUser:
         """
-        Retrieve current user info.
-        :return: info about the current user.
+        Retrieve information about the current user.
+
+        Returns:
+            CurrentUser: Information about the current user.
         """
         return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
 
     def about(self) -> dict[str, Any]:
         """
-        Retrieve about info from the endpoint.
+        Retrieve platform information.
         Supported from release v210 onwards.
-        :return: info about the platform.
+
+        Returns:
+            dict[str, Any]: Information about the platform.
         """
         return self.request(verb=GET, path=["about"])
 

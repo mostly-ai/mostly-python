@@ -31,12 +31,15 @@ class Connector:
         """
         Update a connector with specific parameters.
 
-        :param name: The name of the connector
-        :param config: Connector configuration
-        :param secrets: Secret values for the connector
-        :param ssl: SSL configuration for the connector
-        :param test_connection: If true, validates the connection before saving
-        :return: The updated connector
+        Args:
+            name: The name of the connector.
+            config (dict[str, Any], optional): Connector configuration.
+            secrets (dict[str, str], optional): Secret values for the connector.
+            ssl (dict[str, str], optional): SSL configuration for the connector.
+            test_connection: If true, validates the connection before saving.
+
+        Returns:
+            Connector: The updated connector object.
         """
         patch_config = ConnectorPatchConfig(
             name=name,
@@ -49,17 +52,20 @@ class Connector:
             connector_id=self.id, config=patch_config.model_dump(exclude_none=True)
         )
 
-    def delete(self):
+    def delete(self) -> None:
         """
-        Delete connector
+        Delete the connector.
+
+        Returns:
+            None
         """
         return self.client._delete(connector_id=self.id)
 
     def locations(self, prefix: str = "") -> list:
         """
-        List connector locations
+        List connector locations.
 
-        List the available databases, schemas, tables or folders for a connector.
+        List the available databases, schemas, tables, or folders for a connector.
         For storage connectors, this returns list of folders and files at root, respectively at `prefix` level.
         For DB connectors, this returns list of schemas (or databases for DBs without schema), respectively list of tables if `prefix` is provided.
 
@@ -79,19 +85,24 @@ class Connector:
             - `ORACLE`: `schema.table`
             - `POSTGRES`: `schema.table`
             - `SNOWFLAKE`: `schema.table`
-        :param prefix: The prefix to filter the results by.
-        :return: A list of locations (schemas, databases, directories, etc.) on the given level.
-        """
+
+        Args:
+            prefix: The prefix to filter the results by.
+
+        Returns:
+            list: A list of locations (schemas, databases, directories, etc.)."""
         return self.client._locations(connector_id=self.id, prefix=prefix)
 
     def schema(self, location: str) -> list[dict[str, Any]]:
         """
-        Retrieve the schema (column names, original data types and default model encoding types) of the table at a connector location.
-
+        Retrieve the schema of the table at a connector location.
         Please refer to `locations()` for the format of the location.
 
-        :param location: The location of the table
-        :return: The retrieved schema
+        Args:
+            location: The location of the table.
+
+        Returns:
+            list[dict[str, Any]]: The retrieved schema.
         """
         return self.client._schema(connector_id=self.id, location=location)
 
@@ -115,9 +126,12 @@ class Generator:
         """
         Update a generator with specific parameters.
 
-        :param name: The name of the generator
-        :param description: The description of the generator
-        :return: The updated generator
+        Args:
+            name: The name of the generator.
+            description: The description of the generator.
+
+        Returns:
+            Generator: The updated generator object.
         """
         patch_config = GeneratorPatchConfig(
             name=name,
@@ -127,17 +141,21 @@ class Generator:
             generator_id=self.id, config=patch_config.model_dump(exclude_none=True)
         )
 
-    def delete(self):
+    def delete(self) -> None:
         """
-        Delete generator
+        Delete the generator.
+
+        Returns:
+            None
         """
         return self.client._delete(generator_id=self.id)
 
     def config(self) -> GeneratorConfig:
         """
-        Retrieve writeable generator properties
+        Retrieve writable generator properties.
 
-        :return: The generator properties as dictionary
+        Returns:
+            GeneratorConfig: The generator properties as a configuration object.
         """
         return self.client._config(generator_id=self.id)
 
@@ -149,9 +167,13 @@ class Generator:
         file_path: Union[str, Path, None] = None,
     ) -> Path:
         """
-        Export generator and save to file
+        Export generator and save to file.
 
-        :param file_path: The file path to save the synthetic dataset
+        Args:
+            file_path (Union[str, Path, None], optional): The file path to save the generator.
+
+        Returns:
+            Path: The path to the saved file.
         """
         bytes, filename = self.client._export_to_file(generator_id=self.id)
         file_path = Path(file_path or ".")
@@ -162,9 +184,13 @@ class Generator:
 
     def clone(self, training_status: Literal["NEW", "CONTINUE"] = "NEW") -> "Generator":
         """
-        Clone generator
+        Clone the generator.
 
-        :param training_status: The training status of the cloned generator
+        Args:
+            training_status (Literal["NEW", "CONTINUE"]): The training status of the cloned generator.
+
+        Returns:
+            Generator: The cloned generator object.
         """
         return self.client._clone(generator_id=self.id, training_status=training_status)
 
@@ -174,28 +200,41 @@ class Generator:
 
         def start(self) -> None:
             """
-            Start training
+            Start training.
+
+            Returns:
+                None
             """
             return self.generator.client._training_start(self.generator.id)
 
         def cancel(self) -> None:
             """
-            Cancel training
+            Cancel training.
+
+            Returns:
+                None
             """
             return self.generator.client._training_cancel(self.generator.id)
 
         def progress(self) -> JobProgress:
             """
-            Retrieve job progress of training
+            Retrieve job progress of training.
+
+            Returns:
+                JobProgress: The job progress of the training process.
             """
             return self.generator.client._training_progress(self.generator.id)
 
         def wait(self, progress_bar: bool = True, interval: float = 2) -> "Generator":
             """
-            Poll training progress and loop until training has completed
+            Poll training progress and loop until training has completed.
 
-            :param progress_bar: If true, then the progress bar will be displayed.
-            :param interval: The interval in seconds to poll the job progress
+            Args:
+                progress_bar: If true, displays the progress bar.
+                interval: The interval in seconds to poll the job progress.
+
+            Returns:
+                Generator: The generator after training has completed.
             """
             return self.generator.client._training_wait(
                 self.generator.id, progress_bar=progress_bar, interval=interval
@@ -254,10 +293,13 @@ class SyntheticDataset:
         """
         Update a synthetic dataset with specific parameters.
 
-        :param name: The name of the synthetic dataset
-        :param description: The description of the synthetic dataset
-        :param delivery: The delivery configuration for the synthetic dataset
-        :return: The updated synthetic dataset
+        Args:
+            name: The name of the synthetic dataset.
+            description: The description of the synthetic dataset.
+            delivery: The delivery configuration for the synthetic dataset.
+
+        Returns:
+            SyntheticDataset: The updated synthetic dataset object.
         """
         patch_config = SyntheticDatasetPatchConfig(
             name=name,
@@ -269,17 +311,21 @@ class SyntheticDataset:
             config=patch_config.model_dump(exclude_none=True),
         )
 
-    def delete(self):
+    def delete(self) -> None:
         """
-        Delete synthetic dataset
+        Delete the synthetic dataset.
+
+        Returns:
+            None
         """
         return self.client._delete(synthetic_dataset_id=self.id)
 
     def config(self) -> SyntheticDatasetConfig:
         """
-        Retrieve writeable synthetic dataset properties
+        Retrieve writable synthetic dataset properties.
 
-        :return: The synthetic dataset properties as dictionary
+        Returns:
+            SyntheticDatasetConfig: The synthetic dataset properties as a configuration object.
         """
         return self.client._config(synthetic_dataset_id=self.id)
 
@@ -289,10 +335,14 @@ class SyntheticDataset:
         file_path: Union[str, Path, None] = None,
     ) -> Path:
         """
-        Download synthetic dataset and save to file
+        Download synthetic dataset and save to file.
 
-        :param format: The format of the synthetic dataset
-        :param file_path: The file path to save the synthetic dataset
+        Args:
+            format: The format of the synthetic dataset.
+            file_path (Union[str, Path, None], optional): The file path to save the synthetic dataset.
+
+        Returns:
+            Path: The path to the saved file.
         """
         bytes, filename = self.client._download(
             synthetic_dataset_id=self.id,
@@ -309,9 +359,13 @@ class SyntheticDataset:
         self, return_type: Literal["auto", "dict"] = "auto"
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
-        Download synthetic dataset and return as dictionary of pandas DataFrames
+        Download synthetic dataset and return as dictionary of pandas DataFrames.
 
-        :return: The synthetic dataset as dictionary of pandas DataFrames
+        Args:
+            return_type (Literal["auto", "dict"]): The format of the returned data.
+
+        Returns:
+            Union[pd.DataFrame, dict[str, pd.DataFrame]]: The synthetic dataset as a dictionary of pandas DataFrames.
         """
         dfs = self.client._data(
             synthetic_dataset_id=self.id,
@@ -331,7 +385,10 @@ class SyntheticDataset:
 
         def start(self) -> None:
             """
-            Start generation
+            Start the generation process.
+
+            Returns:
+                None
             """
             return self.synthetic_dataset.client._generation_start(
                 self.synthetic_dataset.id
@@ -339,7 +396,10 @@ class SyntheticDataset:
 
         def cancel(self) -> None:
             """
-            Cancel generation
+            Cancel the generation process.
+
+            Returns:
+                None
             """
             return self.synthetic_dataset.client._generation_cancel(
                 self.synthetic_dataset.id
@@ -347,7 +407,10 @@ class SyntheticDataset:
 
         def progress(self) -> JobProgress:
             """
-            Retrieve job progress of generation
+            Retrieve the progress of the generation process.
+
+            Returns:
+                JobProgress: The progress of the generation process.
             """
             return self.synthetic_dataset.client._generation_progress(
                 self.synthetic_dataset.id
@@ -357,10 +420,14 @@ class SyntheticDataset:
             self, progress_bar: bool = True, interval: float = 2
         ) -> "SyntheticDataset":
             """
-            Poll generation progress and loop until generation has completed
+            Poll the generation progress and wait until the process is complete.
 
-            :param progress_bar: If true, then the progress bar will be displayed.
-            :param interval: The interval in seconds to poll the job progress
+            Args:
+                progress_bar: If true, displays a progress bar.
+                interval: Interval in seconds to poll the job progress.
+
+            Returns:
+                SyntheticDataset: The synthetic dataset after the generation process is complete.
             """
             return self.synthetic_dataset.client._generation_wait(
                 self.synthetic_dataset.id, progress_bar=progress_bar, interval=interval
