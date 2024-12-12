@@ -8,16 +8,11 @@ This module is auto-generated to represent `pydantic`-based classes of the defin
 Some of those classes also include methods to operate on existing objects, in conjunction with an instantiated `MostlyAI` client.
 
 ::: mostlyai.client.model.PermissionLevel
-::: mostlyai.client.model.UserSettingsProfileUpdateConfig
-::: mostlyai.client.model.UserSettingsAssistantUpdateConfig
 ::: mostlyai.client.model.Credits
 ::: mostlyai.client.model.ParallelTrainingJobs
 ::: mostlyai.client.model.ParallelGenerationJobs
 ::: mostlyai.client.model.UserUsage
-::: mostlyai.client.model.NotificationStatus
-::: mostlyai.client.model.NotificationType
 ::: mostlyai.client.model.Metadata
-::: mostlyai.client.model.PaginatedTotalCount
 ::: mostlyai.client.model.ModelEncodingType
 ::: mostlyai.client.model.ConnectorAccessType
 ::: mostlyai.client.model.ConnectorType
@@ -56,21 +51,6 @@ Some of those classes also include methods to operate on existing objects, in co
 ::: mostlyai.client.model.ForeignKey
 ::: mostlyai.client.model.SyntheticDatasetDelivery
 ::: mostlyai.client.model.SyntheticDatasetPatchConfig
-::: mostlyai.client.model.AssistantLiteLlmExtraItem
-::: mostlyai.client.model.LiteLlm
-::: mostlyai.client.model.DataLlm
-::: mostlyai.client.model.AssistantSettings
-::: mostlyai.client.model.AssistantThreadSessionStatus
-::: mostlyai.client.model.AssistantTokenUsage
-::: mostlyai.client.model.AssistantMessageRole
-::: mostlyai.client.model.AssistantMessageContentType
-::: mostlyai.client.model.AssistantMessageFinishReason
-::: mostlyai.client.model.AssistantMessage
-::: mostlyai.client.model.AssistantMessageDelta
-::: mostlyai.client.model.AssistantThreadUsage
-::: mostlyai.client.model.AssistantThreadConfig
-::: mostlyai.client.model.AssistantThreadPatchConfig
-::: mostlyai.client.model.AssistantMessageConfig
 ::: mostlyai.client.model.ComputeResources
 ::: mostlyai.client.model.ComputeListItem
 ::: mostlyai.client.model.Compute
@@ -79,7 +59,6 @@ Some of those classes also include methods to operate on existing objects, in co
 ::: mostlyai.client.model.UsageReportPeriod
 ::: mostlyai.client.model.BaseResource
 ::: mostlyai.client.model.ShareConfig
-::: mostlyai.client.model.ShareDeleteConfig
 ::: mostlyai.client.model.User
 ::: mostlyai.client.model.CurrentUser
 ::: mostlyai.client.model.UserSettingsUpdateConfig
@@ -93,8 +72,6 @@ Some of those classes also include methods to operate on existing objects, in co
 ::: mostlyai.client.model.SyntheticTable
 ::: mostlyai.client.model.SyntheticTablePatchConfig
 ::: mostlyai.client.model.SyntheticTableConfig
-::: mostlyai.client.model.AssistantThreadListItem
-::: mostlyai.client.model.AssistantThread
 ::: mostlyai.client.model.Share
 ::: mostlyai.client.model.ResourceShares
 ::: mostlyai.client.model.SourceTable
