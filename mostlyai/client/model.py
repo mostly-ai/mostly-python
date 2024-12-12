@@ -11,7 +11,7 @@ import pandas as pd
 from pydantic import AwareDatetime, Field, RootModel, field_validator
 
 from mostlyai.client.base import CustomBaseModel
-from mostlyai.client.base_utils import _convert_to_base64
+from mostlyai.client._base_utils import _convert_to_base64
 
 
 class PermissionLevel(str, Enum):

@@ -15,7 +15,7 @@ from mostlyai.client.model import (
     SyntheticProbeConfig,
     SyntheticDatasetPatchConfig,
 )
-from mostlyai.client.mostly_utils import _job_wait
+from mostlyai.client._mostly_utils import _job_wait
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):

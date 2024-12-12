@@ -4,7 +4,7 @@ from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 import pandas as pd
 from pydantic import Field, field_validator
 
-from mostlyai.client.base_utils import _convert_to_base64
+from mostlyai.client._base_utils import _convert_to_base64
 from mostlyai.client.model import (
     JobProgress,
     SyntheticDatasetFormat,

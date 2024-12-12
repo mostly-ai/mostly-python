@@ -20,10 +20,10 @@ from pydantic import BaseModel, ConfigDict, Field
 from rich.console import Console
 
 from mostlyai.client.exceptions import APIError, APIStatusError
-from mostlyai.client.naming_conventions import (
-    snake_to_camel,
-    map_snake_to_camel_case,
-    map_camel_to_snake_case,
+from mostlyai.client._naming_conventions import (
+    _snake_to_camel,
+    _map_snake_to_camel_case,
+    _map_camel_to_snake_case,
 )
 
 GET = "GET"
@@ -121,7 +121,7 @@ class _MostlyBaseClient:
         if "json" in kwargs and do_json_camel_case:
             if isinstance(kwargs["json"], BaseModel):
                 kwargs["json"] = kwargs["json"].model_dump()
-            kwargs["json"] = map_snake_to_camel_case(kwargs["json"])
+            kwargs["json"] = _map_snake_to_camel_case(kwargs["json"])
 
         try:
             with httpx.Client(timeout=self.timeout, verify=self.ssl_verify) as client:
@@ -154,7 +154,7 @@ class _MostlyBaseClient:
                 if isinstance(extra_key_values, dict):
                     response_json["extra_key_values"] = extra_key_values
             elif response_type == dict and do_response_dict_snake_case:
-                response_json = map_camel_to_snake_case(response_json)
+                response_json = _map_camel_to_snake_case(response_json)
             return (
                 response_type(**response_json)
                 if isinstance(response_json, dict)
@@ -178,7 +178,7 @@ class Paginator(Generic[T]):
         self.object_class = object_class
         self.offset = kwargs.pop("offset", 0)
         self.limit = kwargs.pop("limit", 50)
-        self.params = {snake_to_camel(k): v for k, v in kwargs.items()}
+        self.params = {_snake_to_camel(k): v for k, v in kwargs.items()}
         self.current_items = []
         self.current_index = 0
         self.is_last_page = False

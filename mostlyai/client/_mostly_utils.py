@@ -13,7 +13,7 @@ from rich.progress import (
 )
 from rich.style import Style
 
-from mostlyai.client.base_utils import _convert_to_base64, _read_table_from_path
+from mostlyai.client._base_utils import _convert_to_base64, _read_table_from_path
 from mostlyai.client.model import (
     StepCode,
     ProgressStatus,
@@ -25,7 +25,7 @@ from mostlyai.client.model import (
     Connector,
     SyntheticDataset,
 )
-from mostlyai.client.naming_conventions import map_camel_to_snake_case
+from mostlyai.client._naming_conventions import _map_camel_to_snake_case
 
 
 def _job_wait(
@@ -159,7 +159,7 @@ def _harmonize_sd_config(
     if config is None:
         config = config_type()
     elif isinstance(config, dict):
-        config = map_camel_to_snake_case(config)
+        config = _map_camel_to_snake_case(config)
         config = config_type(**config)
 
     size = size if size is not None else {}
