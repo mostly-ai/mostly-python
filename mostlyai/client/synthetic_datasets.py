@@ -15,7 +15,7 @@ from mostlyai.client.model import (
     SyntheticProbeConfig,
     SyntheticDatasetPatchConfig,
 )
-from mostlyai.client._mostly_utils import _job_wait
+from mostlyai.client._mostly_utils import job_wait
 
 
 class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
@@ -196,7 +196,7 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
     def _generation_wait(
         self, synthetic_dataset_id: str, progress_bar: bool, interval: float
     ) -> SyntheticDataset:
-        _job_wait(
+        job_wait(
             lambda: self._generation_progress(synthetic_dataset_id),
             interval,
             progress_bar,

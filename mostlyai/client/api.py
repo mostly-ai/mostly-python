@@ -26,11 +26,11 @@ from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
     _MostlySyntheticProbesClient,
 )
-from mostlyai.client._base_utils import _convert_to_base64
+from mostlyai.client._base_utils import convert_to_base64
 from mostlyai.client._mostly_utils import (
     ShareableResource,
-    _read_table_from_path,
-    _harmonize_sd_config,
+    read_table_from_path,
+    harmonize_sd_config,
     Seed,
 )
 
@@ -232,16 +232,16 @@ class MostlyAI(_MostlyBaseClient):
             # map config to data, in case user provided config as a DataFrame or path
             data = config
         if isinstance(data, (str, Path)):
-            name, df = _read_table_from_path(data)
+            name, df = read_table_from_path(data)
             config = GeneratorConfig(
                 name=name,
-                tables=[SourceTableConfig(data=_convert_to_base64(df), name=name)],
+                tables=[SourceTableConfig(data=convert_to_base64(df), name=name)],
             )
         elif isinstance(data, pd.DataFrame):
             df = data
             config = GeneratorConfig(
                 name=f"DataFrame {df.shape}",
-                tables=[SourceTableConfig(data=_convert_to_base64(df), name="data")],
+                tables=[SourceTableConfig(data=convert_to_base64(df), name="data")],
             )
         if isinstance(config, dict):
             config = GeneratorConfig(**config)
@@ -291,7 +291,7 @@ class MostlyAI(_MostlyBaseClient):
         Returns:
             SyntheticDataset: The created synthetic dataset.
         """
-        config = _harmonize_sd_config(
+        config = harmonize_sd_config(
             generator,
             get_generator=self.generators.get,
             size=size,
@@ -341,7 +341,7 @@ class MostlyAI(_MostlyBaseClient):
         Returns:
             Union[pd.DataFrame, dict[str, pd.DataFrame]]: The created synthetic probe.
         """
-        config = _harmonize_sd_config(
+        config = harmonize_sd_config(
             generator,
             get_generator=self.generators.get,
             size=size,

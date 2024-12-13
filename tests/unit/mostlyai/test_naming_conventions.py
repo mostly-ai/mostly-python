@@ -3,8 +3,8 @@ from datamodel_code_generator.reference import camel_to_snake
 
 from mostlyai.client._naming_conventions import (
     _snake_to_camel,
-    _map_snake_to_camel_case,
-    _map_camel_to_snake_case,
+    map_snake_to_camel_case,
+    map_camel_to_snake_case,
 )
 
 
@@ -55,7 +55,7 @@ def test_map_snake_to_camel_case():
         "emptyStringKey": "",
     }
 
-    assert _map_snake_to_camel_case(input_data) == expected_output
+    assert map_snake_to_camel_case(input_data) == expected_output
 
 
 @pytest.mark.parametrize(
@@ -108,4 +108,4 @@ def test_map_camel_to_snake_case():
         "empty_string_key": "",
     }
 
-    assert _map_camel_to_snake_case(input_data) == expected_output
+    assert map_camel_to_snake_case(input_data) == expected_output

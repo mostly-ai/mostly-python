@@ -31,9 +31,9 @@ def _convert_case(input_data: dict, conv_func: Callable[[str], str]) -> dict:
     return new_dict
 
 
-def _map_snake_to_camel_case(input_dict: dict) -> dict:
+def map_snake_to_camel_case(input_dict: dict) -> dict:
     return _convert_case(input_dict, _snake_to_camel)
 
 
-def _map_camel_to_snake_case(input_dict: dict) -> dict:
+def map_camel_to_snake_case(input_dict: dict) -> dict:
     return _convert_case(input_dict, _camel_to_snake)

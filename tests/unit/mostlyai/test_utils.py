@@ -24,12 +24,12 @@ from mostlyai.client.model import (
     SyntheticProbeConfig,
 )
 from mostlyai.client._base_utils import (
-    _convert_to_base64,
-    _read_table_from_path,
+    convert_to_base64,
+    read_table_from_path,
 )
 from mostlyai.client._mostly_utils import (
-    _job_wait,
-    _harmonize_sd_config,
+    job_wait,
+    harmonize_sd_config,
 )
 
 UTILS_MODULE = "mostlyai.utils"
@@ -37,7 +37,7 @@ UTILS_MODULE = "mostlyai.utils"
 
 def test_convert_to_base64():
     df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
-    base64_str = _convert_to_base64(df)
+    base64_str = convert_to_base64(df)
 
     assert isinstance(base64_str, str)
 
@@ -59,7 +59,7 @@ def test_read_table_from_path():
             df.to_csv(tmp.name, index=False, sep=d)
             tmp_path = tmp.name
 
-        name, read_df = _read_table_from_path(tmp_path)
+        name, read_df = read_table_from_path(tmp_path)
 
         assert name == Path(tmp_path).stem
         pd.testing.assert_frame_equal(read_df, df)
@@ -142,7 +142,7 @@ def test__job_wait():
 
     console = Console()
     with console.capture() as capture, patch(f"{UTILS_MODULE}.rich._console", console):
-        _job_wait(get_job_progress, interval=1)
+        job_wait(get_job_progress, interval=1)
 
     actual_lines = [line.strip() for line in capture.get().splitlines()]
     expected_lines = [
@@ -170,7 +170,7 @@ def test__harmonize_sd_config(simple_sd_config):
     )
 
     # case 1: existing config
-    config = _harmonize_sd_config(
+    config = harmonize_sd_config(
         generator="some_id",
         get_generator=mock_get_generator,
         config=simple_sd_config,
@@ -182,7 +182,7 @@ def test__harmonize_sd_config(simple_sd_config):
     mock_get_generator.assert_not_called()
 
     # case 2: existing config
-    config = _harmonize_sd_config(
+    config = harmonize_sd_config(
         generator="other_id",
         get_generator=mock_get_generator,
         size=1234,
