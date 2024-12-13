@@ -10,7 +10,7 @@ import csv
 warnings.simplefilter("always", DeprecationWarning)
 
 
-def _convert_to_base64(
+def convert_to_base64(
     df: Union[pd.DataFrame, list[dict[str, Any]]],
     format: Literal["parquet", "jsonl"] = "parquet",
 ) -> str:
@@ -28,7 +28,7 @@ def _convert_to_base64(
     return base64_encoded_str
 
 
-def _read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
+def read_table_from_path(path: Union[str, Path]) -> (str, pd.DataFrame):
     # read data from file
     fn = str(path)
     if fn.lower().endswith((".pqt", ".parquet")):

@@ -20,8 +20,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from rich.console import Console
 
 from mostlyai.client.exceptions import APIError, APIStatusError
-from mostlyai.client.naming_conventions import (
-    snake_to_camel,
+from mostlyai.client._naming_conventions import (
     map_snake_to_camel_case,
     map_camel_to_snake_case,
 )
@@ -178,7 +177,7 @@ class Paginator(Generic[T]):
         self.object_class = object_class
         self.offset = kwargs.pop("offset", 0)
         self.limit = kwargs.pop("limit", 50)
-        self.params = {snake_to_camel(k): v for k, v in kwargs.items()}
+        self.params = map_snake_to_camel_case(kwargs)
         self.current_items = []
         self.current_index = 0
         self.is_last_page = False

@@ -1,8 +1,8 @@
 import pytest
 from datamodel_code_generator.reference import camel_to_snake
 
-from mostlyai.client.naming_conventions import (
-    snake_to_camel,
+from mostlyai.client._naming_conventions import (
+    _snake_to_camel,
     map_snake_to_camel_case,
     map_camel_to_snake_case,
 )
@@ -17,7 +17,7 @@ from mostlyai.client.naming_conventions import (
     ],
 )
 def test__snake_to_camel_param(snake_str, expected):
-    assert snake_to_camel(snake_str) == expected
+    assert _snake_to_camel(snake_str) == expected
 
 
 def test_map_snake_to_camel_case():

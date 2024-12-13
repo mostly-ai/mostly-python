@@ -4,7 +4,7 @@ from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 import pandas as pd
 from pydantic import Field, field_validator
 
-from mostlyai.client.base_utils import _convert_to_base64
+from mostlyai.client._base_utils import convert_to_base64
 from mostlyai.client.model import (
     JobProgress,
     SyntheticDatasetFormat,
@@ -257,7 +257,7 @@ class SourceTableConfig:
     @field_validator("data", mode="before")
     @classmethod
     def validate_data_before(cls, value):
-        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+        return convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
 
 
 class SyntheticTableConfiguration:
@@ -265,7 +265,7 @@ class SyntheticTableConfiguration:
     @classmethod
     def validate_dict_before(cls, value):
         return (
-            _convert_to_base64(value, format="jsonl")
+            convert_to_base64(value, format="jsonl")
             if isinstance(value, dict)
             else value
         )
@@ -273,7 +273,7 @@ class SyntheticTableConfiguration:
     @field_validator("sample_seed_data", mode="before")
     @classmethod
     def validate_data_before(cls, value):
-        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+        return convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
 
 
 class SyntheticDataset:

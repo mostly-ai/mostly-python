@@ -13,10 +13,10 @@ from mostlyai.client.model import (
     GeneratorPatchConfig,
 )
 from mostlyai.client.shares import _MostlySharesMixin
-from mostlyai.client.base_utils import (
-    _convert_to_base64,
+from mostlyai.client._base_utils import (
+    convert_to_base64,
 )
-from mostlyai.client.mostly_utils import _job_wait, _read_table_from_path
+from mostlyai.client._mostly_utils import job_wait, read_table_from_path
 
 
 class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
@@ -85,13 +85,13 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
                 # convert `data` to base64-encoded Parquet files
                 if table.get("data") is not None:
                     if isinstance(table["data"], (str, Path)):
-                        name, df = _read_table_from_path(table["data"])
-                        table["data"] = _convert_to_base64(df)
+                        name, df = read_table_from_path(table["data"])
+                        table["data"] = convert_to_base64(df)
                         if "name" not in table:
                             table["name"] = name
                         del df
                     elif isinstance(table["data"], pd.DataFrame):
-                        table["data"] = _convert_to_base64(table["data"])
+                        table["data"] = convert_to_base64(table["data"])
                     else:
                         raise ValueError("data must be a DataFrame or a file path")
                 if table.get("columns"):
@@ -200,6 +200,6 @@ class _MostlyGeneratorsClient(_MostlyBaseClient, _MostlySharesMixin):
     def _training_wait(
         self, generator_id: str, progress_bar: bool, interval: float
     ) -> Generator:
-        _job_wait(lambda: self._training_progress(generator_id), interval, progress_bar)
+        job_wait(lambda: self._training_progress(generator_id), interval, progress_bar)
         generator = self.get(generator_id)
         return generator

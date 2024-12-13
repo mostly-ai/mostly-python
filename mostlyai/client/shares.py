@@ -7,7 +7,7 @@ from mostlyai.client.model import (
     SyntheticDataset,
 )
 
-from mostlyai.client.mostly_utils import ShareableResource
+from mostlyai.client._mostly_utils import ShareableResource
 
 
 class _MostlySharesClient(_MostlyBaseClient):

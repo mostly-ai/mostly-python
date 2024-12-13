@@ -13,7 +13,7 @@ from rich.progress import (
 )
 from rich.style import Style
 
-from mostlyai.client.base_utils import _convert_to_base64, _read_table_from_path
+from mostlyai.client._base_utils import convert_to_base64, read_table_from_path
 from mostlyai.client.model import (
     StepCode,
     ProgressStatus,
@@ -25,10 +25,10 @@ from mostlyai.client.model import (
     Connector,
     SyntheticDataset,
 )
-from mostlyai.client.naming_conventions import map_camel_to_snake_case
+from mostlyai.client._naming_conventions import map_camel_to_snake_case
 
 
-def _job_wait(
+def job_wait(
     get_progress: Callable,
     interval: float,
     progress_bar: bool = True,
@@ -144,7 +144,7 @@ def _get_subject_table_names(generator: Generator) -> list[str]:
 Seed = Union[pd.DataFrame, str, Path, list[dict[str, Any]]]
 
 
-def _harmonize_sd_config(
+def harmonize_sd_config(
     generator: Union[Generator, str, None] = None,
     get_generator: Union[Callable[[str], Generator], None] = None,
     size: Union[int, dict[str, int], None] = None,
@@ -230,17 +230,17 @@ def _harmonize_sd_config(
             continue
         if table.configuration.sample_seed_data is not None:
             if isinstance(table.configuration.sample_seed_data, pd.DataFrame):
-                table.configuration.sample_seed_data = _convert_to_base64(
+                table.configuration.sample_seed_data = convert_to_base64(
                     table.configuration.sample_seed_data
                 )
             elif isinstance(table.configuration.sample_seed_data, (Path, str)):
-                _, df = _read_table_from_path(table.configuration.sample_seed_data)
-                table.configuration.sample_seed_data = _convert_to_base64(df)
+                _, df = read_table_from_path(table.configuration.sample_seed_data)
+                table.configuration.sample_seed_data = convert_to_base64(df)
                 del df
             else:
                 raise ValueError("sample_seed_data must be a DataFrame or a file path")
         if table.configuration.sample_seed_dict is not None:
-            table.configuration.sample_seed_dict = _convert_to_base64(
+            table.configuration.sample_seed_dict = convert_to_base64(
                 table.configuration.sample_seed_dict, format="jsonl"
             )
 

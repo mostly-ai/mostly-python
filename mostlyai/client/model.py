@@ -11,7 +11,7 @@ import pandas as pd
 from pydantic import AwareDatetime, Field, RootModel, field_validator
 
 from mostlyai.client.base import CustomBaseModel
-from mostlyai.client.base_utils import _convert_to_base64
+from mostlyai.client._base_utils import convert_to_base64
 
 
 class PermissionLevel(str, Enum):
@@ -1372,7 +1372,7 @@ class SyntheticTableConfiguration(CustomBaseModel):
     @classmethod
     def validate_dict_before(cls, value):
         return (
-            _convert_to_base64(value, format="jsonl")
+            convert_to_base64(value, format="jsonl")
             if isinstance(value, dict)
             else value
         )
@@ -1380,7 +1380,7 @@ class SyntheticTableConfiguration(CustomBaseModel):
     @field_validator("sample_seed_data", mode="before")
     @classmethod
     def validate_data_before(cls, value):
-        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+        return convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
 
 
 class SyntheticTable(CustomBaseModel):
@@ -1582,7 +1582,7 @@ class SourceTableConfig(CustomBaseModel):
     @field_validator("data", mode="before")
     @classmethod
     def validate_data_before(cls, value):
-        return _convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
+        return convert_to_base64(value) if isinstance(value, pd.DataFrame) else value
 
 
 class SourceTablePatchConfig(CustomBaseModel):
