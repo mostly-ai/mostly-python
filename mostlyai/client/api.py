@@ -73,7 +73,7 @@ class MostlyAI(_MostlyBaseClient):
         Create a connector and optionally validate the connection before saving.
 
         Args:
-            config (Union[ConnectorConfig, dict]): Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
+            config: Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
 
         The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
@@ -204,8 +204,8 @@ class MostlyAI(_MostlyBaseClient):
     def train(
         self,
         config: Union[GeneratorConfig, dict, None] = None,
-        data: Union[pd.DataFrame, str, Path, None] = None,
         name: Optional[str] = None,
+        data: Union[pd.DataFrame, str, Path, None] = None,
         start: bool = True,
         wait: bool = True,
         progress_bar: bool = True,
@@ -214,15 +214,15 @@ class MostlyAI(_MostlyBaseClient):
         Train a generator.
 
         Args:
-            config (Union[GeneratorConfig, dict, None]): The configuration parameters of the generator to be created. Either `data` or `config` must be provided.
-            data (Union[pd.DataFrame, str, Path, None]): A single pandas DataFrame, or a path to a CSV or PARQUET file.
+            config: The configuration parameters of the generator to be created. Either `data` or `config` must be provided.
+            data: A single pandas DataFrame, or a path to a CSV or PARQUET file.
             name: Name of the generator.
             start: Whether to start training immediately.
             wait: Whether to wait for training to finish.
             progress_bar: Whether to display a progress bar during training.
 
         Returns:
-            Generator: The created generator.
+            The created generator.
         """
         if data is None and config is None:
             raise ValueError("Either config or data must be provided")
@@ -276,20 +276,20 @@ class MostlyAI(_MostlyBaseClient):
         progress_bar: bool = True,
     ) -> SyntheticDataset:
         """
-        Generate synthetic data.
+        Generate a synthetic dataset.
 
         Args:
-            generator (Union[Generator, str, None]): The generator instance or its UUID.
-            config (Union[SyntheticDatasetConfig, dict, None]): Configuration for the synthetic dataset.
-            size (Union[int, dict[str, int], None]): Sample size(s) for the subject table(s).
-            seed (Union[Seed, dict[str, Seed], None]): Seed data for the subject table(s).
+            generator: The generator instance or its UUID.
+            config: Configuration for the synthetic dataset.
+            size: Sample size(s) for the subject table(s).
+            seed: Seed data for the subject table(s).
             name: Name of the synthetic dataset.
             start: Whether to start generation immediately.
             wait: Whether to wait for generation to finish.
             progress_bar: Whether to display a progress bar during generation.
 
         Returns:
-            SyntheticDataset: The created synthetic dataset.
+            The created synthetic dataset.
         """
         config = _harmonize_sd_config(
             generator,
@@ -329,17 +329,17 @@ class MostlyAI(_MostlyBaseClient):
         return_type: Literal["auto", "dict"] = "auto",
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
-        Probe a generator.
+        Probe a generator for synthetic samples.
 
         Args:
-            generator (Union[Generator, str, None]): The generator instance or its UUID.
-            size (Union[int, dict[str, int], None]): Sample size(s) for the subject table(s).
-            seed (Union[Seed, dict[str, Seed], None]): Seed data for the subject table(s).
-            config (Union[SyntheticProbeConfig, dict, None]): Configuration for the probe.
-            return_type (Literal["auto", "dict"]): Format of the return value. "auto" for pandas DataFrame if a single table, otherwise a dictionary.
+            generator: The generator instance or its UUID.
+            size: Sample size(s) for the subject table(s).
+            seed: Seed data for the subject table(s).
+            config: Configuration for the probe.
+            return_type: Format of the return value. "auto" for pandas DataFrame if a single table, otherwise a dictionary.
 
         Returns:
-            Union[pd.DataFrame, dict[str, pd.DataFrame]]: The created synthetic probe.
+            The created synthetic probe.
         """
         config = _harmonize_sd_config(
             generator,
@@ -355,75 +355,40 @@ class MostlyAI(_MostlyBaseClient):
         else:
             return dfs
 
-    # SHARES
-
-    def share(
-        self,
-        resource: ShareableResource,
-        user_email: str,
-        permission_level: Union[str, PermissionLevel] = PermissionLevel.view,
-    ) -> None:
-        """
-        Share a resource with a user.
-
-        Args:
-            resource: The resource to share.
-            user_email: Email address of the user to share the resource with.
-            permission_level (Union[str, PermissionLevel]): Permission level to grant.
-
-        Returns:
-            None
-        """
-        if isinstance(permission_level, PermissionLevel):
-            permission_level = permission_level.value
-        if permission_level == "ADMIN":
-            raise ValueError(
-                "ADMIN permission level is not supported. Transfer ownership via the UI."
-            )
-        self.shares._share(resource, user_email, permission_level)
-        rich.print(
-            f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource.id}[/]"
-        )
-
-    def unshare(self, resource: ShareableResource, user_email: str) -> None:
-        """
-        Unshare a resource from a user.
-
-        Args:
-            resource: The resource to unshare.
-            user_email: Email address of the user to revoke access.
-
-        Returns:
-            None
-        """
-        self.shares._unshare(resource, user_email)
-        rich.print(
-            f"Revoked access of resource [bold cyan]{resource.id}[/] for [bold]{user_email}[/]"
-        )
-
     def me(self) -> CurrentUser:
         """
         Retrieve information about the current user.
 
         Returns:
-            CurrentUser: Information about the current user.
+            Information about the current user.
         """
         return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
 
     def about(self) -> dict[str, Any]:
         """
         Retrieve platform information.
-        Supported from release v210 onwards.
 
         Returns:
-            dict[str, Any]: Information about the platform.
+            Information about the platform.
         """
         return self.request(verb=GET, path=["about"])
 
     def models(self, model_type: Union[str, ModelType]) -> list[str]:
+        """
+        Retrieve list of available models for the given model type.
+
+        Returns:
+            List of available models.
+        """
         if isinstance(model_type, ModelType):
             model_type = model_type.value
         return self.request(verb=GET, path=["models", model_type])
 
     def computes(self) -> list[dict[str, Any]]:
+        """
+        Retrieve list of available computes.
+
+        Returns:
+            List of available computes.
+        """
         return self.request(verb=GET, path=["computes"])
