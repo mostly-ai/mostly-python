@@ -234,18 +234,6 @@ class Generator:
                 self.generator.id, progress_bar=progress_bar, interval=interval
             )
 
-        def list_synthetic_dataset(self) -> list["SyntheticDataset"]:
-            """
-            List synthetic datasets
-
-            List the synthetic datasets that were created based on this generator.
-
-            :return: A list of synthetic datasets
-            """
-            raise "Not implemented yet."
-            # return self.generator.client._list_synthetic_datasets(self.generator.id)
-            pass
-
 
 class SourceTableConfig:
     @field_validator("data", mode="before")
