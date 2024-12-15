@@ -131,17 +131,6 @@ c.open()
 c.delete()
 ```
 
-### Sharing
-
-```python
-mostly.share(g | sd | c, email)
-mostly.unshare(g | sd | c, email)
-
-g.shares()
-sd.shares()
-c.shares()
-```
-
 ### Job Configuration Info
 
 ```python

@@ -27,7 +27,7 @@ def postprocess_model_file(file_path):
         elif "import UUID" in line:
             new_lines.append(
                 "import pandas as pd\nfrom pathlib import Path\n"
-                "from pydantic import field_validator\nfrom mostlyai.client.base_utils import _convert_to_base64"
+                "from pydantic import field_validator\nfrom mostlyai.client._base_utils import convert_to_base64"
             )
         elif "from typing" in line and not import_typing_updated:
             # Append ', ClassVar' to the line if it doesn't already contain ClassVar

@@ -8,10 +8,9 @@ from mostlyai.client.model import (
     ConnectorPatchConfig,
     ConnectorConfig,
 )
-from mostlyai.client.shares import _MostlySharesMixin
 
 
-class _MostlyConnectorsClient(_MostlyBaseClient, _MostlySharesMixin):
+class _MostlyConnectorsClient(_MostlyBaseClient):
     SECTION = ["connectors"]
 
     # PUBLIC METHODS #
