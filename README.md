@@ -2,21 +2,23 @@
 
 [![Documentation](https://img.shields.io/badge/docs-latest-green)](https://mostly-ai.github.io/mostlyai-client/) [![stats](https://pepy.tech/badge/mostlyai)](https://pypi.org/project/mostlyai/) ![license](https://img.shields.io/github/license/mostly-ai/mostlyai-client) ![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostlyai-client) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai)
 
-The official Python client for the [MOSTLY AI platform](https://app.mostly.ai/). See the [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and Python examples. Check out our [Synthetic Data Tutorials](#synthetic-data-tutorials) for further end-to-end usage demonstrations.
+The official Python client for [MOSTLY AI](https://app.mostly.ai/), the #1 platform for high-fidelity, privacy-safe **Synthetic Data**. 
 
-## Overview
+The client allows you to programmatically create, browse and manage the 3 key resources of the MOSTLY AI platform: 
 
-| Intent                                          | Primitive                                |
-|-------------------------------------------------|------------------------------------------|
-| Train a Generative AI on tabular data           | `g = mostly.train(data)`                 |
-| Generate any number of synthetic data records   | `mostly.generate(g, size)`               |
-| Prompt the generator for the data that you need | `mostly.generate(g, seed)`               |
-| Live probe the generator on demand              | `mostly.probe(g, size \| seed)`          |
-| Connect to any data source within your org      | `mostly.connect(config)`                 |
-| List the available models                       | `mostly.models('LANGUAGE' \| 'TABULAR')` |
-| List the available computes                     | `mostly.computes()`                      |
-| Info about the current user                     | `mostly.me()`                            |
-| Info about the platform                         | `mostly.about()`                         |
+1. **Generators** - Train a synthetic data generator on your existing tabular or language data assets
+2. **Synthetic Datasets** - Use a generator to create any number of synthetic samples to your needs
+3. **Connectors** - Connect to any data source within your organization, for reading and writing data
+
+
+| Intent                                        | Primitive                         |
+|-----------------------------------------------|-----------------------------------|
+| Train a Generator on tabular or language data | `g = mostly.train(config)`        |
+| Generate any number of synthetic data records | `sd = mostly.generate(g, config)` |
+| Live probe the generator on demand            | `df = mostly.probe(g, config)`    |
+| Connect to any data source within your org    | `c = mostly.connect(config)`      |
+
+See also our [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and further Python examples.
 
 ## Installation
 
@@ -28,7 +30,7 @@ pip install -U mostlyai
 
 ## Quick Start
 
-Please obtain your personal API key from your [settings page](https://app.mostly.ai/settings/api-keys). 
+Please obtain your personal API key from your [account settings page](https://app.mostly.ai/settings/api-keys), and adjust the following code snippet, before running it.
 
 ```python
 import pandas as pd
@@ -40,125 +42,19 @@ mostly = MostlyAI(
     base_url='https://app.mostly.ai' # or set env var `MOSTLYAI_BASE_URL`
 )
 
-# train a generator
-df = pd.read_csv('https://github.com/mostly-ai/public-demo-data/raw/dev/census/census.csv.gz')
-g = mostly.train(data=df)
+# train a generator on original data
+df_original = pd.read_csv('https://github.com/mostly-ai/public-demo-data/raw/dev/census/census.csv.gz')
+g = mostly.train(name='census', data=df_original)  # shorthand syntax for 1-table config
 
-# probe for some samples
-syn = mostly.probe(g, size=10)
+# live probe the generator for synthetic samples
+df_samples = mostly.probe(g, size=10)
 
 # generate a synthetic dataset
-sd = mostly.generate(g, size=2_000)
+sd = mostly.generate(g, size=10_000)
 
-# start using it
-sd.data()
+# download the synthetic dataset
+df_synthetic = sd.data()
 ```
-
-## Basic Usage
-
-### Generators
-
-```python
-g = mostly.train(config, data, name, start=True, wait=True)
-
-g = mostly.generators.create(config)
-g = mostly.generators.get(id)
-it = mostly.generators.list()
-g = g.update(config)
-config = g.config()
-g.open()
-g.delete()
-
-# training
-g.training.start()
-g.training.progress()
-g.training.cancel()
-g = g.training.wait()
-
-# import / export
-g.export_to_file(file_path)
-mostly.generators.import_from_file(file_path)
-
-# clone
-cloned_g = g.clone(training_status="NEW")       # clone the generator for new training
-cloned_g = g.clone(training_status="CONTINUE")  # clone the generator and reuse its weights for continued training
-```
-
-### Synthetic Datasets
-
-```python
-sd = mostly.generate(g, seed=seed)
-sd = mostly.generate(g, size=size)
-sd = mostly.generate(g, config=config)
-
-sd = mostly.synthetic_datasets.create(g, config)
-sd = mostly.synthetic_datasets.get(id)
-it = mostly.synthetic_datasets.list()
-config = sd.config()
-sd.open()
-sd.delete()
-
-
-sd.generation.start()
-sd.generation.progress()
-sd.generation.cancel()
-sd = sd.generation.wait()
-
-sd.data()
-sd.download(file, format)
-```
-
-### Synthetic Probes
-
-```python
-sp = mostly.probe(g, seed=seed)
-sp = mostly.probe(g, size=size)
-sp = mostly.probe(g, config=config)
-```
-
-### Connectors
-
-```python
-c = mostly.connect(config)
-
-c = mostly.connectors.create(config)
-c = mostly.connectors.get(id)
-it = mostly.connectors.list()
-c = c.update(config)
-ls = c.locations(prefix)
-config = c.config()
-c.open()
-c.delete()
-```
-
-### Job Configuration Info
-
-```python
-mostly.models(model_type='TABULAR')
-mostly.models(model_type='LANGUAGE')
-mostly.computes()
-```
-
-### User Info
-
-```python
-mostly.me()
-mostly.about()
-
-```
-
-## Synthetic Data Tutorials
-
-* Validate synthetic data via **Train-Synthetic-Test-Real** [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/train-synthetic-test-real/TSTR.ipynb)]
-* Explore the **size vs. accuracy trade-off** for synthetic data [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/size-vs-accuracy/size-vs-accuracy.ipynb)]
-* **Rebalance** synthetic datasets for data augmentation [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/rebalancing/rebalancing.ipynb)]
-* **Conditionally generate** synthetic (geo) data [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/conditional-generation/conditional-generation.ipynb)]
-* **Explain AI**  with synthetic data [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/explainable-ai/explainable-ai.ipynb)]
-* Generate **synthetic text** [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/synthetic-text/synthetic-text.ipynb)]
-* Perform **multi-table synthesis** [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/multi-table/multi-table.ipynb)]
-* Develop a **fake or real discriminator** with Synthetic Data [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/fake-or-real/fake-or-real.ipynb)]
-* Close gaps in your data with **Smart Imputation** [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/smart-imputation/smart-imputation.ipynb)]
-* Calculate accuracy and privacy metrics for **Quality Assurance** [[run on Colab](https://colab.research.google.com/github/mostly-ai/mostly-tutorials/blob/dev/quality-assurance/quality-assurance.ipynb)]
 
 ## Further Links
 

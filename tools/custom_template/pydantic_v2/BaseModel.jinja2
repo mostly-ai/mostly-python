@@ -46,7 +46,7 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
         config: Optional[dict[str, Any]] = None,
         secrets: Optional[dict[str, str]] = None,
         ssl: Optional[dict[str, str]] = None,
-        test_connection: Optional[bool] = None,
+        test_connection: Optional[bool] = True,
     ) -> "Connector":
         """
         Update a connector with specific parameters.
@@ -125,9 +125,6 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
             list[dict[str, Any]]: The retrieved schema.
         """
         return self.client._schema(connector_id=self.id, location=location)
-
-    def shares(self):
-        return self.client._shares(resource=self)
 {%- endif %}
 {%- if class_name == "Generator" %}
     OPEN_URL_PARTS: ClassVar[list] = ["d", "generators"]
@@ -177,9 +174,6 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
             GeneratorConfig: The generator properties as a configuration object.
         """
         return self.client._config(generator_id=self.id)
-
-    def shares(self):
-        return self.client._shares(resource=self)
 
     def export_to_file(
         self,
@@ -416,9 +410,6 @@ class {{ class_name }}({{ base_class }}):{% if comment is defined %}  # {{ comme
             return list(dfs.values())[0]
         else:
             return dfs
-
-    def shares(self):
-        return self.client._shares(resource=self)
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):

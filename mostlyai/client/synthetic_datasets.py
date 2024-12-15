@@ -38,11 +38,11 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         Args:
             offset: Offset for the entities in the response.
             limit: Limit for the number of entities in the response.
-            status (Union[str, list[str]], optional): Filter by generation status.
+            status: Filter by generation status.
             search_term: Filter by name or description.
 
         Returns:
-            Iterator[SyntheticDatasetListItem]: An iterator over synthetic datasets.
+            An iterator over synthetic datasets.
         """
         status = ",".join(status) if isinstance(status, list) else status
         with Paginator(
@@ -78,10 +78,10 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         Create a synthetic dataset.
 
         Args:
-            config (Union[SyntheticDatasetConfig, dict[str, Any]]): Configuration for the synthetic dataset.
+            config: Configuration for the synthetic dataset.
 
         Returns:
-            SyntheticDataset: The created synthetic dataset object.
+            The created synthetic dataset object.
         """
         synthetic_dataset = self.request(
             verb=POST,
@@ -215,10 +215,10 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
         Create a synthetic probe.
 
         Args:
-            config (Union[SyntheticProbeConfig, dict[str, Any]]): Configuration for the synthetic probe.
+            config: Configuration for the synthetic probe.
 
         Returns:
-            Union[pd.DataFrame, dict[str, pd.DataFrame]]: A dictionary mapping probe names to pandas DataFrames.
+            A dictionary mapping probe names to pandas DataFrames.
         """
         dicts = self.request(
             verb=POST,

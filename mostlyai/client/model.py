@@ -262,7 +262,7 @@ class Connector(CustomBaseModel):
         config: Optional[dict[str, Any]] = None,
         secrets: Optional[dict[str, str]] = None,
         ssl: Optional[dict[str, str]] = None,
-        test_connection: Optional[bool] = None,
+        test_connection: Optional[bool] = True,
     ) -> "Connector":
         """
         Update a connector with specific parameters.
@@ -342,9 +342,6 @@ class Connector(CustomBaseModel):
         """
         return self.client._schema(connector_id=self.id, location=location)
 
-    def shares(self):
-        return self.client._shares(resource=self)
-
 
 class ConnectorConfig(CustomBaseModel):
     name: Optional[str] = Field(None, description="The name of a connector")
@@ -356,7 +353,7 @@ class ConnectorConfig(CustomBaseModel):
     secrets: Optional[Dict[str, str]] = None
     ssl: Optional[Dict[str, str]] = None
     test_connection: Optional[bool] = Field(
-        None,
+        True,
         alias="testConnection",
         description="If true, the connection will be tested before saving. In case of error, the connector will not be saved.\nIf false, the connection will not be tested.\n",
     )
@@ -368,7 +365,7 @@ class ConnectorPatchConfig(CustomBaseModel):
     secrets: Optional[Dict[str, str]] = None
     ssl: Optional[Dict[str, str]] = None
     test_connection: Optional[bool] = Field(
-        None,
+        True,
         alias="testConnection",
         description="If true, the connection will be tested before saving. In case of error, the connector will not be saved.\nIf false, the connection will not be tested.\n",
     )
@@ -1738,10 +1735,10 @@ class SyntheticDataset(CustomBaseModel):
 
         Args:
             format: The format of the synthetic dataset.
-            file_path (Union[str, Path, None], optional): The file path to save the synthetic dataset.
+            file_path: The file path to save the synthetic dataset.
 
         Returns:
-            Path: The path to the saved file.
+            The path to the saved file.
         """
         bytes, filename = self.client._download(
             synthetic_dataset_id=self.id,
@@ -1761,10 +1758,10 @@ class SyntheticDataset(CustomBaseModel):
         Download synthetic dataset and return as dictionary of pandas DataFrames.
 
         Args:
-            return_type (Literal["auto", "dict"]): The format of the returned data.
+            return_type: The format of the returned data.
 
         Returns:
-            Union[pd.DataFrame, dict[str, pd.DataFrame]]: The synthetic dataset as a dictionary of pandas DataFrames.
+            The synthetic dataset as a dictionary of pandas DataFrames.
         """
         dfs = self.client._data(
             synthetic_dataset_id=self.id,
@@ -1774,9 +1771,6 @@ class SyntheticDataset(CustomBaseModel):
             return list(dfs.values())[0]
         else:
             return dfs
-
-    def shares(self):
-        return self.client._shares(resource=self)
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):
@@ -1920,9 +1914,6 @@ class Generator(CustomBaseModel):
             GeneratorConfig: The generator properties as a configuration object.
         """
         return self.client._config(generator_id=self.id)
-
-    def shares(self):
-        return self.client._shares(resource=self)
 
     def export_to_file(
         self,
