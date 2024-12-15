@@ -316,7 +316,7 @@ class MostlyAI(_MostlyBaseClient):
             g.training.start()
             rich.print("Started generator training")
         if start and wait:
-            g = g.training.wait(progress_bar=progress_bar)
+            g.training.wait(progress_bar=progress_bar)
             if g.training_status == ProgressStatus.done:
                 rich.print(
                     ":tada: [bold green]Your generator is ready![/] "
@@ -421,7 +421,7 @@ class MostlyAI(_MostlyBaseClient):
             sd.generation.start()
             rich.print("Started synthetic dataset generation")
         if start and wait:
-            sd = sd.generation.wait(progress_bar=progress_bar)
+            sd.generation.wait(progress_bar=progress_bar)
             if sd.generation_status == ProgressStatus.done:
                 rich.print(
                     ":tada: [bold green]Your synthetic dataset is ready![/] "

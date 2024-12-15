@@ -27,7 +27,7 @@ class Connector:
         secrets: Optional[dict[str, str]] = None,
         ssl: Optional[dict[str, str]] = None,
         test_connection: Optional[bool] = True,
-    ) -> "Connector":
+    ) -> None:
         """
         Update a connector with specific parameters.
 
@@ -37,9 +37,6 @@ class Connector:
             secrets (dict[str, str], optional): Secret values for the connector.
             ssl (dict[str, str], optional): SSL configuration for the connector.
             test_connection: If true, validates the connection before saving.
-
-        Returns:
-            Connector: The updated connector object.
         """
         patch_config = ConnectorPatchConfig(
             name=name,
@@ -48,9 +45,10 @@ class Connector:
             ssl=ssl,
             test_connection=test_connection,
         )
-        return self.client._update(
+        self.client._update(
             connector_id=self.id, config=patch_config.model_dump(exclude_none=True)
         )
+        self.reload()
 
     def delete(self) -> None:
         """
@@ -119,24 +117,22 @@ class Generator:
         self,
         name: Optional[str] = None,
         description: Optional[str] = None,
-    ) -> "Generator":
+    ) -> None:
         """
         Update a generator with specific parameters.
 
         Args:
             name: The name of the generator.
             description: The description of the generator.
-
-        Returns:
-            Generator: The updated generator object.
         """
         patch_config = GeneratorPatchConfig(
             name=name,
             description=description,
         )
-        return self.client._update(
+        self.client._update(
             generator_id=self.id, config=patch_config.model_dump(exclude_none=True)
         )
+        self.reload()
 
     def delete(self) -> None:
         """
@@ -195,20 +191,15 @@ class Generator:
         def start(self) -> None:
             """
             Start training.
-
-            Returns:
-                None
             """
-            return self.generator.client._training_start(self.generator.id)
+            self.generator.client._training_start(self.generator.id)
 
         def cancel(self) -> None:
             """
             Cancel training.
-
-            Returns:
-                None
             """
-            return self.generator.client._training_cancel(self.generator.id)
+            self.generator.client._training_cancel(self.generator.id)
+            self.generator.reload()
 
         def progress(self) -> JobProgress:
             """
@@ -219,20 +210,18 @@ class Generator:
             """
             return self.generator.client._training_progress(self.generator.id)
 
-        def wait(self, progress_bar: bool = True, interval: float = 2) -> "Generator":
+        def wait(self, progress_bar: bool = True, interval: float = 2) -> None:
             """
             Poll training progress and loop until training has completed.
 
             Args:
                 progress_bar: If true, displays the progress bar.
                 interval: The interval in seconds to poll the job progress.
-
-            Returns:
-                Generator: The generator after training has completed.
             """
-            return self.generator.client._training_wait(
+            self.generator.client._training_wait(
                 self.generator.id, progress_bar=progress_bar, interval=interval
             )
+            self.generator.reload()
 
 
 class SourceTableConfig:
@@ -271,7 +260,7 @@ class SyntheticDataset:
         name: Optional[str] = None,
         description: Optional[str] = None,
         delivery: Optional[SyntheticDatasetDelivery] = None,
-    ) -> "SyntheticDataset":
+    ) -> None:
         """
         Update a synthetic dataset with specific parameters.
 
@@ -279,19 +268,17 @@ class SyntheticDataset:
             name: The name of the synthetic dataset.
             description: The description of the synthetic dataset.
             delivery: The delivery configuration for the synthetic dataset.
-
-        Returns:
-            SyntheticDataset: The updated synthetic dataset object.
         """
         patch_config = SyntheticDatasetPatchConfig(
             name=name,
             description=description,
             delivery=delivery,
         )
-        return self.client._update(
+        self.client._update(
             synthetic_dataset_id=self.id,
             config=patch_config.model_dump(exclude_none=True),
         )
+        self.reload()
 
     def delete(self) -> None:
         """
@@ -365,24 +352,15 @@ class SyntheticDataset:
         def start(self) -> None:
             """
             Start the generation process.
-
-            Returns:
-                None
             """
-            return self.synthetic_dataset.client._generation_start(
-                self.synthetic_dataset.id
-            )
+            self.synthetic_dataset.client._generation_start(self.synthetic_dataset.id)
 
         def cancel(self) -> None:
             """
             Cancel the generation process.
-
-            Returns:
-                None
             """
-            return self.synthetic_dataset.client._generation_cancel(
-                self.synthetic_dataset.id
-            )
+            self.synthetic_dataset.client._generation_cancel(self.synthetic_dataset.id)
+            self.synthetic_dataset.reload()
 
         def progress(self) -> JobProgress:
             """
@@ -395,19 +373,15 @@ class SyntheticDataset:
                 self.synthetic_dataset.id
             )
 
-        def wait(
-            self, progress_bar: bool = True, interval: float = 2
-        ) -> "SyntheticDataset":
+        def wait(self, progress_bar: bool = True, interval: float = 2) -> None:
             """
             Poll the generation progress and wait until the process is complete.
 
             Args:
                 progress_bar: If true, displays a progress bar.
                 interval: Interval in seconds to poll the job progress.
-
-            Returns:
-                SyntheticDataset: The synthetic dataset after the generation process is complete.
             """
-            return self.synthetic_dataset.client._generation_wait(
+            self.synthetic_dataset.client._generation_wait(
                 self.synthetic_dataset.id, progress_bar=progress_bar, interval=interval
             )
+            self.synthetic_dataset.reload()
