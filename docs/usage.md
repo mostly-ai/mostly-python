@@ -25,8 +25,8 @@ g = mostly.train(config={
             # columns, keys, compute,..   # further table configurations (optional)  
         }]
     }, 
-    start=True,                               # start training immediately (default: True)
-    wait=True,                                # wait for completion (default: True)
+    start=True,                           # start training immediately (default: True)
+    wait=True,                            # wait for completion (default: True)
 )
 
 # probe for new samples a synthetic dataset
