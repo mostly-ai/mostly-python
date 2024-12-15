@@ -38,7 +38,7 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         Args:
             offset: Offset for the entities in the response.
             limit: Limit for the number of entities in the response.
-            status (Union[str, list[str]], optional): Filter by training status.
+            status: Filter by training status.
             search_term: Filter by name or description.
 
         Returns:
@@ -74,10 +74,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         Create a generator.
 
         Args:
-            config (Union[GeneratorConfig, dict]): Configuration for the generator.
+            config: Configuration for the generator.
 
         Returns:
-            Generator: The created generator object.
+            The created generator object.
         """
         if isinstance(config, dict) and config.get("tables"):
             for table in config["tables"]:
@@ -113,10 +113,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         Supported from release v212 onwards.
 
         Args:
-            file_path (Union[str, Path]): Path to the file to import.
+            file_path: Path to the file to import.
 
         Returns:
-            Generator: The imported generator object.
+            The imported generator object.
         """
         response = self.request(
             verb=POST,

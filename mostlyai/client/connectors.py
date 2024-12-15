@@ -70,10 +70,10 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         See `mostly.connect` for more details.
 
         Args:
-            config (Union[SyntheticDatasetConfig, dict[str, Any]]): Configuration for the connector.
+            config: Configuration for the connector.
 
         Returns:
-            Connector: The created connector object.
+            The created connector object.
         """
         response = self.request(
             verb=POST, path=[], json=config, response_type=Connector

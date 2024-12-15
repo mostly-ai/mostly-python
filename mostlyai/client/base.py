@@ -87,7 +87,7 @@ class _MostlyBaseClient:
         Extended request helper method to send HTTP requests and process the response.
 
         Args:
-            path (Union[str, List[Any]]): A single string or a list of parts of the path to concatenate.
+            path: A single string or a list of parts of the path to concatenate.
             verb: HTTP method (GET, POST, PATCH, DELETE).
             response_type: Type to cast the response into. Defaults to `dict`.
             raw_response: Whether to return the raw response object. Defaults to `False`.
@@ -99,7 +99,7 @@ class _MostlyBaseClient:
             **kwargs: Additional arguments passed to the HTTP request.
 
         Returns:
-            Any: Processed response based on the `response_type`.
+            Processed response based on the `response_type`.
 
         Raises:
             APIStatusError: For HTTP errors (non-2XX responses).

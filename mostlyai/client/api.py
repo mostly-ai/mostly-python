@@ -34,7 +34,7 @@ from mostlyai.client._mostly_utils import (
 
 class MostlyAI(_MostlyBaseClient):
     """
-    Client for interacting with the Mostly AI Public API.
+    Client for interacting with the MOSTLY AI platform via its Public API.
 
     Args:
         base_url: The base URL. If not provided, a default value is used.
@@ -68,8 +68,27 @@ class MostlyAI(_MostlyBaseClient):
         """
         Create a connector and optionally validate the connection before saving.
 
+        See [ConnectorConfig](api_model.md#mostlyai.client.model.ConnectorConfig) for more information on the available configuration parameters.
+
+        Example:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            c = mostly.connect(
+                config={
+                    'type': 'S3_STORAGE',
+                    'config': {
+                        'accessKey': '...',
+                    },
+                    'secrets': {
+                        'secretKey': '...'
+                    }
+                }
+            )
+            ```
+
         Args:
-            config (Union[ConnectorConfig, dict]): Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
+            config: Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
 
         The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
@@ -209,9 +228,55 @@ class MostlyAI(_MostlyBaseClient):
         """
         Train a generator.
 
+        See [GeneratorConfig](api_model.md#mostlyai.client.model.GeneratorConfig) for more information on the available configuration parameters.
+
+        Example configuration using short-hand notation:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            g = mostly.train(
+                name='census',
+                data=df_original
+            )
+            ```
+
+        Example configuration using GeneratorConfig:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            g = mostly.train(
+                config=GeneratorConfig(
+                    name='census',
+                    tables=[
+                        SourceTableConfig(
+                            name='data',
+                            data=df_original
+                        )
+                    ]
+                )
+            )
+            ```
+
+        Example configuration using a dictionary:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            g = mostly.train(
+                config={
+                    'name': 'census',
+                    'tables': [
+                        {
+                            'name': 'data',
+                            'data': df_original
+                        }
+                    ]
+                }
+            )
+            ```
+
         Args:
-            config (Union[GeneratorConfig, dict, None]): The configuration parameters of the generator to be created. Either `data` or `config` must be provided.
-            data (Union[pd.DataFrame, str, Path, None]): A single pandas DataFrame, or a path to a CSV or PARQUET file.
+            config: The configuration parameters of the generator to be created. Either `config` or `data` must be provided.
+            data: A single pandas DataFrame, or a path to a CSV or PARQUET file. Either `config` or `data` must be provided.
             name: Name of the generator.
             start: Whether to start training immediately.
             wait: Whether to wait for training to finish.
@@ -225,7 +290,7 @@ class MostlyAI(_MostlyBaseClient):
         if data is not None and config is not None:
             raise ValueError("Either config or data must be provided, but not both")
         if config is not None and isinstance(config, (pd.DataFrame, str, Path)) is None:
-            # map config to data, in case user provided config as a DataFrame or path
+            # map config to data, in case user incorrectly provided data as first argument
             data = config
         if isinstance(data, (str, Path)):
             name, df = read_table_from_path(data)
@@ -274,11 +339,60 @@ class MostlyAI(_MostlyBaseClient):
         """
         Generate synthetic data.
 
+        See [SyntheticDatasetConfig](api_model.md#mostlyai.client.model.SyntheticDatasetConfig) for more information on the available configuration parameters.
+
+        Example configuration using short-hand notation:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            sd = mostly.generate(generator=g, size=1000)
+            ```
+
+        Example configuration using SyntheticDatasetConfig:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            sd = mostly.generate(
+                config=SyntheticDatasetConfig(
+                    generator=g,
+                    tables=[
+                        SyntheticTableConfig(
+                            name="data",
+                            configuration=SyntheticTableConfiguration(
+                                sample_size=1000,
+                                sampling_temperature=0.9,
+                            )
+                        )
+                    ]
+                )
+            )
+            ```
+
+        Example configuration using a dictionary:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            sd = mostly.generate(
+                config={
+                    'generator': g,
+                    'tables': [
+                        {
+                            'name': 'data',
+                            'configuration': {
+                                'sample_size': 1000,
+                                'sampling_temperature': 0.9,
+                            }
+                        }
+                    ]
+                }
+            )
+            ```
+
         Args:
-            generator (Union[Generator, str, None]): The generator instance or its UUID.
-            config (Union[SyntheticDatasetConfig, dict, None]): Configuration for the synthetic dataset.
-            size (Union[int, dict[str, int], None]): Sample size(s) for the subject table(s).
-            seed (Union[Seed, dict[str, Seed], None]): Seed data for the subject table(s).
+            generator: The generator instance or its UUID.
+            config: Configuration for the synthetic dataset.
+            size : Sample size(s) for the subject table(s).
+            seed: Seed data for the subject table(s).
             name: Name of the synthetic dataset.
             start: Whether to start generation immediately.
             wait: Whether to wait for generation to finish.
@@ -327,15 +441,22 @@ class MostlyAI(_MostlyBaseClient):
         """
         Probe a generator.
 
+        Example:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            probe = mostly.probe(generator=g, size=10)
+            ```
+
         Args:
-            generator (Union[Generator, str, None]): The generator instance or its UUID.
-            size (Union[int, dict[str, int], None]): Sample size(s) for the subject table(s).
-            seed (Union[Seed, dict[str, Seed], None]): Seed data for the subject table(s).
-            config (Union[SyntheticProbeConfig, dict, None]): Configuration for the probe.
-            return_type (Literal["auto", "dict"]): Format of the return value. "auto" for pandas DataFrame if a single table, otherwise a dictionary.
+            generator: The generator instance or its UUID.
+            size: Sample size(s) for the subject table(s).
+            seed: Seed data for the subject table(s).
+            config: Configuration for the probe.
+            return_type: Format of the return value. "auto" for pandas DataFrame if a single table, otherwise a dictionary.
 
         Returns:
-            Union[pd.DataFrame, dict[str, pd.DataFrame]]: The created synthetic probe.
+            The created synthetic probe.
         """
         config = harmonize_sd_config(
             generator,

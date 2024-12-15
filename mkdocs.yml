@@ -30,6 +30,9 @@ theme:
 
 nav:
   - Getting Started: index.md
+  - Usage Examples: usage.md
+  - Syntax Overview: syntax.md
+  - Tutorials: tutorials.md
   - API Reference: api_client.md
   - Model Reference: api_model.md
 
@@ -51,6 +54,7 @@ plugins:
             extensions:
             - griffe_fieldz
             docstring_style: google
+            modernize_annotations: true
 
 markdown_extensions:
   - pymdownx.highlight:

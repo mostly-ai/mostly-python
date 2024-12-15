@@ -26,7 +26,7 @@ class Connector:
         config: Optional[dict[str, Any]] = None,
         secrets: Optional[dict[str, str]] = None,
         ssl: Optional[dict[str, str]] = None,
-        test_connection: Optional[bool] = None,
+        test_connection: Optional[bool] = True,
     ) -> "Connector":
         """
         Update a connector with specific parameters.
@@ -106,9 +106,6 @@ class Connector:
         """
         return self.client._schema(connector_id=self.id, location=location)
 
-    def shares(self):
-        return self.client._shares(resource=self)
-
 
 class Generator:
     OPEN_URL_PARTS: ClassVar[list] = ["d", "generators"]
@@ -159,9 +156,6 @@ class Generator:
         """
         return self.client._config(generator_id=self.id)
 
-    def shares(self):
-        return self.client._shares(resource=self)
-
     def export_to_file(
         self,
         file_path: Union[str, Path, None] = None,
@@ -170,10 +164,10 @@ class Generator:
         Export generator and save to file.
 
         Args:
-            file_path (Union[str, Path, None], optional): The file path to save the generator.
+            file_path: The file path to save the generator.
 
         Returns:
-            Path: The path to the saved file.
+            The path to the saved file.
         """
         bytes, filename = self.client._export_to_file(generator_id=self.id)
         file_path = Path(file_path or ".")
@@ -239,18 +233,6 @@ class Generator:
             return self.generator.client._training_wait(
                 self.generator.id, progress_bar=progress_bar, interval=interval
             )
-
-        def list_synthetic_dataset(self) -> list["SyntheticDataset"]:
-            """
-            List synthetic datasets
-
-            List the synthetic datasets that were created based on this generator.
-
-            :return: A list of synthetic datasets
-            """
-            raise "Not implemented yet."
-            # return self.generator.client._list_synthetic_datasets(self.generator.id)
-            pass
 
 
 class SourceTableConfig:
@@ -339,10 +321,10 @@ class SyntheticDataset:
 
         Args:
             format: The format of the synthetic dataset.
-            file_path (Union[str, Path, None], optional): The file path to save the synthetic dataset.
+            file_path: The file path to save the synthetic dataset.
 
         Returns:
-            Path: The path to the saved file.
+            The path to the saved file.
         """
         bytes, filename = self.client._download(
             synthetic_dataset_id=self.id,
@@ -375,9 +357,6 @@ class SyntheticDataset:
             return list(dfs.values())[0]
         else:
             return dfs
-
-    def shares(self):
-        return self.client._shares(resource=self)
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):
