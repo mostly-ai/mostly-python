@@ -174,16 +174,10 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         return dfs
 
     def _generation_start(self, synthetic_dataset_id: str) -> None:
-        response = self.request(
-            verb=POST, path=[synthetic_dataset_id, "generation", "start"]
-        )
-        return response
+        self.request(verb=POST, path=[synthetic_dataset_id, "generation", "start"])
 
     def _generation_cancel(self, synthetic_dataset_id: str) -> None:
-        response = self.request(
-            verb=POST, path=[synthetic_dataset_id, "generation", "cancel"]
-        )
-        return response
+        self.request(verb=POST, path=[synthetic_dataset_id, "generation", "cancel"])
 
     def _generation_progress(self, synthetic_dataset_id: str) -> JobProgress:
         response = self.request(

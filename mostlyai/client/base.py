@@ -243,6 +243,24 @@ class CustomBaseModel(BaseModel):
         webbrowser.open_new(url)
         return url
 
+    def reload(self):
+        """
+        Reload the instance to reflect its current state.
+        """
+        if hasattr(self.client, "get"):
+            reloaded = self.client.get(self.id)
+            for key, value in reloaded.__dict__.items():
+                current_attr = getattr(self, key, None)
+
+                # If the current attribute is a class instance, try updating it instead of overwriting
+                if isinstance(current_attr, type(value)) and hasattr(
+                    current_attr, "__dict__"
+                ):
+                    current_attr.__dict__.update(value.__dict__)
+                else:
+                    # Otherwise, directly overwrite the attribute
+                    setattr(self, key, value)
+
 
 def _get_total_size(obj, seen=None):
     """Recursively finds size of objects in bytes."""

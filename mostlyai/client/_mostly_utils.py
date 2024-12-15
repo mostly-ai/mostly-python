@@ -114,7 +114,7 @@ def job_wait(
                         return
                 # check whether we are done
                 if job.progress.value >= job.progress.max:
-                    time.sleep(1)  # give the system a moment
+                    time.sleep(1)  # give the system a moment to update the status
                     progress.stop()
                     return
             else:

@@ -183,12 +183,10 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         return response
 
     def _training_start(self, generator_id: str) -> None:
-        response = self.request(verb=POST, path=[generator_id, "training", "start"])
-        return response
+        self.request(verb=POST, path=[generator_id, "training", "start"])
 
     def _training_cancel(self, generator_id: str) -> None:
-        response = self.request(verb=POST, path=[generator_id, "training", "cancel"])
-        return response
+        self.request(verb=POST, path=[generator_id, "training", "cancel"])
 
     def _training_progress(self, generator_id: str) -> JobProgress:
         response = self.request(
