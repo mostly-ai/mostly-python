@@ -70,6 +70,23 @@ class MostlyAI(_MostlyBaseClient):
 
         See [ConnectorConfig](api_model.md#mostlyai.client.model.ConnectorConfig) for more information on the available configuration parameters.
 
+        Example:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            c = mostly.connect(
+                config={
+                    'type': 'S3_STORAGE',
+                    'config': {
+                        'accessKey': '...',
+                    },
+                    'secrets': {
+                        'secretKey': '...'
+                    }
+                }
+            )
+            ```
+
         Args:
             config: Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
 
