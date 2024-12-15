@@ -1,5 +1,5 @@
 from mostlyai import MostlyAI
-from mostlyai.client.model import *
+from mostlyai.client.model import GeneratorConfig, SyntheticDatasetConfig
 import pandas as pd
 mostly = MostlyAI()
 
