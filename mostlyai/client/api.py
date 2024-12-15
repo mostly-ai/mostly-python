@@ -11,7 +11,6 @@ from mostlyai.client.model import (
     Connector,
     CurrentUser,
     Generator,
-    PermissionLevel,
     ProgressStatus,
     SyntheticDataset,
     ModelType,
@@ -21,14 +20,12 @@ from mostlyai.client.model import (
     SyntheticDatasetConfig,
     SyntheticProbeConfig,
 )
-from mostlyai.client.shares import _MostlySharesClient
 from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
     _MostlySyntheticProbesClient,
 )
 from mostlyai.client.base_utils import _convert_to_base64
 from mostlyai.client.mostly_utils import (
-    ShareableResource,
     _read_table_from_path,
     _harmonize_sd_config,
     Seed,
@@ -66,7 +63,6 @@ class MostlyAI(_MostlyBaseClient):
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
-        self.shares = _MostlySharesClient(**client_kwargs)
 
     def connect(self, config: Union[ConnectorConfig, dict[str, Any]]) -> Connector:
         """

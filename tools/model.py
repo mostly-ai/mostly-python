@@ -106,9 +106,6 @@ class Connector:
         """
         return self.client._schema(connector_id=self.id, location=location)
 
-    def shares(self):
-        return self.client._shares(resource=self)
-
 
 class Generator:
     OPEN_URL_PARTS: ClassVar[list] = ["d", "generators"]
@@ -158,9 +155,6 @@ class Generator:
             GeneratorConfig: The generator properties as a configuration object.
         """
         return self.client._config(generator_id=self.id)
-
-    def shares(self):
-        return self.client._shares(resource=self)
 
     def export_to_file(
         self,
@@ -239,18 +233,6 @@ class Generator:
             return self.generator.client._training_wait(
                 self.generator.id, progress_bar=progress_bar, interval=interval
             )
-
-        def list_synthetic_dataset(self) -> list["SyntheticDataset"]:
-            """
-            List synthetic datasets
-
-            List the synthetic datasets that were created based on this generator.
-
-            :return: A list of synthetic datasets
-            """
-            raise "Not implemented yet."
-            # return self.generator.client._list_synthetic_datasets(self.generator.id)
-            pass
 
 
 class SourceTableConfig:
@@ -375,9 +357,6 @@ class SyntheticDataset:
             return list(dfs.values())[0]
         else:
             return dfs
-
-    def shares(self):
-        return self.client._shares(resource=self)
 
     class Generation:
         def __init__(self, _synthetic_dataset: "SyntheticDataset"):
