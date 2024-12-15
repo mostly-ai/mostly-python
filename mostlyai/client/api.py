@@ -11,7 +11,6 @@ from mostlyai.client.model import (
     Connector,
     CurrentUser,
     Generator,
-    PermissionLevel,
     ProgressStatus,
     SyntheticDataset,
     ModelType,
@@ -21,14 +20,12 @@ from mostlyai.client.model import (
     SyntheticDatasetConfig,
     SyntheticProbeConfig,
 )
-from mostlyai.client.shares import _MostlySharesClient
 from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
     _MostlySyntheticProbesClient,
 )
 from mostlyai.client._base_utils import convert_to_base64
 from mostlyai.client._mostly_utils import (
-    ShareableResource,
     read_table_from_path,
     harmonize_sd_config,
     Seed,
@@ -66,7 +63,6 @@ class MostlyAI(_MostlyBaseClient):
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
-        self.shares = _MostlySharesClient(**client_kwargs)
 
     def connect(self, config: Union[ConnectorConfig, dict[str, Any]]) -> Connector:
         """
@@ -354,52 +350,6 @@ class MostlyAI(_MostlyBaseClient):
             return list(dfs.values())[0]
         else:
             return dfs
-
-    # SHARES
-
-    def share(
-        self,
-        resource: ShareableResource,
-        user_email: str,
-        permission_level: Union[str, PermissionLevel] = PermissionLevel.view,
-    ) -> None:
-        """
-        Share a resource with a user.
-
-        Args:
-            resource: The resource to share.
-            user_email: Email address of the user to share the resource with.
-            permission_level (Union[str, PermissionLevel]): Permission level to grant.
-
-        Returns:
-            None
-        """
-        if isinstance(permission_level, PermissionLevel):
-            permission_level = permission_level.value
-        if permission_level == "ADMIN":
-            raise ValueError(
-                "ADMIN permission level is not supported. Transfer ownership via the UI."
-            )
-        self.shares._share(resource, user_email, permission_level)
-        rich.print(
-            f"Granted [bold]{user_email}[/] [grey]{permission_level}[/] access to resource [bold cyan]{resource.id}[/]"
-        )
-
-    def unshare(self, resource: ShareableResource, user_email: str) -> None:
-        """
-        Unshare a resource from a user.
-
-        Args:
-            resource: The resource to unshare.
-            user_email: Email address of the user to revoke access.
-
-        Returns:
-            None
-        """
-        self.shares._unshare(resource, user_email)
-        rich.print(
-            f"Revoked access of resource [bold cyan]{resource.id}[/] for [bold]{user_email}[/]"
-        )
 
     def me(self) -> CurrentUser:
         """
