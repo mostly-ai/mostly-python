@@ -7,7 +7,7 @@ import rich
 from mostlyai.client.base import GET, _MostlyBaseClient
 from mostlyai.client.connectors import _MostlyConnectorsClient
 from mostlyai.client.generators import _MostlyGeneratorsClient
-from mostlyai.client.model import (
+from mostlyai.client.domain import (
     Connector,
     CurrentUser,
     Generator,

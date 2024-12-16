@@ -6,7 +6,7 @@ from typing import Any, Iterator, Optional, Union
 import pandas as pd
 
 from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.client.model import (
+from mostlyai.client.domain import (
     JobProgress,
     SyntheticDataset,
     SyntheticDatasetFormat,
