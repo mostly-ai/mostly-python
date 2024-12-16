@@ -10,6 +10,7 @@ hide:
       members:
         - train
         - generate
+        - probe
         - connect
         - models
         - computes
