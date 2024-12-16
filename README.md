@@ -11,12 +11,12 @@ The client allows you to programmatically create, browse and manage the 3 key re
 3. **Connectors** - Connect to any data source within your organization, for reading and writing data
 
 
-| Intent                                        | Primitive                         |
-|-----------------------------------------------|-----------------------------------|
-| Train a Generator on tabular or language data | `g = mostly.train(config)`        |
-| Generate any number of synthetic data records | `sd = mostly.generate(g, config)` |
-| Live probe the generator on demand            | `df = mostly.probe(g, config)`    |
-| Connect to any data source within your org    | `c = mostly.connect(config)`      |
+| Intent                                        | Primitive                         | Documentation                                                                                                        |
+|-----------------------------------------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| Train a Generator on tabular or language data | `g = mostly.train(config)`        | see [mostly.train](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.train)       |
+| Generate any number of synthetic data records | `sd = mostly.generate(g, config)` | see [mostly.generate](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.generate) |
+| Live probe the generator on demand            | `df = mostly.probe(g, config)`    | see [mostly.probe](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.probe)       |
+| Connect to any data source within your org    | `c = mostly.connect(config)`      | see [mostly.connect](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.connect)   |
 
 See also our [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and further Python examples.
 
@@ -56,7 +56,7 @@ sd = mostly.generate(g, size=10_000)
 df_synthetic = sd.data()
 ```
 
-## Further Links
+## Further Resources
 
 * [MOSTLY AI Website](https://mostly.ai/)
 * [MOSTLY AI Blog](https://mostly.ai/blog) 
@@ -64,3 +64,16 @@ df_synthetic = sd.data()
 * [OpenAPI Documentation](https://api-docs.mostly.ai/)
 * [MOSTLY AI @ GitHub](https://github.com/mostly-ai/)
 * [Synthetic Data - Quality Assurance](https://github.com/mostly-ai/mostlyai-qa/) `mostlyai-qa`
+
+## Citation
+
+Please consider citing our project if you find it useful:
+
+```bibtex
+@software{mostlyai-client,
+    author = {{MOSTLY AI}},
+    title = {{MOSTLY AI - Python Client}},
+    url = {https://github.com/mostly-ai/mostlyai-client},
+    year = {2024}
+}
+```
