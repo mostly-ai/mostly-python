@@ -11,12 +11,12 @@ The client allows you to programmatically create, browse and manage the 3 key re
 3. **Connectors** - Connect to any data source within your organization, for reading and writing data
 
 
-| Intent                                        | Primitive                         | Documentation                                                           |
-|-----------------------------------------------|-----------------------------------|-------------------------------------------------------------------------|
-| Train a Generator on tabular or language data | `g = mostly.train(config)`        | see [mostly.train](api_client.md#mostlyai.client.api.MostlyAI.train)    |
-| Generate any number of synthetic data records | `sd = mostly.generate(g, config)` | see [mostly.generate](api_client.md#mostlyai.client.api.MostlyAI.generate) |
-| Live probe the generator on demand            | `df = mostly.probe(g, config)`    | see [mostly.probe](api_client.md#mostlyai.client.api.MostlyAI.probe)       |
-| Connect to any data source within your org    | `c = mostly.connect(config)`      | see [mostly.connect](api_client.md#mostlyai.client.api.MostlyAI.connect)   |
+| Intent                                        | Primitive                         | Documentation                                                                                                        |
+|-----------------------------------------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| Train a Generator on tabular or language data | `g = mostly.train(config)`        | see [mostly.train](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.train)       |
+| Generate any number of synthetic data records | `sd = mostly.generate(g, config)` | see [mostly.generate](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.generate) |
+| Live probe the generator on demand            | `df = mostly.probe(g, config)`    | see [mostly.probe](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.probe)       |
+| Connect to any data source within your org    | `c = mostly.connect(config)`      | see [mostly.connect](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.connect)   |
 
 See also our [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and further Python examples.
 
