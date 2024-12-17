@@ -7,7 +7,7 @@ import rich
 from mostlyai.client.base import GET, _MostlyBaseClient
 from mostlyai.client.connectors import _MostlyConnectorsClient
 from mostlyai.client.generators import _MostlyGeneratorsClient
-from mostlyai.client.model import (
+from mostlyai.client.domain import (
     Connector,
     CurrentUser,
     Generator,
@@ -34,7 +34,7 @@ from mostlyai.client._mostly_utils import (
 
 class MostlyAI(_MostlyBaseClient):
     """
-    Client for interacting with the MOSTLY AI platform via its Public API.
+    Client for interacting with the MOSTLY AI platform via its [Public API](https://github.com/mostly-ai/mostly-openapi/blob/main/public-api.yaml).
 
     Args:
         base_url: The base URL. If not provided, a default value is used.
@@ -68,7 +68,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Create a connector and optionally validate the connection before saving.
 
-        See [ConnectorConfig](api_model.md#mostlyai.client.model.ConnectorConfig) for more information on the available configuration parameters.
+        See [ConnectorConfig](api_domain.md#mostlyai.client.domain.ConnectorConfig) for more information on the available configuration parameters.
 
         Example:
             ```python
@@ -228,7 +228,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Train a generator.
 
-        See [GeneratorConfig](api_model.md#mostlyai.client.model.GeneratorConfig) for more information on the available configuration parameters.
+        See [GeneratorConfig](api_domain.md#mostlyai.client.domain.GeneratorConfig) for more information on the available configuration parameters.
 
         Example configuration using short-hand notation:
             ```python
@@ -339,7 +339,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Generate synthetic data.
 
-        See [SyntheticDatasetConfig](api_model.md#mostlyai.client.model.SyntheticDatasetConfig) for more information on the available configuration parameters.
+        See [SyntheticDatasetConfig](api_domain.md#mostlyai.client.domain.SyntheticDatasetConfig) for more information on the available configuration parameters.
 
         Example configuration using short-hand notation:
             ```python

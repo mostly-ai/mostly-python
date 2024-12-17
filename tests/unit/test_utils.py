@@ -10,7 +10,7 @@ import pandas as pd
 import pytest
 from rich.console import Console
 
-from mostlyai.client.model import (
+from mostlyai.client.domain import (
     JobProgress,
     ProgressStatus,
     ProgressStep,

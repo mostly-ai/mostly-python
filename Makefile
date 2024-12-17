@@ -1,6 +1,6 @@
 # Internal Variables
 PUBLIC_API_FULL_URL = https://raw.githubusercontent.com/mostly-ai/mostly-openapi/refs/heads/main/public-api.yaml
-PUBLIC_API_OUTPUT_PATH = mostlyai/client/model.py
+PUBLIC_API_OUTPUT_PATH = mostlyai/client/domain.py
 
 # Targets
 .PHONY: help
