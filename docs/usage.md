@@ -7,10 +7,18 @@ hide:
 
 ## Single-table tabular data
 
+Train a tabular model on the US Census Income dataset.
+
 ```python
+import pandas as pd
+from mostlyai import MostlyAI
+
 # load original data
 repo_url = 'https://github.com/mostly-ai/public-demo-data'
 df_original = pd.read_csv(f'{repo_url}/raw/dev/census/census.csv.gz')
+
+# instantiate client
+mostly = MostlyAI()
 
 # train a generator
 g = mostly.train(config={
@@ -28,28 +36,44 @@ g = mostly.train(config={
     start=True,                           # start training immediately (default: True)
     wait=True,                            # wait for completion (default: True)
 )
+g
+```
 
-# probe for new samples a synthetic dataset
+Probe the generator for 100 new synthetic samples.
+```python
 df_samples = mostly.probe(g, size=100)
+df_samples
+```
 
-# conditionally generate a hybrid synthetic dataset
+Create a new Synthetic Dataset via a batch job to conditionally generate 100'000 synthetic samples, that are of age 28, and either from Cuba or from Mexico.
+
+```python
 df_seed = pd.DataFrame({
-    'age': [28] * 10_000, 
-    'native_country': ['Mexico', 'Cuba'] * 5_000
+    'age': [28] * 100_000, 
+    'native_country': ['Mexico', 'Cuba'] * 50_000
 })
 sd = mostly.generate(g, seed=df_seed)
 df_synthetic = sd.data()
+df_synthetic
 ```
 
 ## Multi-table tabular data
 
+Train a multi-table tabular generator on baseball players and their seasonal statistics.
+
 ```python
+import pandas as pd
+from mostlyai import MostlyAI
+
 # load original data
 repo_url = 'https://github.com/mostly-ai/public-demo-data'
 df_original_players = pd.read_csv(f'{repo_url}/raw/dev/baseball/players.csv.gz')
 df_original_players = df_original_players[['id', 'country', 'weight', 'height']]
 df_original_seasons = pd.read_csv(f'{repo_url}/raw/dev/baseball/batting.csv.gz')
 df_original_seasons = df_original_seasons[['players_id', 'year', 'team', 'G', 'AB', 'HR']]
+
+# instantiate client
+mostly = MostlyAI()    
 
 # train a generator
 g = mostly.train(config={
@@ -66,19 +90,31 @@ g = mostly.train(config={
         ],
     }],
 }, start=True, wait=True)
-
-# generate a new dataset of synthetic players and their synthetic season stats 
-sd = mostly.generate(g, size=10_000)
-df_synthetic_players = sd.data()['players']
-df_synthetic_seasons = sd.data()['seasons']
 ```
 
-## Single-table tabular and textual data
+Generate a new dataset of 10k synthetic players and their synthetic season stats.
+```python
+sd = mostly.generate(g, size=10_000)
+df_synthetic_players = sd.data()['players']
+display(df_synthetic_players)
+df_synthetic_seasons = sd.data()['seasons']
+display(df_synthetic_seasons)
+```
+
+## Tabular and textual data
+
+Train a multi-model generator on a single flat table, that consists both of tabular and of textual columns.
 
 ```python
+import pandas as pd
+from mostlyai import MostlyAI
+
 # load original data with news headlines
 repo_url = 'https://github.com/mostly-ai/public-demo-data'
 original_df = pd.read_parquet(f'{repo_url}/raw/refs/heads/dev/headlines/headlines.parquet')
+
+# instantiate client
+mostly = MostlyAI()
 
 # print out available LANGUAGE models
 print(mostly.models("LANGUAGE"))
@@ -103,8 +139,11 @@ g = mostly.train(config={
         }
     }],
 }, start=True, wait=True)
+```
 
-# conditionally generate 100 new headlines for the WELLNESS category
+Conditionally generate 100 new headlines for the WELLNESS category.
+
+```python
 df_seed = pd.DataFrame({'category': ['WELLNESS'] * 100})
 sd = mostly.generate(g, seed=df_seed)
 df_synthetic = sd.data()

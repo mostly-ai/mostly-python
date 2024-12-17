@@ -2,7 +2,7 @@
 
 [![Documentation](https://img.shields.io/badge/docs-latest-green)](https://mostly-ai.github.io/mostlyai-client/) [![stats](https://pepy.tech/badge/mostlyai)](https://pypi.org/project/mostlyai/) ![license](https://img.shields.io/github/license/mostly-ai/mostlyai-client) ![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostlyai-client) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai)
 
-The official Python client for [MOSTLY AI](https://app.mostly.ai/), the #1 platform for high-fidelity, privacy-safe **Synthetic Data**. 
+The official Python client for [MOSTLY AI](https://app.mostly.ai/), the #1 platform for high-fidelity privacy-safe **Synthetic Data**. 
 
 The client allows you to programmatically create, browse and manage the 3 key resources of the MOSTLY AI platform: 
 
@@ -18,7 +18,7 @@ The client allows you to programmatically create, browse and manage the 3 key re
 | Live probe the generator on demand            | `df = mostly.probe(g, config)`    | see [mostly.probe](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.probe)       |
 | Connect to any data source within your org    | `c = mostly.connect(config)`      | see [mostly.connect](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.connect)   |
 
-See also our [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and further Python examples.
+See our [Package Documentation](https://mostly-ai.github.io/mostlyai-client/) as well also our [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and further Python examples.
 
 ## Installation
 
