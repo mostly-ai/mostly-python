@@ -46,14 +46,14 @@ ruff = "0.4.4"
 respx = "^0.20.2"
 twine = "^5.0.0"
 poetry-bumpversion = "^0.3.2"
-# docs
+
+[tool.poetry.group.docs.dependencies]
 mkdocs = ">=1.5.3"
 mkdocstrings = { version = "^0.27.0", extras = ["crystal", "python"] }
 mkdocs-material = "^9.0.0"
 griffe = "^1.0.0"
 pymdown-extensions = "^10.0.0"
 griffe-fieldz = "^0.2.0"
-
 
 [[tool.poetry_bumpversion.replacements]]
 files = ["mostlyai/__init__.py"]
