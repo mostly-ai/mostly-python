@@ -4,7 +4,6 @@ from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBas
 from mostlyai.client.domain import (
     Connector,
     ConnectorListItem,
-    SyntheticDatasetConfig,
     ConnectorPatchConfig,
     ConnectorConfig,
 )
