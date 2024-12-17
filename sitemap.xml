@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://mostly-ai.github.io/mostlyai-client/</loc>
+         <lastmod>2024-12-17</lastmod>
+    </url>
+    <url>
+         <loc>https://mostly-ai.github.io/mostlyai-client/api_client/</loc>
+         <lastmod>2024-12-17</lastmod>
+    </url>
+    <url>
+         <loc>https://mostly-ai.github.io/mostlyai-client/api_domain/</loc>
+         <lastmod>2024-12-17</lastmod>
+    </url>
+    <url>
+         <loc>https://mostly-ai.github.io/mostlyai-client/syntax/</loc>
+         <lastmod>2024-12-17</lastmod>
+    </url>
+    <url>
+         <loc>https://mostly-ai.github.io/mostlyai-client/tutorials/</loc>
+         <lastmod>2024-12-17</lastmod>
+    </url>
+    <url>
+         <loc>https://mostly-ai.github.io/mostlyai-client/usage/</loc>
+         <lastmod>2024-12-17</lastmod>
+    </url>
+</urlset>
