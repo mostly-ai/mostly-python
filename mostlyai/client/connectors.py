@@ -4,7 +4,6 @@ from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBas
 from mostlyai.client.domain import (
     Connector,
     ConnectorListItem,
-    SyntheticDatasetConfig,
     ConnectorPatchConfig,
     ConnectorConfig,
 )
@@ -26,6 +25,14 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         List connectors.
 
         Paginate through all connectors accessible by the user. Only connectors that are independent of a table will be returned.
+
+        Example for listing all connectors:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            for c in mostly.connectors.list():
+                print(f"Connector `{c.name}` ({c.access_type}, {c.type}, {c.id})")
+            ```
 
         Args:
             offset: Offset for entities in the response.
@@ -51,6 +58,14 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
         """
         Retrieve a connector by its ID.
 
+        Example for retrieving a connector:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            c = mostly.connectors.get('INSERT_YOUR_CONNECTOR_ID')
+            c
+            ```
+
         Args:
             connector_id: The unique identifier of the connector.
 
@@ -62,12 +77,12 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
 
     def create(
         self,
-        config: Union[SyntheticDatasetConfig, dict[str, Any]],
+        config: Union[ConnectorConfig, dict[str, Any]],
     ) -> Connector:
         """
         Create a connector and optionally validate the connection before saving.
 
-        See `mostly.connect` for more details.
+        See [`mostly.connect`](api_client.md#mostlyai.client.api.MostlyAI.connect) for more details.
 
         Args:
             config: Configuration for the connector.

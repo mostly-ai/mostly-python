@@ -35,6 +35,22 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
 
         Paginate through all generators accessible by the user.
 
+        Example for listing all generators:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            for g in mostly.generators.list():
+                print(f"Generator `{g.name}` ({g.training_status}, {g.id})")
+            ```
+
+        Example for searching trained generators via key word:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            generators = list(mostly.generators.list(search_term="census", status="DONE"))
+            print(f"Found {len(generators)} generators")
+            ```
+
         Args:
             offset: Offset for the entities in the response.
             limit: Limit for the number of entities in the response.
@@ -63,6 +79,14 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
         Args:
             generator_id: The unique identifier of the generator.
 
+        Example for retrieving a generator:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            g = mostly.generators.get('INSERT_YOUR_GENERATOR_ID')
+            g
+            ```
+
         Returns:
             Generator: The retrieved generator object.
         """
@@ -71,7 +95,32 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
 
     def create(self, config: Union[GeneratorConfig, dict]) -> Generator:
         """
-        Create a generator.
+        Create a generator. The generator will be in the NEW state and will need to be trained before it can be used.
+
+        See [`mostly.train`](api_client.md#mostlyai.client.api.MostlyAI.train) for more details.
+
+        Example for creating a generator:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            g = mostly.generators.create(
+                config=GeneratorConfig(
+                    name="US Census",
+                    tables=[{
+                        "name": "census",
+                        "data": original_df,
+                    }]
+                )
+            )
+            print("status:", g.training_status)
+            # status: NEW
+            g.training.start()  # start training
+            print("status:", g.training_status)
+            # status: QUEUED
+            g.training.wait()   # wait for training to complete
+            print("status:", g.training_status)
+            # status: DONE
+            ```
 
         Args:
             config: Configuration for the generator.
@@ -110,7 +159,14 @@ class _MostlyGeneratorsClient(_MostlyBaseClient):
     ) -> Generator:
         """
         Import a generator from a file.
-        Supported from release v212 onwards.
+
+        Example for importing a generator from a file:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            g = mostly.generators.import_from_file('path/to/generator')
+            g
+            ```
 
         Args:
             file_path: Path to the file to import.
