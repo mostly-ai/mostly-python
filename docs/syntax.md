@@ -27,7 +27,7 @@ for g in mostly.generators.list():
 g = mostly.generators.get(id: str)
 
 # fetch a generator's configuration
-g.config()
+config = g.config()
 
 # open a generator in a new browser tab
 g.open()
@@ -70,7 +70,7 @@ for sd in mostly.synthetic_datasets.list():
 sd = mostly.synthetic_datasets.get(id: str)
 
 # fetch a synthetic dataset's configuration
-sd.config()
+config = sd.config()
 
 # open a synthetic dataset in a new browser tab
 sd.open()
@@ -122,7 +122,7 @@ for c in mostly.connectors.list():
 c.update(name: str, ...)
 
 # fetch a connector's configuration
-c.config()
+config = c.config()
 
 # open a connector in a new browser tab
 c.open()

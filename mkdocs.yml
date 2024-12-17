@@ -34,7 +34,7 @@ nav:
   - Syntax Overview: syntax.md
   - Tutorials: tutorials.md
   - API Reference: api_client.md
-  - Model Reference: api_domain.md
+  - Schema Reference: api_domain.md
 
 plugins:
   - search
