@@ -2,3 +2,4 @@
 dist/
 site/
 __pycache__/
+.vscode/
