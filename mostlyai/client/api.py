@@ -441,7 +441,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Probe a generator.
 
-        See [SyntheticProbeConfig](api_model.md#mostlyai.client.model.SyntheticProbeConfig) for more information on the available configuration parameters.
+        See [SyntheticProbeConfig](api_domain.md#mostlyai.client.domain.SyntheticProbeConfig) for more information on the available configuration parameters.
 
         Example:
             ```python

@@ -62,7 +62,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
 
     def create(
         self,
-        config: Union[SyntheticDatasetConfig, dict[str, Any]],
+        config: Union[ConnectorConfig, dict[str, Any]],
     ) -> Connector:
         """
         Create a connector and optionally validate the connection before saving.
