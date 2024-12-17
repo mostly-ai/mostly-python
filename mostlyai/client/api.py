@@ -34,7 +34,29 @@ from mostlyai.client._mostly_utils import (
 
 class MostlyAI(_MostlyBaseClient):
     """
-    Client for interacting with the MOSTLY AI platform via its [Public API](https://github.com/mostly-ai/mostly-openapi/blob/main/public-api.yaml).
+    Instantiate a client for interacting with the MOSTLY AI platform via its [Public API](https://github.com/mostly-ai/mostly-openapi/blob/main/public-api.yaml).
+
+    Example for instantiating the client with explicit arguments:
+        ```python
+        from mostlyai import MostlyAI
+        mostly = MostlyAI(
+            api_key='INSERT_YOUR_API_KEY',
+            base_url='https://app.mostly.ai',
+        )
+        mostly
+        # MostlyAI(base_url='https://app.mostly.ai', api_key='***')
+        ```
+
+    Example for instantiating the client with environment variables:
+        ```python
+        import os
+        from mostlyai import MostlyAI
+        os.environ["MOSTLYAI_API_KEY"] = "INSERT_YOUR_API_KEY"
+        os.environ["MOSTLYAI_BASE_URL"] = "https://app.mostly.ai"
+        mostly = MostlyAI()
+        mostly
+        # MostlyAI(base_url='https://app.mostly.ai', api_key='***')
+        ```
 
     Args:
         base_url: The base URL. If not provided, a default value is used.
@@ -64,13 +86,17 @@ class MostlyAI(_MostlyBaseClient):
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
 
+    def __repr__(self) -> str:
+        api_key = "'***'" if self.api_key else "None"
+        return f"MostlyAI(base_url='{self.base_url}', api_key={api_key})"
+
     def connect(self, config: Union[ConnectorConfig, dict[str, Any]]) -> Connector:
         """
         Create a connector and optionally validate the connection before saving.
 
         See [ConnectorConfig](api_domain.md#mostlyai.client.domain.ConnectorConfig) for more information on the available configuration parameters.
 
-        Example:
+        Example for creating a connector to a AWS S3 storage:
             ```python
             from mostlyai import MostlyAI
             mostly = MostlyAI()
@@ -443,11 +469,35 @@ class MostlyAI(_MostlyBaseClient):
 
         See [SyntheticProbeConfig](api_domain.md#mostlyai.client.domain.SyntheticProbeConfig) for more information on the available configuration parameters.
 
-        Example:
+        Example for probing a generator for 10 synthetic samples:
             ```python
             from mostlyai import MostlyAI
             mostly = MostlyAI()
-            probe = mostly.probe(generator=g, size=10)
+            probe = mostly.probe(
+                generator='INSERT_YOUR_GENERATOR_ID',
+                size=10
+            )
+            ```
+
+        Example for conditional probing a generator for 10 synthetic samples:
+            ```python
+            import pandas as pd
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            g = mostly.generators.get('INSERT_YOUR_GENERATOR_ID')
+            print('columns:', [c.name for c in g.tables[0].columns])
+            # columns: ['age', 'workclass', 'fnlwgt', ...]
+            col = g.tables[0].columns[1]
+            print(col.name, col.value_range.values)
+            # workclass: ['Federal-gov', 'Local-gov', 'Never-worked', ...]
+            mostly.probe(
+                generator=g,
+                seed=pd.DataFrame({
+                    'age': [63, 45],
+                    'sex': ['Female', 'Male'],
+                    'workclass': ['Sales', 'Tech-support'],
+                }),
+            )
             ```
 
         Args:
@@ -478,6 +528,14 @@ class MostlyAI(_MostlyBaseClient):
         """
         Retrieve information about the current user.
 
+        Example for retrieving information about the current user:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            mostly.me()
+            # {'id': '488f2f26-...', 'first_name': 'Tom', ...}
+            ```
+
         Returns:
             CurrentUser: Information about the current user.
         """
@@ -485,8 +543,15 @@ class MostlyAI(_MostlyBaseClient):
 
     def about(self) -> dict[str, Any]:
         """
-        Retrieve platform information.
-        Supported from release v210 onwards.
+        Retrieve information about the platform.
+
+        Example for retrieving information about the platform:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            mostly.about()
+            # {'version': 'v316', 'assistant': True}
+            ```
 
         Returns:
             dict[str, Any]: Information about the platform.
@@ -494,9 +559,42 @@ class MostlyAI(_MostlyBaseClient):
         return self.request(verb=GET, path=["about"])
 
     def models(self, model_type: Union[str, ModelType]) -> list[str]:
+        """
+        Retrieve a list of available models of a specific type.
+
+        Example for retrieving available models:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            mostly.models("LANGUAGE")
+            # ['MOSTLY_AI/LSTMFromScratch-3m', 'microsoft/phi-1_5', ..]
+            mostly.models("TABULAR")
+            # ['MOSTLY_AI/Small', 'MOSTLY_AI/Medium', 'MOSTLY_AI/Large']
+            ```
+
+        Args:
+            model_type: The type of model to retrieve. Can be a string or a ModelType enum.
+
+        Returns:
+            A list of available models of the specified type.
+        """
         if isinstance(model_type, ModelType):
             model_type = model_type.value
         return self.request(verb=GET, path=["models", model_type])
 
     def computes(self) -> list[dict[str, Any]]:
+        """
+        Retrieve a list of available compute resources, that can be used for executing tasks.
+
+        Example for retrieving available compute resources:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            mostly.computes()
+            # [{'id': '...', 'name': 'CPU Large',...]
+            ```
+
+        Returns:
+            A list of available compute resources.
+        """
         return self.request(verb=GET, path=["computes"])

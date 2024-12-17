@@ -35,6 +35,22 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
 
         Paginate through all synthetic datasets accessible by the user.
 
+        Example for listing all synthetic datasets:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            for sd in mostly.synthetic_datasets.list():
+                print(f"Synthetic Dataset `{sd.name}` ({sd.generation_status}, {sd.id})")
+            ```
+
+        Example for searching generated synthetic datasets via key word:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            datasets = list(mostly.synthetic_datasets.list(search_term="census", status="DONE"))
+            print(f"Found {len(datasets)} synthetic datasets")
+            ```
+
         Args:
             offset: Offset for the entities in the response.
             limit: Limit for the number of entities in the response.
@@ -60,6 +76,14 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         """
         Retrieve a synthetic dataset by its ID.
 
+        Example for retrieving a synthetic dataset:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            sd = mostly.synthetic_datasets.get('INSERT_YOUR_SYNTHETIC_DATASET_ID')
+            sd
+            ```
+
         Args:
             synthetic_dataset_id: The unique identifier of the synthetic dataset.
 
@@ -75,7 +99,28 @@ class _MostlySyntheticDatasetsClient(_MostlyBaseClient):
         self, config: Union[SyntheticDatasetConfig, dict[str, Any]]
     ) -> SyntheticDataset:
         """
-        Create a synthetic dataset.
+        Create a synthetic dataset. The synthetic dataset will be in the NEW state and will need to be generated before it can be used.
+
+        See [`mostly.generate`](api_client.md#mostlyai.client.api.MostlyAI.generate) for more details.
+
+        Example for creating a synthetic dataset:
+            ```python
+            from mostlyai import MostlyAI
+            mostly = MostlyAI()
+            sd = mostly.synthetic_datasets.create(
+                config=SyntheticDatasetConfig(
+                    generator_id="INSERT_YOUR_GENERATOR_ID",
+                )
+            )
+            print("status:", sd.generation_status)
+            # status: NEW
+            sd.generation.start()  # start generation
+            print("status:", sd.generation_status)
+            # status: QUEUED
+            sd.generation.wait()   # wait for generation to complete
+            print("status:", sd.generation_status)
+            # status: DONE
+            ```
 
         Args:
             config: Configuration for the synthetic dataset.
@@ -207,6 +252,8 @@ class _MostlySyntheticProbesClient(_MostlyBaseClient):
     ) -> Union[pd.DataFrame, dict[str, pd.DataFrame]]:
         """
         Create a synthetic probe.
+
+        See [`mostly.probe`](api_client.md#mostlyai.client.api.MostlyAI.probe) for more details.
 
         Args:
             config: Configuration for the synthetic probe.
