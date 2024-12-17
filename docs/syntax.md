@@ -3,7 +3,7 @@ hide:
   - navigation
 ---
 
-# Syntax Overview
+# MOSTLY AI Cheat Sheet
 
 ## Generators
 
