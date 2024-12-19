@@ -12,12 +12,11 @@ This module is auto-generated to represent `pydantic`-based classes of the defin
       show_root_heading: true
       show_root_full_path: true
       show_object_full_path: false
+      show_root_toc_entry: false
       filters:
-        - "!^Generator$"
-        - "!^SyntheticDataset$"
-        - "!^Connector$"
         - "!^Assistant.*"
         - "!^Share.*"
+        - "!^ResourceShares"
         - "!^LiteLlm.*"
         - "!^DataLlm.*"
         - "!.*PatchConfig.*"

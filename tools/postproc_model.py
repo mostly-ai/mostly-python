@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Constant for the file path
-FILE_PATH = "mostlyai/client/domain.py"
+FILE_PATH = "mostlyai/domain.py"
 
 # Dictionary for enum replacements
 enum_replace_dict = {
