@@ -18,7 +18,8 @@ from mostlyai.client.domain import (
     GeneratorConfig,
     SourceTableConfig,
     SyntheticDatasetConfig,
-    SyntheticProbeConfig, AboutService,
+    SyntheticProbeConfig,
+    AboutService,
 )
 from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
@@ -88,7 +89,9 @@ class MostlyAI(_MostlyBaseClient):
         try:
             version = self.about().version
             email = self.me().email
-            rich.print(f"Connected to {self.base_url} ({version}) as [bold]{email}[/bold]")
+            rich.print(
+                f"Connected to {self.base_url} ({version}) as [bold]{email}[/bold]"
+            )
         except Exception as e:
             rich.print(f"Failed to connect to {self.base_url}: {e}")
 

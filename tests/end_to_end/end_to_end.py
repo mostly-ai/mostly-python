@@ -1,11 +1,9 @@
-from unittest import skip
-
 from mostlyai import MostlyAI
 from mostlyai.client.domain import GeneratorConfig, SyntheticDatasetConfig
 import pandas as pd
 
 
-@skip("End-to-end tests require API access")
+# @skip("End-to-end tests require API access")
 def test_end_to_end(tmp_path):
     # create some mock data
     df = pd.DataFrame(
