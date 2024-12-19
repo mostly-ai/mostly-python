@@ -18,7 +18,7 @@ from mostlyai.client.domain import (
     GeneratorConfig,
     SourceTableConfig,
     SyntheticDatasetConfig,
-    SyntheticProbeConfig,
+    SyntheticProbeConfig, AboutService,
 )
 from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
@@ -86,10 +86,9 @@ class MostlyAI(_MostlyBaseClient):
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
         try:
-            about = self.about()
-            version = about["version"] if isinstance(about, dict) else about.version
+            version = self.about().version
             email = self.me().email
-            rich.print(f"Connected to {self.base_url} ({version}) as {email}")
+            rich.print(f"Connected to {self.base_url} ({version}) as [bold]{email}[/bold]")
         except Exception as e:
             rich.print(f"Failed to connect to {self.base_url}: {e}")
 
@@ -544,11 +543,11 @@ class MostlyAI(_MostlyBaseClient):
             ```
 
         Returns:
-            CurrentUser: Information about the current user.
+            Information about the current user.
         """
         return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
 
-    def about(self) -> dict[str, Any]:
+    def about(self) -> AboutService:
         """
         Retrieve information about the platform.
 
@@ -561,9 +560,9 @@ class MostlyAI(_MostlyBaseClient):
             ```
 
         Returns:
-            dict[str, Any]: Information about the platform.
+            Information about the platform.
         """
-        return self.request(verb=GET, path=["about"])
+        return self.request(verb=GET, path=["about"], response_type=AboutService)
 
     def models(self, model_type: Union[str, ModelType]) -> list[str]:
         """
