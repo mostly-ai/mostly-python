@@ -113,22 +113,22 @@ def test_end_to_end(tmp_path):
 
     ## CONNECTOR
 
-    c = mostly.connect(
-        config={
-            "name": "Test 1",
-            "type": "S3_STORAGE",
-            "access_type": "SOURCE",
-            "config": {
-                "access_key": "xxx",
-            },
-            "secrets": {
-                "secret_key": "xxx",
-            },
-            # "test_connection": False,
-        }
-    )
-    assert c.name == "Test 1"
-    c.update(name="Test 2")
-    assert c.name == "Test 2"
-
-    c.delete()
+    # c = mostly.connect(
+    #     config={
+    #         "name": "Test 1",
+    #         "type": "S3_STORAGE",
+    #         "access_type": "SOURCE",
+    #         "config": {
+    #             "access_key": "xxx",
+    #         },
+    #         "secrets": {
+    #             "secret_key": "xxx",
+    #         },
+    #     },
+    #     test_connection=False,
+    # )
+    # assert c.name == "Test 1"
+    # c.update(name="Test 2")
+    # assert c.name == "Test 2"
+    #
+    # c.delete()

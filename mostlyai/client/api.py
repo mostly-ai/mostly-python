@@ -33,6 +33,7 @@ from mostlyai.client.domain import (
     SourceTableConfig,
     SyntheticDatasetConfig,
     SyntheticProbeConfig,
+    AboutService,
 )
 from mostlyai.client.synthetic_datasets import (
     _MostlySyntheticDatasetsClient,
@@ -100,10 +101,11 @@ class MostlyAI(_MostlyBaseClient):
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
         try:
-            about = self.about()
-            version = about["version"] if isinstance(about, dict) else about.version
+            version = self.about().version
             email = self.me().email
-            rich.print(f"Connected to {self.base_url} ({version}) as {email}")
+            rich.print(
+                f"Connected to {self.base_url} ({version}) as [bold]{email}[/bold]"
+            )
         except Exception as e:
             rich.print(f"Failed to connect to {self.base_url}: {e}")
 
@@ -111,7 +113,11 @@ class MostlyAI(_MostlyBaseClient):
         api_key = "'***'" if self.api_key else "None"
         return f"MostlyAI(base_url='{self.base_url}', api_key={api_key})"
 
-    def connect(self, config: Union[ConnectorConfig, dict[str, Any]]) -> Connector:
+    def connect(
+        self,
+        config: Union[ConnectorConfig, dict[str, Any]],
+        test_connection: Optional[bool] = True,
+    ) -> Connector:
         """
         Create a connector and optionally validate the connection before saving.
 
@@ -136,6 +142,7 @@ class MostlyAI(_MostlyBaseClient):
 
         Args:
             config: Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
+            test_connection: Whether to validate the connection before saving.
 
         The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
@@ -257,7 +264,7 @@ class MostlyAI(_MostlyBaseClient):
         Returns:
             Connector: The created connector.
         """
-        c = self.connectors.create(config)
+        c = self.connectors.create(config=config, test_connection=test_connection)
         rich.print(
             f"Created connector [link={self.base_url}/d/connectors/{c.id} blue underline]{c.id}[/]"
         )
@@ -558,11 +565,11 @@ class MostlyAI(_MostlyBaseClient):
             ```
 
         Returns:
-            CurrentUser: Information about the current user.
+            Information about the current user.
         """
         return self.request(verb=GET, path=["users", "me"], response_type=CurrentUser)
 
-    def about(self) -> dict[str, Any]:
+    def about(self) -> AboutService:
         """
         Retrieve information about the platform.
 
@@ -575,9 +582,9 @@ class MostlyAI(_MostlyBaseClient):
             ```
 
         Returns:
-            dict[str, Any]: Information about the platform.
+            Information about the platform.
         """
-        return self.request(verb=GET, path=["about"])
+        return self.request(verb=GET, path=["about"], response_type=AboutService)
 
     def models(self, model_type: Union[str, ModelType]) -> list[str]:
         """
