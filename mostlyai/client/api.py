@@ -21,7 +21,7 @@ import rich
 from mostlyai.client.base import GET, _MostlyBaseClient
 from mostlyai.client.connectors import _MostlyConnectorsClient
 from mostlyai.client.generators import _MostlyGeneratorsClient
-from mostlyai.client.domain import (
+from mostlyai.domain import (
     Connector,
     CurrentUser,
     Generator,
@@ -121,7 +121,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Create a connector and optionally validate the connection before saving.
 
-        See [ConnectorConfig](api_domain.md#mostlyai.client.domain.ConnectorConfig) for more information on the available configuration parameters.
+        See [ConnectorConfig](api_domain.md#mostlyai.domain.ConnectorConfig) for more information on the available configuration parameters.
 
         Example for creating a connector to a AWS S3 storage:
             ```python
@@ -282,7 +282,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Train a generator.
 
-        See [GeneratorConfig](api_domain.md#mostlyai.client.domain.GeneratorConfig) for more information on the available configuration parameters.
+        See [GeneratorConfig](api_domain.md#mostlyai.domain.GeneratorConfig) for more information on the available configuration parameters.
 
         Example configuration using short-hand notation:
             ```python
@@ -393,7 +393,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Generate synthetic data.
 
-        See [SyntheticDatasetConfig](api_domain.md#mostlyai.client.domain.SyntheticDatasetConfig) for more information on the available configuration parameters.
+        See [SyntheticDatasetConfig](api_domain.md#mostlyai.domain.SyntheticDatasetConfig) for more information on the available configuration parameters.
 
         Example configuration using short-hand notation:
             ```python
@@ -495,7 +495,7 @@ class MostlyAI(_MostlyBaseClient):
         """
         Probe a generator.
 
-        See [SyntheticProbeConfig](api_domain.md#mostlyai.client.domain.SyntheticProbeConfig) for more information on the available configuration parameters.
+        See [SyntheticProbeConfig](api_domain.md#mostlyai.domain.SyntheticProbeConfig) for more information on the available configuration parameters.
 
         Example for probing a generator for 10 synthetic samples:
             ```python

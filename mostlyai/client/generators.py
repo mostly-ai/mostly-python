@@ -19,7 +19,7 @@ import re
 import pandas as pd
 
 from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.client.domain import (
+from mostlyai.domain import (
     Generator,
     JobProgress,
     GeneratorListItem,

@@ -24,7 +24,7 @@ import pandas as pd
 import pytest
 from rich.console import Console
 
-from mostlyai.client.domain import (
+from mostlyai.domain import (
     JobProgress,
     ProgressStatus,
     ProgressStep,
