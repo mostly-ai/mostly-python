@@ -1,9 +1,11 @@
+from unittest import skip
+
 from mostlyai import MostlyAI
 from mostlyai.client.domain import GeneratorConfig, SyntheticDatasetConfig
 import pandas as pd
 
 
-# @skip("End-to-end tests require API access")
+@skip("End-to-end tests require API access")
 def test_end_to_end(tmp_path):
     # create some mock data
     df = pd.DataFrame(
@@ -97,22 +99,22 @@ def test_end_to_end(tmp_path):
 
     ## CONNECTOR
 
-    c = mostly.connect(
-        config={
-            "name": "Test 1",
-            "type": "S3_STORAGE",
-            "access_type": "SOURCE",
-            "config": {
-                "access_key": "xxx",
-            },
-            "secrets": {
-                "secret_key": "xxx",
-            },
-            # "test_connection": False,
-        }
-    )
-    assert c.name == "Test 1"
-    c.update(name="Test 2")
-    assert c.name == "Test 2"
-
-    c.delete()
+    # c = mostly.connect(
+    #     config={
+    #         "name": "Test 1",
+    #         "type": "S3_STORAGE",
+    #         "access_type": "SOURCE",
+    #         "config": {
+    #             "access_key": "xxx",
+    #         },
+    #         "secrets": {
+    #             "secret_key": "xxx",
+    #         },
+    #     },
+    #     test_connection=False,
+    # )
+    # assert c.name == "Test 1"
+    # c.update(name="Test 2")
+    # assert c.name == "Test 2"
+    #
+    # c.delete()

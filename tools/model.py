@@ -43,10 +43,11 @@ class Connector:
             config=config,
             secrets=secrets,
             ssl=ssl,
-            test_connection=test_connection,
         )
         self.client._update(
-            connector_id=self.id, config=patch_config.model_dump(exclude_none=True)
+            connector_id=self.id,
+            config=patch_config.model_dump(exclude_none=True),
+            test_connection=test_connection,
         )
         self.reload()
 

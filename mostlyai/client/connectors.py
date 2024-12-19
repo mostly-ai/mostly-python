@@ -78,6 +78,7 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
     def create(
         self,
         config: Union[ConnectorConfig, dict[str, Any]],
+        test_connection: Optional[bool] = True,
     ) -> Connector:
         """
         Create a connector and optionally validate the connection before saving.
@@ -86,12 +87,17 @@ class _MostlyConnectorsClient(_MostlyBaseClient):
 
         Args:
             config: Configuration for the connector.
+            test_connection: Whether to test the connection before saving the connector
 
         Returns:
             The created connector object.
         """
         response = self.request(
-            verb=POST, path=[], json=config, response_type=Connector
+            verb=POST,
+            path=[],
+            json=config,
+            params={"test_connection": test_connection},
+            response_type=Connector,
         )
         return response
 

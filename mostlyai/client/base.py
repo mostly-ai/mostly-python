@@ -121,6 +121,10 @@ class _MostlyBaseClient:
             if isinstance(kwargs["json"], BaseModel):
                 kwargs["json"] = kwargs["json"].model_dump()
             kwargs["json"] = map_snake_to_camel_case(kwargs["json"])
+        if "params" in kwargs and do_json_camel_case:
+            if isinstance(kwargs["params"], BaseModel):
+                kwargs["params"] = kwargs["params"].model_dump()
+            kwargs["params"] = map_snake_to_camel_case(kwargs["params"])
 
         try:
             with httpx.Client(timeout=self.timeout, verify=self.ssl_verify) as client:

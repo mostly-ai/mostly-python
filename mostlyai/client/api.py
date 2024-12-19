@@ -99,7 +99,11 @@ class MostlyAI(_MostlyBaseClient):
         api_key = "'***'" if self.api_key else "None"
         return f"MostlyAI(base_url='{self.base_url}', api_key={api_key})"
 
-    def connect(self, config: Union[ConnectorConfig, dict[str, Any]]) -> Connector:
+    def connect(
+        self,
+        config: Union[ConnectorConfig, dict[str, Any]],
+        test_connection: Optional[bool] = True,
+    ) -> Connector:
         """
         Create a connector and optionally validate the connection before saving.
 
@@ -124,6 +128,7 @@ class MostlyAI(_MostlyBaseClient):
 
         Args:
             config: Configuration for the connector. Can be either a ConnectorConfig object or an equivalent dictionary.
+            test_connection: Whether to validate the connection before saving.
 
         The structures of the `config`, `secrets` and `ssl` parameters depend on the connector `type`:
 
@@ -245,7 +250,7 @@ class MostlyAI(_MostlyBaseClient):
         Returns:
             Connector: The created connector.
         """
-        c = self.connectors.create(config)
+        c = self.connectors.create(config=config, test_connection=test_connection)
         rich.print(
             f"Created connector [link={self.base_url}/d/connectors/{c.id} blue underline]{c.id}[/]"
         )
