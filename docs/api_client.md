@@ -21,7 +21,7 @@ hide:
 
 ## Generator
 
-::: mostlyai.client.domain.Generator
+::: mostlyai.domain.Generator
     options:
         show_root_heading: false
         heading_level: 3
@@ -35,7 +35,7 @@ hide:
 
 ## Synthetic Dataset
 
-::: mostlyai.client.domain.SyntheticDataset
+::: mostlyai.domain.SyntheticDataset
     options:
         show_root_heading: false
         heading_level: 3
@@ -49,7 +49,7 @@ hide:
 
 ## Connector
 
-::: mostlyai.client.domain.Connector
+::: mostlyai.domain.Connector
     options:
         show_root_heading: false
         heading_level: 3

@@ -15,7 +15,7 @@
 from typing import Any, Iterator, Optional, List, Dict, Union
 
 from mostlyai.client.base import DELETE, GET, PATCH, POST, Paginator, _MostlyBaseClient
-from mostlyai.client.domain import (
+from mostlyai.domain import (
     Connector,
     ConnectorListItem,
     ConnectorPatchConfig,

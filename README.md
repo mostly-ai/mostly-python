@@ -1,24 +1,24 @@
-# MOSTLY AI - Python Client 🚀
+# MOSTLY AI - SDK 🚀
 
-[![Documentation](https://img.shields.io/badge/docs-latest-green)](https://mostly-ai.github.io/mostlyai-client/) [![stats](https://pepy.tech/badge/mostlyai)](https://pypi.org/project/mostlyai/) ![license](https://img.shields.io/github/license/mostly-ai/mostlyai-client) ![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostlyai-client) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai)
+[![Documentation](https://img.shields.io/badge/docs-latest-green)](https://mostly-ai.github.io/mostlyai/) [![stats](https://pepy.tech/badge/mostlyai)](https://pypi.org/project/mostlyai/) ![license](https://img.shields.io/github/license/mostly-ai/mostlyai) ![GitHub Release](https://img.shields.io/github/v/release/mostly-ai/mostlyai) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mostlyai)
 
-The official Python client for [MOSTLY AI](https://app.mostly.ai/), the #1 platform for high-fidelity privacy-safe **Synthetic Data**. 
+[Package Documentation](https://mostly-ai.github.io/mostlyai/) | [Platform Documentation](https://mostly.ai/docs) | [Usage Examples](https://mostly-ai.github.io/mostlyai/api_client/)
 
-The client allows you to programmatically create, browse and manage the 3 key resources of the MOSTLY AI platform: 
+The official Python SDK for [MOSTLY AI](https://app.mostly.ai/), the #1 platform for high-fidelity privacy-safe **Synthetic Data**. 
+
+This toolkit allows you to programmatically create, browse and manage the 3 key resources of the MOSTLY AI platform:
 
 1. **Generators** - Train a synthetic data generator on your existing tabular or language data assets
 2. **Synthetic Datasets** - Use a generator to create any number of synthetic samples to your needs
 3. **Connectors** - Connect to any data source within your organization, for reading and writing data
 
 
-| Intent                                        | Primitive                         | Documentation                                                                                                        |
-|-----------------------------------------------|-----------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| Train a Generator on tabular or language data | `g = mostly.train(config)`        | see [mostly.train](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.train)       |
-| Generate any number of synthetic data records | `sd = mostly.generate(g, config)` | see [mostly.generate](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.generate) |
-| Live probe the generator on demand            | `df = mostly.probe(g, config)`    | see [mostly.probe](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.probe)       |
-| Connect to any data source within your org    | `c = mostly.connect(config)`      | see [mostly.connect](https://mostly-ai.github.io/mostlyai-client/api_client/#mostlyai.client.api.MostlyAI.connect)   |
-
-See our [Package Documentation](https://mostly-ai.github.io/mostlyai-client/) as well also our [Platform Documentation](https://mostly.ai/docs) for detailed feature descriptions and further Python examples.
+| Intent                                        | Primitive                         | Documentation                                                                                                 |
+|-----------------------------------------------|-----------------------------------|---------------------------------------------------------------------------------------------------------------|
+| Train a Generator on tabular or language data | `g = mostly.train(config)`        | see [mostly.train](https://mostly-ai.github.io/mostlyai/api_client/#mostlyai.client.api.MostlyAI.train)       |
+| Generate any number of synthetic data records | `sd = mostly.generate(g, config)` | see [mostly.generate](https://mostly-ai.github.io/mostlyai/api_client/#mostlyai.client.api.MostlyAI.generate) |
+| Live probe the generator on demand            | `df = mostly.probe(g, config)`    | see [mostly.probe](https://mostly-ai.github.io/mostlyai/api_client/#mostlyai.client.api.MostlyAI.probe)       |
+| Connect to any data source within your org    | `c = mostly.connect(config)`      | see [mostly.connect](https://mostly-ai.github.io/mostlyai/api_client/#mostlyai.client.api.MostlyAI.connect)   |
 
 ## Installation
 
@@ -70,10 +70,10 @@ df_synthetic = sd.data()
 Please consider citing our project if you find it useful:
 
 ```bibtex
-@software{mostlyai-client,
+@software{mostlyai,
     author = {{MOSTLY AI}},
-    title = {{MOSTLY AI - Python Client}},
-    url = {https://github.com/mostly-ai/mostlyai-client},
+    title = {{MOSTLY AI SDK}},
+    url = {https://github.com/mostly-ai/mostlyai},
     year = {2024}
 }
 ```

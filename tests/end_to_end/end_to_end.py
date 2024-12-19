@@ -15,7 +15,7 @@
 from unittest import skip
 
 from mostlyai import MostlyAI
-from mostlyai.client.domain import GeneratorConfig, SyntheticDatasetConfig
+from mostlyai.domain import GeneratorConfig, SyntheticDatasetConfig
 import pandas as pd
 
 

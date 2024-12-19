@@ -19,7 +19,7 @@ import pandas as pd
 from pydantic import Field, field_validator
 
 from mostlyai.client._base_utils import convert_to_base64
-from mostlyai.client.domain import (
+from mostlyai.domain import (
     JobProgress,
     SyntheticDatasetFormat,
     ConnectorPatchConfig,

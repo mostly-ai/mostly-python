@@ -26,8 +26,8 @@ classifiers = [
 
 [tool.poetry.urls]
 "Homepage" = "https://app.mostly.ai/"
-"Documentation" = "https://mostly-ai.github.io/mostlyai-client/"
-"Source" = "https://github.com/mostly-ai/mostlyai-client"
+"Documentation" = "https://mostly-ai.github.io/mostlyai/"
+"Source" = "https://github.com/mostly-ai/mostlyai"
 
 [tool.poetry.dependencies]
 python = "^3.9"
