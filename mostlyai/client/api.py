@@ -99,6 +99,13 @@ class MostlyAI(_MostlyBaseClient):
         self.generators = _MostlyGeneratorsClient(**client_kwargs)
         self.synthetic_datasets = _MostlySyntheticDatasetsClient(**client_kwargs)
         self.synthetic_probes = _MostlySyntheticProbesClient(**client_kwargs)
+        try:
+            about = self.about()
+            version = about["version"] if isinstance(about, dict) else about.version
+            email = self.me().email
+            rich.print(f"Connected to {self.base_url} ({version}) as {email}")
+        except Exception as e:
+            rich.print(f"Failed to connect to {self.base_url}: {e}")
 
     def __repr__(self) -> str:
         api_key = "'***'" if self.api_key else "None"
